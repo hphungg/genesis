@@ -3,6 +3,7 @@
 import { postgresdb } from "@/db/database"
 import { set, setCards } from "@/db/schema"
 import { eq } from "drizzle-orm"
+import { revalidatePath } from "next/cache"
 
 export async function getSetById(setId: number) {
     const result = await postgresdb.query.set.findFirst({
@@ -30,6 +31,8 @@ export type CreateSetInput = {
     description?: string
     tags?: string[]
     setType?: string
+    coverId?: string | null
+    cardIds?: string[]
 }
 
 export async function createSet(data: CreateSetInput) {
@@ -40,9 +43,19 @@ export async function createSet(data: CreateSetInput) {
             description: data.description,
             tags: data.tags,
             setType: data.setType,
+            coverId: data.coverId,
         })
         .returning()
 
+    if (data.cardIds && data.cardIds.length > 0) {
+        const relationsToInsert = data.cardIds.map((cardId) => ({
+            setId: newSet.id,
+            cardId: cardId,
+        }))
+        await postgresdb.insert(setCards).values(relationsToInsert)
+    }
+
+    revalidatePath("/create")
     return newSet
 }
 
@@ -52,6 +65,7 @@ export type UpdateSetInput = {
     tags?: string[]
     cardIds?: string[]
     setType?: string
+    coverId?: string | null
 }
 
 export async function updateSet(setId: number, data: UpdateSetInput) {
@@ -61,6 +75,7 @@ export async function updateSet(setId: number, data: UpdateSetInput) {
         setUpdateData.description = data.description
     if (data.tags !== undefined) setUpdateData.tags = data.tags
     if (data.setType !== undefined) setUpdateData.setType = data.setType
+    if (data.coverId !== undefined) setUpdateData.coverId = data.coverId
 
     if (Object.keys(setUpdateData).length > 0) {
         await postgresdb
@@ -86,6 +101,8 @@ export async function updateSet(setId: number, data: UpdateSetInput) {
         with: { setCards: { with: { card: true } } },
     })
 
+    revalidatePath("/create")
+    revalidatePath(`/create/${setId}`)
     return updatedSet
 }
 
@@ -94,6 +111,7 @@ export async function deleteSet(setId: number) {
         .delete(set)
         .where(eq(set.id, setId))
         .returning()
+    revalidatePath("/create")
     return deletedSet
 }
 

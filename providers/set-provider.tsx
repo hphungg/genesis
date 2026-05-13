@@ -1,6 +1,6 @@
 "use client"
 
-import { updateSet } from "@/app/api/sets"
+import { createSet, updateSet } from "@/app/api/sets"
 import { Card, Set } from "@/db/schema"
 import { createContext, useContext, useState, useTransition } from "react"
 
@@ -14,11 +14,12 @@ interface SetContextType {
     setName: (name: string) => void
     setDescription: (desc: string) => void
     setSetType: (type: string) => void
+    setCoverId: (id: string | null) => void
     addTag: (tag: string) => void
     removeTag: (tag: string) => void
     addCard: (card: Card) => void
     removeCard: (cardId: string) => void
-    save: () => void
+    save: () => Promise<void>
 }
 
 const SetContext = createContext<SetContextType | null>(null)
@@ -41,6 +42,9 @@ export function SetProvider({
 
     const setSetType = (setType: string) =>
         setSet((prev) => ({ ...prev, setType }))
+
+    const setCoverId = (coverId: string | null) =>
+        setSet((prev) => ({ ...prev, coverId }))
 
     const addTag = (tag: string) => {
         const trimmed = tag.trim()
@@ -68,16 +72,26 @@ export function SetProvider({
             cards: prev.cards.filter((c) => c.id !== cardId),
         }))
 
-    const save = () => {
-        startTransition(async () => {
+    const save = async () => {
+        if (set.id === 0) {
+            await createSet({
+                name: set.name,
+                description: set.description,
+                setType: set.setType,
+                coverId: set.coverId,
+                tags: set.tags,
+                cardIds: set.cards.map((c) => c.id),
+            })
+        } else {
             await updateSet(set.id, {
                 name: set.name,
                 description: set.description,
                 setType: set.setType,
+                coverId: set.coverId,
                 tags: set.tags,
                 cardIds: set.cards.map((c) => c.id),
             })
-        })
+        }
     }
 
     return (
@@ -88,6 +102,7 @@ export function SetProvider({
                 setName,
                 setDescription,
                 setSetType,
+                setCoverId,
                 addTag,
                 removeTag,
                 addCard,

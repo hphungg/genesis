@@ -1,5 +1,3 @@
-"use server"
-
 import SetEditorCardSearch from "@/components/create/card-search/set-editor-card-search"
 import SetInfo from "@/components/create/set-info"
 import SetEditorTopBar from "@/components/create/topbar"
@@ -15,16 +13,30 @@ interface Props {
 
 export default async function SetEditorPage({ params }: Props) {
     const { id } = await params
-    const setId = parseInt(id, 10)
+    let set;
 
-    if (isNaN(setId)) {
-        notFound()
-    }
+    if (id === "new") {
+        set = {
+            id: 0,
+            name: "New Set",
+            description: "",
+            setType: "Archetype",
+            coverId: null,
+            tags: [],
+            cards: [],
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        } as any
+    } else {
+        const setId = parseInt(id, 10)
+        if (isNaN(setId)) {
+            notFound()
+        }
 
-    const set = await getSetById(setId)
-
-    if (!set) {
-        notFound()
+        set = await getSetById(setId)
+        if (!set) {
+            notFound()
+        }
     }
 
     return (

@@ -18,6 +18,7 @@ export const set = pgTable("set", {
     name: varchar("name", { length: 255 }).notNull().default("New Set"),
     description: text("description").notNull().default(""),
     setType: varchar("set_type", { length: 50 }).notNull().default("custom"),
+    coverId: varchar("cover_id", { length: 255 }),
     tags: text("tags")
         .array()
         .notNull()

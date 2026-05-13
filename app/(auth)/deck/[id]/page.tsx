@@ -1,5 +1,3 @@
-"use server"
-
 import { getDeckById } from "@/app/api/editor"
 
 import CardInfo from "@/components/editor/card-info/card-info"

@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
+import { Badge } from "@/components/ui/badge"
+
 import {
     Select,
     SelectContent,
@@ -16,21 +18,8 @@ import {
 import { XIcon } from "@phosphor-icons/react"
 import { useState, useRef } from "react"
 
-const TAG_COLORS = [
-    "bg-teal-600/90",
-    "bg-violet-600/90",
-    "bg-amber-600/90",
-    "bg-rose-600/90",
-    "bg-sky-600/90",
-    "bg-emerald-600/90",
-]
-
-function tagColor(tag: string, index: number): string {
-    return TAG_COLORS[index % TAG_COLORS.length]
-}
-
 export default function SetInfo() {
-    const { set, setDescription, setSetType, addTag, removeTag, removeCard } = useSetEditor()
+    const { set, setDescription, setSetType, setCoverId, addTag, removeTag, removeCard } = useSetEditor()
     const [tagInput, setTagInput] = useState("")
     const tagInputRef = useRef<HTMLInputElement>(null)
 
@@ -45,23 +34,37 @@ export default function SetInfo() {
     return (
         <div className="flex flex-col h-full w-96 min-w-80 shrink-0 overflow-hidden">
             <div className="flex flex-col gap-4 p-4 border-b">
-                <div className="flex flex-col gap-1.5">
-                    <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                        Set Type
-                    </Label>
-                    <Select
-                        value={set.setType || ""}
-                        onValueChange={setSetType}
-                    >
-                        <SelectTrigger className="h-9">
-                            <SelectValue placeholder="Select type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="Archetype">Archetype</SelectItem>
-                            <SelectItem value="Staple">Staple</SelectItem>
-                            <SelectItem value="Engine">Engine</SelectItem>
-                        </SelectContent>
-                    </Select>
+                <div className="grid grid-cols-2 gap-3">
+                    <div className="flex flex-col gap-1.5">
+                        <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                            Set Type
+                        </Label>
+                        <Select
+                            value={set.setType || ""}
+                            onValueChange={setSetType}
+                        >
+                            <SelectTrigger className="h-9">
+                                <SelectValue placeholder="Select type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="Archetype">Archetype</SelectItem>
+                                <SelectItem value="Staple">Staple</SelectItem>
+                                <SelectItem value="Engine">Engine</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                        <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                            Cover ID
+                        </Label>
+                        <Input
+                            value={set.coverId || ""}
+                            onChange={(e) => setCoverId(e.target.value)}
+                            placeholder="e.g. 89631139"
+                            className="h-9 text-sm"
+                        />
+                    </div>
                 </div>
 
                 <div className="flex flex-col gap-1.5">
@@ -85,9 +88,9 @@ export default function SetInfo() {
                     {set.tags.length > 0 && (
                         <div className="flex flex-wrap gap-1.5">
                             {set.tags.map((tag, i) => (
-                                <span
+                                <Badge
                                     key={tag}
-                                    className={`inline-flex items-center gap-1 text-white text-xs font-semibold px-2.5 py-0.5 rounded-full ${tagColor(tag, i)}`}
+                                    className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 bg-black"
                                 >
                                     {tag}
                                     <button
@@ -97,7 +100,7 @@ export default function SetInfo() {
                                     >
                                         <XIcon size={10} weight="bold" />
                                     </button>
-                                </span>
+                                </Badge>
                             ))}
                         </div>
                     )}
