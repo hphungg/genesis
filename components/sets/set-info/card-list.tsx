@@ -31,38 +31,43 @@ export function SetCardList() {
     const { set, removeCard } = useSetEditor()
 
     return (
-        <div className="flex flex-col flex-1 overflow-hidden p-4 gap-3 min-h-0">
+        <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-hidden p-4">
             <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                <span className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
                     Cards
                 </span>
-                <span className="text-xs text-muted-foreground font-medium tabular-nums">
+                <span className="text-muted-foreground text-xs font-medium tabular-nums">
                     {set.cards.length}
                 </span>
             </div>
 
-            <ScrollArea className="flex-1 min-h-0">
+            <ScrollArea className="min-h-0 flex-1">
                 {set.cards.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center h-32 text-muted-foreground text-sm gap-1">
+                    <div className="text-muted-foreground flex h-32 flex-col items-center justify-center gap-1 text-sm">
                         <span>No cards yet</span>
                     </div>
                 ) : (
                     <div className="flex flex-col gap-1 pr-2">
                         {set.cards.map((card) => (
                             <CardPreview key={card.id} card={card}>
-                                <div
-                                    className="flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm bg-muted/30 hover:bg-muted/60 transition-colors group cursor-default"
-                                >
-                                    <div className={`w-2 h-3.5 rounded-[2px] shrink-0 border border-black/20 dark:border-white/20 ${getCardTypeColor(card.type, card.type2 || undefined)}`} />
-                                    <span className="flex-1 truncate font-medium text-foreground">
+                                <div className="bg-muted/30 hover:bg-muted/60 group flex cursor-default items-center gap-2 rounded-md border px-3 py-1.5 text-sm transition-colors">
+                                    <div
+                                        className={`h-3.5 w-2 shrink-0 rounded-xs border border-black/20 dark:border-white/20 ${getCardTypeColor(card.type, card.type2 || undefined)}`}
+                                    />
+                                    <span className="text-foreground flex-1 truncate font-medium">
                                         {card.name}
                                     </span>
+                                    {card.point > 0 && (
+                                        <span className="rounded bg-red-600 px-1.5 py-0.5 text-[10px] font-bold text-white">
+                                            {card.point}
+                                        </span>
+                                    )}
                                     <button
                                         onClick={(e) => {
-                                            e.preventDefault();
-                                            removeCard(card.id);
+                                            e.preventDefault()
+                                            removeCard(card.id)
                                         }}
-                                        className="opacity-0 group-hover:opacity-60 hover:opacity-100! transition-opacity text-destructive shrink-0"
+                                        className="text-destructive shrink-0 opacity-0 transition-opacity group-hover:opacity-60 hover:opacity-100!"
                                         aria-label={`Remove card ${card.name}`}
                                     >
                                         <XIcon size={14} />

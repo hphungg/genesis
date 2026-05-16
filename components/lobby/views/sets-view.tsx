@@ -2,35 +2,62 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { SetCard } from "./sets/set-card"
-import { SetDialog } from "./sets/set-dialog"
+import { SetCard } from "@/components/lobby/views/sets/set-card"
+import { SetDialog } from "@/components/lobby/views/sets/set-dialog"
 import { Set, Card } from "@/db/schema"
+import { getSetById } from "@/app/api/sets"
 
 type SetWithCards = Set & { cards?: Card[] }
 
 const TABS = [
     { key: "archetype", label: "Archetype" },
-    { key: "staple",    label: "Staples" },
-    { key: "engine",    label: "Engine" },
+    { key: "staple", label: "Staples" },
+    { key: "engine", label: "Engine" },
 ] as const
 
-export default function SetsView({ initialSets }: { initialSets: SetWithCards[] }) {
-    const [activeTab, setActiveTab] = useState<"archetype" | "staple" | "engine">("archetype")
+export default function SetsView({
+    initialSets,
+}: {
+    initialSets: SetWithCards[]
+}) {
+    const [activeTab, setActiveTab] = useState<
+        "archetype" | "staple" | "engine"
+    >("archetype")
     const [selectedSet, setSelectedSet] = useState<SetWithCards | null>(null)
+    const [isLoadingSet, setIsLoadingSet] = useState(false)
 
     const filtered = initialSets.filter(
-        (s) => (s.setType ?? "").toLowerCase() === activeTab
+        (s) => (s.setType ?? "").toLowerCase() === activeTab,
     )
 
+    const handleOpenSet = async (set: SetWithCards) => {
+        setSelectedSet(set)
+        setIsLoadingSet(true)
+
+        try {
+            const fullSet = await getSetById(set.id)
+            if (fullSet) {
+                setSelectedSet(fullSet)
+            }
+        } finally {
+            setIsLoadingSet(false)
+        }
+    }
+
     return (
-        <div className="flex flex-1 flex-col w-full h-full p-4 gap-4">
-            <div className="flex items-center justify-center bg-muted/10">
-                <div className="flex gap-1 p-1 bg-muted rounded-xl">
+        <div className="flex h-full w-full flex-1 flex-col gap-4 p-4">
+            <div className="bg-muted/10 flex items-center justify-center">
+                <div className="bg-muted flex gap-1 rounded-xl p-1">
                     {TABS.map((tab) => (
                         <Button
                             key={tab.key}
-                            variant={activeTab === tab.key ? "default" : "ghost"}
-                            onClick={() => { setActiveTab(tab.key); setSelectedSet(null) }}
+                            variant={
+                                activeTab === tab.key ? "default" : "ghost"
+                            }
+                            onClick={() => {
+                                setActiveTab(tab.key)
+                                setSelectedSet(null)
+                            }}
                             className="rounded-lg px-6"
                         >
                             {tab.label}
@@ -41,13 +68,17 @@ export default function SetsView({ initialSets }: { initialSets: SetWithCards[] 
 
             <div className="flex-1 overflow-y-auto">
                 {filtered.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center h-40 text-muted-foreground text-sm gap-1">
+                    <div className="text-muted-foreground flex h-40 flex-col items-center justify-center gap-1 text-sm">
                         <span>No {activeTab} sets yet.</span>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                         {filtered.map((set) => (
-                            <SetCard key={set.id} set={set} onClick={() => setSelectedSet(set)} />
+                            <SetCard
+                                key={set.id}
+                                set={set}
+                                onClick={() => handleOpenSet(set)}
+                            />
                         ))}
                     </div>
                 )}
@@ -55,6 +86,7 @@ export default function SetsView({ initialSets }: { initialSets: SetWithCards[] 
 
             <SetDialog
                 selectedSet={selectedSet}
+                isLoading={isLoadingSet}
                 onOpenChange={(open) => !open && setSelectedSet(null)}
             />
         </div>

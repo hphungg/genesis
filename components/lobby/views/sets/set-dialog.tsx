@@ -1,48 +1,87 @@
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog"
 import { Set, Card } from "@/db/schema"
 import { CardPreview } from "@/components/card-preview"
+import { Badge } from "@/components/ui/badge"
+import { Spinner } from "@/components/ui/spinner"
 
 type SetWithCards = Set & { cards?: Card[] }
 
 interface SetDialogProps {
     selectedSet: SetWithCards | null
     onOpenChange: (open: boolean) => void
+    isLoading?: boolean
 }
 
-export function SetDialog({ selectedSet, onOpenChange }: SetDialogProps) {
+export function SetDialog({
+    selectedSet,
+    onOpenChange,
+    isLoading,
+}: SetDialogProps) {
     return (
         <Dialog open={!!selectedSet} onOpenChange={onOpenChange}>
-            <DialogContent className="min-w-7xl max-h-[90vh] flex flex-col p-6 overflow-hidden">
-                <DialogHeader className="shrink-0 mb-2">
-                    <DialogTitle className="text-2xl">{selectedSet?.name}</DialogTitle>
-                    <div className="flex gap-2 items-center mt-2">
-                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded border border-foreground/20 bg-foreground text-background uppercase tracking-wide">
-                            {selectedSet?.setType}
-                        </span>
-                    </div>
+            <DialogContent className="flex h-[90vh] min-w-7xl flex-col overflow-hidden p-6">
+                <DialogHeader className="mb-2 shrink-0">
+                    <DialogTitle className="text-2xl">
+                        {selectedSet?.name}
+                    </DialogTitle>
+                    {selectedSet?.tags ? (
+                        <div className="flex flex-wrap gap-1">
+                            {selectedSet.tags.map((tag) => (
+                                <Badge
+                                    key={tag}
+                                    className="border-white bg-black text-xs font-semibold tracking-wide uppercase"
+                                >
+                                    {tag}
+                                </Badge>
+                            ))}
+                        </div>
+                    ) : (
+                        <Badge className="border-white bg-black text-xs font-semibold tracking-wide uppercase">
+                            No tags
+                        </Badge>
+                    )}
                     <DialogDescription className="mt-4 text-base">
                         {selectedSet?.description}
                     </DialogDescription>
                 </DialogHeader>
 
-                <div className="flex-1 overflow-y-auto mt-2 min-h-0 pr-2">
-                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
-                        {selectedSet?.cards?.map((card, i) => (
-                            <CardPreview card={card}>
-                                <div
-                                    className="aspect-59/86 bg-muted rounded overflow-hidden relative shadow-sm"
-                                    title={card.name}
-                                >
-                                    <img
-                                        src={`https://images.ygoprodeck.com/images/cards/${card.id}.jpg`}
-                                        alt={card.name}
-                                        className="w-full h-full object-cover"
-                                        loading="lazy"
-                                    />
-                                </div>
-                            </CardPreview>
-                        ))}
-                    </div>
+                <div className="mt-2 min-h-0 flex-1 overflow-y-auto pr-2">
+                    {isLoading ? (
+                        <Spinner className="mx-auto size-10" />
+                    ) : selectedSet?.cards && selectedSet.cards.length === 0 ? (
+                        <div className="text-muted-foreground flex h-40 items-center justify-center text-sm">
+                            No cards in this set yet.
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
+                            {selectedSet?.cards?.map((card) => (
+                                <CardPreview key={card.id} card={card}>
+                                    <div
+                                        className="bg-muted relative aspect-59/86 overflow-hidden rounded shadow-sm"
+                                        title={card.name}
+                                    >
+                                        <img
+                                            src={`https://images.ygoprodeck.com/images/cards/${card.id}.jpg`}
+                                            alt={card.name}
+                                            className="h-full w-full object-cover"
+                                            loading="lazy"
+                                        />
+                                        {card.point > 0 && (
+                                            <span className="absolute top-1 left-1 rounded bg-red-600 px-2 py-0.5 text-xs font-bold text-white">
+                                                {card.point}
+                                            </span>
+                                        )}
+                                    </div>
+                                </CardPreview>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </DialogContent>
         </Dialog>

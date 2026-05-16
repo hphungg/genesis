@@ -2,6 +2,7 @@
 
 import { createSet, updateSet } from "@/app/api/sets"
 import { Card, Set } from "@/db/schema"
+import { getCardSortRank } from "@/lib/sort-rank"
 import { createContext, useContext, useState, useTransition } from "react"
 
 export type SetWithCards = Set & {
@@ -34,8 +35,7 @@ export function SetProvider({
     const [set, setSet] = useState<SetWithCards>(initialSet)
     const [isPending, startTransition] = useTransition()
 
-    const setName = (name: string) =>
-        setSet((prev) => ({ ...prev, name }))
+    const setName = (name: string) => setSet((prev) => ({ ...prev, name }))
 
     const setDescription = (description: string) =>
         setSet((prev) => ({ ...prev, description }))
@@ -52,18 +52,21 @@ export function SetProvider({
         setSet((prev) =>
             prev.tags.includes(trimmed)
                 ? prev
-                : { ...prev, tags: [...prev.tags, trimmed] }
+                : { ...prev, tags: [...prev.tags, trimmed] },
         )
     }
 
     const removeTag = (tag: string) =>
-        setSet((prev) => ({ ...prev, tags: prev.tags.filter((t) => t !== tag) }))
+        setSet((prev) => ({
+            ...prev,
+            tags: prev.tags.filter((t) => t !== tag),
+        }))
 
     const addCard = (card: Card) =>
         setSet((prev) =>
             prev.cards.some((c) => c.id === card.id)
                 ? prev
-                : { ...prev, cards: [...prev.cards, card] }
+                : { ...prev, cards: [...prev.cards, card] },
         )
 
     const removeCard = (cardId: string) =>
@@ -73,6 +76,14 @@ export function SetProvider({
         }))
 
     const save = async () => {
+        const sortedCards = [...set.cards].sort((a, b) => {
+            const rankDiff = getCardSortRank(a) - getCardSortRank(b)
+            if (rankDiff !== 0) return rankDiff
+            return a.name.localeCompare(b.name)
+        })
+        const sortedCardIds = sortedCards.map((c) => c.id)
+        setSet((prev) => ({ ...prev, cards: sortedCards }))
+
         if (set.id === 0) {
             await createSet({
                 name: set.name,
@@ -80,7 +91,7 @@ export function SetProvider({
                 setType: set.setType,
                 coverId: set.coverId,
                 tags: set.tags,
-                cardIds: set.cards.map((c) => c.id),
+                cardIds: sortedCardIds,
             })
         } else {
             await updateSet(set.id, {
@@ -89,7 +100,7 @@ export function SetProvider({
                 setType: set.setType,
                 coverId: set.coverId,
                 tags: set.tags,
-                cardIds: set.cards.map((c) => c.id),
+                cardIds: sortedCardIds,
             })
         }
     }
