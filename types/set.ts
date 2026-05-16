@@ -1,4 +1,4 @@
-import { Card } from "./card"
+import { Card } from "@/db/schema"
 
 export type CardSet = {
     id: string

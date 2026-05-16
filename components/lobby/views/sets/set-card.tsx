@@ -12,7 +12,6 @@ export function SetCard({ set, onClick }: SetCardProps) {
             onClick={onClick}
             className="aspect-3/2 rounded-xl border bg-card overflow-hidden shadow-sm hover:shadow-xl transition-shadow cursor-pointer relative group flex flex-col"
         >
-            {/* Background: cover image or gradient placeholder */}
             <div className="absolute inset-0 bg-muted">
                 {set.coverId ? (
                     <img

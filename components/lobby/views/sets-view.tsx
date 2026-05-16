@@ -4,9 +4,9 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { SetCard } from "./sets/set-card"
 import { SetDialog } from "./sets/set-dialog"
-import { Set } from "@/db/schema"
+import { Set, Card } from "@/db/schema"
 
-type SetWithCards = Set & { cards?: { id: string; name: string }[] }
+type SetWithCards = Set & { cards?: Card[] }
 
 const TABS = [
     { key: "archetype", label: "Archetype" },

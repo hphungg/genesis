@@ -1,6 +1,6 @@
 'use client'
 
-import { Card } from "@/types/card"
+import { Card } from "@/db/schema"
 import { Deck } from "@/types/deck"
 import { createContext, useContext, useState } from "react"
 

@@ -1,7 +1,8 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Set } from "@/db/schema"
+import { Set, Card } from "@/db/schema"
+import { CardPreview } from "@/components/card-preview"
 
-type SetWithCards = Set & { cards?: { id: string; name: string }[] }
+type SetWithCards = Set & { cards?: Card[] }
 
 interface SetDialogProps {
     selectedSet: SetWithCards | null
@@ -27,18 +28,19 @@ export function SetDialog({ selectedSet, onOpenChange }: SetDialogProps) {
                 <div className="flex-1 overflow-y-auto mt-2 min-h-0 pr-2">
                     <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
                         {selectedSet?.cards?.map((card, i) => (
-                            <div
-                                key={card.id ?? i}
-                                className="aspect-59/86 bg-muted rounded overflow-hidden relative shadow-sm"
-                                title={card.name}
-                            >
-                                <img
-                                    src={`https://images.ygoprodeck.com/images/cards/${card.id}.jpg`}
-                                    alt={card.name}
-                                    className="w-full h-full object-cover"
-                                    loading="lazy"
-                                />
-                            </div>
+                            <CardPreview card={card}>
+                                <div
+                                    className="aspect-59/86 bg-muted rounded overflow-hidden relative shadow-sm"
+                                    title={card.name}
+                                >
+                                    <img
+                                        src={`https://images.ygoprodeck.com/images/cards/${card.id}.jpg`}
+                                        alt={card.name}
+                                        className="w-full h-full object-cover"
+                                        loading="lazy"
+                                    />
+                                </div>
+                            </CardPreview>
                         ))}
                     </div>
                 </div>
