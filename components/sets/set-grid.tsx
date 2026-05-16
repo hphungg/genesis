@@ -45,7 +45,7 @@ export default function SetGrid({ initialSets }: { initialSets: any[] }) {
 
                         <div className="absolute top-2 right-2 flex flex-col gap-2 translate-x-4 opacity-0 group-hover/set-card:translate-x-0 group-hover/set-card:opacity-100 transition-all duration-200">
                             <Button size="icon" className="h-8 w-8" asChild>
-                                <Link href={`/create/${set.id}`}>
+                                <Link href={`/sets/${set.id}`}>
                                     <PencilIcon size={14} weight="bold" />
                                 </Link>
                             </Button>

@@ -1,6 +1,6 @@
 import { getAllSet } from "@/app/api/sets"
-import LandingTopBar from "@/components/create/landing-topbar"
-import SetGrid from "@/components/create/set-grid"
+import LandingTopBar from "@/components/sets/topbar"
+import SetGrid from "@/components/sets/set-grid"
 
 export default async function CreateSetLanding() {
     const sets = await getAllSet()
@@ -14,7 +14,7 @@ export default async function CreateSetLanding() {
                     <div className="flex items-center justify-between mb-6">
                         <h2 className="text-2xl font-bold">All Sets</h2>
                     </div>
-                    
+
                     <SetGrid initialSets={sets} />
                 </div>
             </main>

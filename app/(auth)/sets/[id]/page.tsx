@@ -1,6 +1,6 @@
-import SetEditorCardSearch from "@/components/create/card-search/set-editor-card-search"
-import SetInfo from "@/components/create/set-info"
-import SetEditorTopBar from "@/components/create/topbar"
+import SetEditorCardSearch from "@/components/sets/card-search"
+import SetInfo from "@/components/sets/set-info"
+import SetEditorTopBar from "@/components/sets/set-topbar"
 
 import { getSetById } from "@/app/api/sets"
 import { Separator } from "@/components/ui/separator"

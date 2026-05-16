@@ -12,7 +12,7 @@ export default function LandingTopBar() {
 
     const handleCreate = () => {
         startTransition(() => {
-            router.push(`/create/new`)
+            router.push(`/sets/new`)
         })
     }
 

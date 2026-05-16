@@ -55,7 +55,7 @@ export async function createSet(data: CreateSetInput) {
         await postgresdb.insert(setCards).values(relationsToInsert)
     }
 
-    revalidatePath("/create")
+    revalidatePath("/sets")
     return newSet
 }
 
@@ -101,8 +101,8 @@ export async function updateSet(setId: number, data: UpdateSetInput) {
         with: { setCards: { with: { card: true } } },
     })
 
-    revalidatePath("/create")
-    revalidatePath(`/create/${setId}`)
+    revalidatePath("/sets")
+    revalidatePath(`/sets/${setId}`)
     return updatedSet
 }
 
@@ -111,7 +111,7 @@ export async function deleteSet(setId: number) {
         .delete(set)
         .where(eq(set.id, setId))
         .returning()
-    revalidatePath("/create")
+    revalidatePath("/sets")
     return deletedSet
 }
 

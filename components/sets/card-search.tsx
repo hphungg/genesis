@@ -3,11 +3,10 @@
 import { useMemo, useState, useTransition } from "react"
 import { useSetEditor } from "@/providers/set-provider"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { MagnifyingGlassIcon } from "@phosphor-icons/react"
 import { searchCardsByName } from "@/app/api/cards"
 import { Card } from "@/db/schema"
-import CardSearchBar from "./card-search-bar"
-import CardSearchResults from "./card-search-results"
+import CardSearchBar from "./card-search/searchbar"
+import CardSearchResults from "./card-search/search-results"
 
 export default function SetEditorCardSearch() {
     const { set, addCard } = useSetEditor()

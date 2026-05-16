@@ -18,7 +18,7 @@ export default function SetEditorTopBar() {
             try {
                 await save()
                 toast.success("Set saved successfully")
-                router.push("/create")
+                router.push("/sets")
                 router.refresh()
             } catch (error) {
                 toast.error("Failed to save set")
@@ -30,7 +30,7 @@ export default function SetEditorTopBar() {
         <header className="flex w-full items-center justify-between px-4 py-4 gap-4 shrink-0">
             <div className="flex items-center">
                 <Button variant="outline" onClick={() => {
-                    router.push("/create")
+                    router.push("/sets")
                     router.refresh()
                 }}>
                     <ArrowLeftIcon />

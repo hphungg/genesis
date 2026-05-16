@@ -9,18 +9,6 @@ interface CardSearchResultsProps {
     onAdd: (card: Card) => void
 }
 
-function cardTypeDot(type1: string | null | undefined): string {
-    const t = (type1 ?? "").toLowerCase()
-    if (t.includes("xyz"))     return "bg-zinc-900"
-    if (t.includes("synchro")) return "bg-zinc-200"
-    if (t.includes("fusion"))  return "bg-purple-600"
-    if (t.includes("spell"))   return "bg-cyan-500"
-    if (t.includes("trap"))    return "bg-pink-700"
-    if (t.includes("normal"))  return "bg-yellow-300"
-    if (t.includes("effect"))  return "bg-amber-700"
-    return "bg-muted-foreground"
-}
-
 function CardThumbnail({ card, inSet, onAdd }: { card: Card; inSet: boolean; onAdd: () => void }) {
     return (
         <button
@@ -30,7 +18,7 @@ function CardThumbnail({ card, inSet, onAdd }: { card: Card; inSet: boolean; onA
                 "relative group rounded overflow-hidden aspect-59/86 bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
                 inSet
                     ? "opacity-50 cursor-default grayscale-[0.3]"
-                    : "hover:shadow-md hover:ring-2 hover:ring-primary cursor-pointer",
+                    : "cursor-pointer",
             ].join(" ")}
             title={card.name}
         >
@@ -39,11 +27,6 @@ function CardThumbnail({ card, inSet, onAdd }: { card: Card; inSet: boolean; onA
                 alt={card.name}
                 className="w-full h-full object-cover"
                 loading="lazy"
-            />
-
-            {/* Type color dot */}
-            <span
-                className={`absolute bottom-1 right-1 w-2 h-2 rounded-full border border-white/40 shadow ${cardTypeDot(card.type1)}`}
             />
 
             {inSet && (
