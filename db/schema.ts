@@ -2,18 +2,15 @@ import { InferSelectModel, relations, sql } from "drizzle-orm"
 import {
     integer,
     pgTable,
+    pgEnum,
     primaryKey,
     text,
     timestamp,
     varchar,
+    uuid,
 } from "drizzle-orm/pg-core"
 
-export const user = pgTable("user", {
-    id: integer().primaryKey().generatedAlwaysAsIdentity(),
-    username: varchar().notNull(),
-})
-
-export const set = pgTable("set", {
+export const sets = pgTable("sets", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     name: varchar("name", { length: 255 }).notNull().default("New Set"),
     description: text("description").notNull().default(""),
@@ -42,12 +39,22 @@ export const cards = pgTable("cards", {
     level: integer("level"),
 })
 
+export const decks = pgTable("decks", {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    userId: uuid("user_id").notNull(),
+    name: varchar("name", { length: 255 }).notNull().default("New Deck"),
+    coverId: varchar("cover_id", { length: 255 }),
+    points: integer("points").notNull().default(0),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+})
+
 export const setCards = pgTable(
     "set_cards",
     {
         setId: integer("set_id")
             .notNull()
-            .references(() => set.id, { onDelete: "cascade" }),
+            .references(() => sets.id, { onDelete: "cascade" }),
         cardId: varchar("card_id")
             .notNull()
             .references(() => cards.id, { onDelete: "cascade" }),
@@ -57,7 +64,29 @@ export const setCards = pgTable(
     }),
 )
 
-export const setRelations = relations(set, ({ many }) => ({
+export const deckSection = pgEnum("deck_section", ["main", "extra", "side"])
+
+export const deckCards = pgTable(
+    "deck_cards",
+    {
+        deckId: integer("deck_id")
+            .notNull()
+            .references(() => decks.id, { onDelete: "cascade" }),
+        cardId: varchar("card_id")
+            .notNull()
+            .references(() => cards.id, { onDelete: "cascade" }),
+        section: deckSection("section").notNull().default("main"),
+    },
+    (t) => ({
+        pk: primaryKey({ columns: [t.deckId, t.cardId, t.section] }),
+    }),
+)
+
+export const decksRelations = relations(decks, ({ many }) => ({
+    deckCards: many(deckCards),
+}))
+
+export const setRelations = relations(sets, ({ many }) => ({
     setCards: many(setCards),
 }))
 
@@ -65,10 +94,21 @@ export const cardsRelations = relations(cards, ({ many }) => ({
     setCards: many(setCards),
 }))
 
+export const deckCardsRelations = relations(deckCards, ({ one }) => ({
+    deck: one(decks, {
+        fields: [deckCards.deckId],
+        references: [decks.id],
+    }),
+    card: one(cards, {
+        fields: [deckCards.cardId],
+        references: [cards.id],
+    }),
+}))
+
 export const setCardsRelations = relations(setCards, ({ one }) => ({
-    set: one(set, {
+    set: one(sets, {
         fields: [setCards.setId],
-        references: [set.id],
+        references: [sets.id],
     }),
     card: one(cards, {
         fields: [setCards.cardId],
@@ -77,4 +117,5 @@ export const setCardsRelations = relations(setCards, ({ one }) => ({
 }))
 
 export type Card = InferSelectModel<typeof cards>
-export type Set = InferSelectModel<typeof set>
+export type Deck = InferSelectModel<typeof decks>
+export type Set = InferSelectModel<typeof sets>

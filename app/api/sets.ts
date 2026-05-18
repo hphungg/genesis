@@ -1,13 +1,13 @@
 "use server"
 
-import { postgresdb } from "@/db/database"
-import { set, setCards } from "@/db/schema"
+import { db } from "@/db/database"
+import { sets, setCards } from "@/db/schema"
 import { eq } from "drizzle-orm"
 import { revalidatePath } from "next/cache"
 
 export async function getSetById(setId: number) {
-    const result = await postgresdb.query.set.findFirst({
-        where: eq(set.id, setId),
+    const result = await db.query.sets.findFirst({
+        where: eq(sets.id, setId),
         with: {
             setCards: {
                 with: {
@@ -36,8 +36,8 @@ export type CreateSetInput = {
 }
 
 export async function createSet(data: CreateSetInput) {
-    const [newSet] = await postgresdb
-        .insert(set)
+    const [newSet] = await db
+        .insert(sets)
         .values({
             name: data.name,
             description: data.description,
@@ -52,7 +52,7 @@ export async function createSet(data: CreateSetInput) {
             setId: newSet.id,
             cardId: cardId,
         }))
-        await postgresdb.insert(setCards).values(relationsToInsert)
+        await db.insert(setCards).values(relationsToInsert)
     }
 
     revalidatePath("/sets")
@@ -78,26 +78,26 @@ export async function updateSet(setId: number, data: UpdateSetInput) {
     if (data.coverId !== undefined) setUpdateData.coverId = data.coverId
 
     if (Object.keys(setUpdateData).length > 0) {
-        await postgresdb
-            .update(set)
+        await db
+            .update(sets)
             .set({ ...setUpdateData, updatedAt: new Date() })
-            .where(eq(set.id, setId))
+            .where(eq(sets.id, setId))
     }
 
     if (data.cardIds) {
-        await postgresdb.delete(setCards).where(eq(setCards.setId, setId))
+        await db.delete(setCards).where(eq(setCards.setId, setId))
 
         if (data.cardIds.length > 0) {
             const relationsToInsert = data.cardIds.map((cardId) => ({
                 setId: setId,
                 cardId: cardId,
             }))
-            await postgresdb.insert(setCards).values(relationsToInsert)
+            await db.insert(setCards).values(relationsToInsert)
         }
     }
 
-    const updatedSet = await postgresdb.query.set.findFirst({
-        where: eq(set.id, setId),
+    const updatedSet = await db.query.sets.findFirst({
+        where: eq(sets.id, setId),
         with: { setCards: { with: { card: true } } },
     })
 
@@ -107,16 +107,16 @@ export async function updateSet(setId: number, data: UpdateSetInput) {
 }
 
 export async function deleteSet(setId: number) {
-    const [deletedSet] = await postgresdb
-        .delete(set)
-        .where(eq(set.id, setId))
+    const [deletedSet] = await db
+        .delete(sets)
+        .where(eq(sets.id, setId))
         .returning()
     revalidatePath("/sets")
     return deletedSet
 }
 
 export async function getAllSet() {
-    return await postgresdb.query.set.findMany({
-        orderBy: (set, { desc }) => [desc(set.createdAt)],
+    return await db.query.sets.findMany({
+        orderBy: (sets, { desc }) => [desc(sets.createdAt)],
     })
 }

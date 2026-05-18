@@ -1,16 +1,16 @@
 "use server"
 
-import { postgresdb } from "@/db/database"
+import { db } from "@/db/database"
 import { cards } from "@/db/schema"
 import { eq, ilike } from "drizzle-orm"
 
 export async function getAllCards() {
-    const result = await postgresdb.query.cards.findMany()
+    const result = await db.query.cards.findMany()
     return result
 }
 
 export async function getCardById(cardId: string) {
-    const result = await postgresdb.query.cards.findFirst({
+    const result = await db.query.cards.findFirst({
         where: eq(cards.id, cardId),
     })
 
@@ -23,7 +23,7 @@ export async function getCardPaginated(
 ) {
     const offset = (page - 1) * pageSize
 
-    const result = await postgresdb.query.cards.findMany({
+    const result = await db.query.cards.findMany({
         limit: pageSize,
         offset: offset,
     })
@@ -33,11 +33,11 @@ export async function getCardPaginated(
 
 export async function searchCardsByName(query: string) {
     if (!query) return []
-    
-    const result = await postgresdb.query.cards.findMany({
+
+    const result = await db.query.cards.findMany({
         where: ilike(cards.name, `%${query}%`),
         limit: 50,
     })
-    
+
     return result
 }
