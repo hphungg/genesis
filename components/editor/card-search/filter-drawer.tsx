@@ -1,0 +1,297 @@
+"use client"
+
+import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
+import {
+    Drawer,
+    DrawerContent,
+    DrawerDescription,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerTitle,
+} from "@/components/ui/drawer"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+import { cn } from "@/lib/utils"
+
+export type CardSearchFilters = {
+    type: string
+    race: string
+    subtype: string
+    level: string
+    attribute: string
+}
+
+export const DEFAULT_FILTERS: CardSearchFilters = {
+    type: "",
+    race: "",
+    subtype: "",
+    level: "",
+    attribute: "",
+}
+
+type FilterKey = keyof CardSearchFilters
+
+interface CardFilterDrawerProps {
+    open: boolean
+    onOpenChange: (open: boolean) => void
+    filters: CardSearchFilters
+    onTypeChange: (value: string) => void
+    onFilterChange: (key: FilterKey, value: string) => void
+    onClear: () => void
+    onApply: () => void
+    canApply: boolean
+}
+
+const TYPE_OPTIONS = ["Monster", "Spell", "Trap"]
+const MONSTER_RACES = [
+    "Aqua",
+    "Beast",
+    "Beast-Warrior",
+    "Creator God",
+    "Cyberse",
+    "Dinosaur",
+    "Divine-Beast",
+    "Dragon",
+    "Fairy",
+    "Fiend",
+    "Fish",
+    "Insect",
+    "Machine",
+    "Plant",
+    "Psychic",
+    "Pyro",
+    "Reptile",
+    "Rock",
+    "Sea Serpent",
+    "Spellcaster",
+    "Thunder",
+    "Warrior",
+    "Winged Beast",
+    "Wyrm",
+    "Zombie",
+]
+const MONSTER_SUBTYPES = [
+    "Normal",
+    "Effect",
+    "Fusion",
+    "Synchro",
+    "Xyz",
+    "Link",
+    "Ritual",
+    "Pendulum",
+    "Tuner",
+    "Gemini",
+    "Union",
+    "Spirit",
+    "Toon",
+    "Flip",
+]
+const SPELL_SUBTYPES = [
+    "Normal",
+    "Continuous",
+    "Quick-Play",
+    "Field",
+    "Equip",
+    "Ritual",
+]
+const TRAP_SUBTYPES = ["Normal", "Continuous", "Counter"]
+const ATTRIBUTES = ["DARK", "LIGHT", "EARTH", "WATER", "FIRE", "WIND", "DIVINE"]
+const LEVELS = Array.from({ length: 12 }, (_, index) => String(index + 1))
+
+const drawerWidthClassName =
+    "data-[vaul-drawer-direction=bottom]:left-1/2 data-[vaul-drawer-direction=bottom]:right-auto data-[vaul-drawer-direction=bottom]:-translate-x-1/2 data-[vaul-drawer-direction=bottom]:mx-auto data-[vaul-drawer-direction=bottom]:w-[92vw] sm:data-[vaul-drawer-direction=bottom]:w-[70vw] lg:data-[vaul-drawer-direction=bottom]:w-[50vw]"
+
+export default function CardFilterDrawer({
+    open,
+    onOpenChange,
+    filters,
+    onTypeChange,
+    onFilterChange,
+    onClear,
+    onApply,
+    canApply,
+}: CardFilterDrawerProps) {
+    const isMonster = filters.type === "Monster"
+    const isSpell = filters.type === "Spell"
+    const isTrap = filters.type === "Trap"
+    const subtypeOptions = isMonster
+        ? MONSTER_SUBTYPES
+        : isSpell
+          ? SPELL_SUBTYPES
+          : isTrap
+            ? TRAP_SUBTYPES
+            : []
+
+    const handleChange = (key: FilterKey) => (value: string) =>
+        onFilterChange(key, value === "any" ? "" : value)
+
+    return (
+        <Drawer open={open} onOpenChange={onOpenChange}>
+            <DrawerContent className={cn(drawerWidthClassName)}>
+                <DrawerHeader className="mb-4">
+                    <DrawerTitle className="text-xl">Filter</DrawerTitle>
+                    <DrawerDescription>Select type first</DrawerDescription>
+                </DrawerHeader>
+
+                <div className="px-6 pb-6">
+                    <div className="grid gap-4 sm:grid-cols-2">
+                        <div className="grid gap-2">
+                            <Label>Type</Label>
+                            <Select
+                                value={filters.type || "any"}
+                                onValueChange={onTypeChange}
+                            >
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Any" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="any">Any</SelectItem>
+                                    {TYPE_OPTIONS.map((option) => (
+                                        <SelectItem key={option} value={option}>
+                                            {option}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        <div
+                            className={cn(
+                                "grid gap-2 transition-opacity",
+                                !isMonster && "opacity-30 grayscale",
+                            )}
+                        >
+                            <Label>Race</Label>
+                            <Select
+                                value={filters.race || "any"}
+                                onValueChange={handleChange("race")}
+                                disabled={!isMonster}
+                            >
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Monster only" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="any">Any</SelectItem>
+                                    {MONSTER_RACES.map((option) => (
+                                        <SelectItem key={option} value={option}>
+                                            {option}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        <div
+                            className={cn(
+                                "grid gap-2 transition-opacity",
+                                !filters.type && "opacity-30 grayscale",
+                            )}
+                        >
+                            <Label>Subtype</Label>
+                            <Select
+                                value={filters.subtype || "any"}
+                                onValueChange={handleChange("subtype")}
+                                disabled={!filters.type}
+                            >
+                                <SelectTrigger className="w-full">
+                                    <SelectValue
+                                        placeholder={
+                                            filters.type
+                                                ? "Any"
+                                                : "Pick a type first"
+                                        }
+                                    />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="any">Any</SelectItem>
+                                    {subtypeOptions.map((option) => (
+                                        <SelectItem key={option} value={option}>
+                                            {option}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        <div
+                            className={cn(
+                                "grid gap-2 transition-opacity",
+                                !isMonster && "opacity-30 grayscale",
+                            )}
+                        >
+                            <Label>Level</Label>
+                            <Select
+                                value={filters.level || "any"}
+                                onValueChange={handleChange("level")}
+                                disabled={!isMonster}
+                            >
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Monster only" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="any">Any</SelectItem>
+                                    {LEVELS.map((level) => (
+                                        <SelectItem key={level} value={level}>
+                                            Level {level}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        <div
+                            className={cn(
+                                "grid gap-2 transition-opacity",
+                                !isMonster && "opacity-30 grayscale",
+                            )}
+                        >
+                            <Label>Attribute</Label>
+                            <Select
+                                value={filters.attribute || "any"}
+                                onValueChange={handleChange("attribute")}
+                                disabled={!isMonster}
+                            >
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Monster only" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="any">Any</SelectItem>
+                                    {ATTRIBUTES.map((option) => (
+                                        <SelectItem key={option} value={option}>
+                                            {option}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </div>
+                </div>
+
+                <DrawerFooter className="flex-row flex-wrap justify-end gap-2 px-6 pt-0 pb-6">
+                    <Button
+                        size="sm"
+                        className="w-auto"
+                        variant="outline"
+                        onClick={onClear}
+                    >
+                        Clear filters
+                    </Button>
+                    <Button
+                        size="sm"
+                        className="w-auto"
+                        onClick={onApply}
+                        disabled={!canApply}
+                    >
+                        Apply filters
+                    </Button>
+                </DrawerFooter>
+            </DrawerContent>
+        </Drawer>
+    )
+}

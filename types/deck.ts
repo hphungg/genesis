@@ -1,10 +1,10 @@
 export type Deck = {
-    id: string
+    id: number
     name: string
-    main_deck: bigint[]
-    extra_deck: bigint[]
-    side_deck: bigint[]
+    main_deck: string[]
+    extra_deck: string[]
+    side_deck: string[]
     points: number
-    created_at: Date
-    updated_at: Date
+    createdAt: Date
+    updatedAt: Date
 }

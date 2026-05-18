@@ -57,7 +57,7 @@ export function CardPreview({ card, children }: CardPreviewProps) {
                         <div className="flex w-80 flex-col gap-2 bg-transparent p-4 text-sm text-white">
                             <div className="flex items-start justify-between gap-2 border-b pb-2 text-lg leading-tight font-bold">
                                 <span className="flex-1">{card.name}</span>
-                                {card.point > 0 && (
+                                {card.point && card.point > 0 && (
                                     <span className="rounded bg-red-600 px-2 py-0.5 text-xs font-bold text-white">
                                         {card.point}
                                     </span>

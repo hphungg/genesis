@@ -28,7 +28,7 @@ export const cards = pgTable("cards", {
     id: varchar("id").primaryKey(),
     name: varchar("name", { length: 255 }).notNull(),
     type: varchar("type", { length: 100 }).notNull(),
-    point: integer("point").notNull().default(0),
+    point: integer("point").default(0),
     effect: text("effect").notNull().default(""),
     type1: varchar("type_1", { length: 100 }).notNull(),
     type2: varchar("type_2", { length: 100 }),

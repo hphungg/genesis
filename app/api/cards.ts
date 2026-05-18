@@ -2,7 +2,7 @@
 
 import { db } from "@/db/database"
 import { cards } from "@/db/schema"
-import { eq, ilike } from "drizzle-orm"
+import { and, eq, ilike } from "drizzle-orm"
 
 export async function getAllCards() {
     const result = await db.query.cards.findMany()
@@ -36,7 +36,74 @@ export async function searchCardsByName(query: string) {
 
     const result = await db.query.cards.findMany({
         where: ilike(cards.name, `%${query}%`),
-        limit: 50,
+    })
+
+    return result
+}
+
+export type CardSearchFilters = {
+    type?: "Monster" | "Spell" | "Trap"
+    race?: string
+    subtype?: string
+    level?: number
+    attribute?: string
+}
+
+export async function searchCards({
+    query,
+    filters,
+    limit,
+}: {
+    query?: string
+    filters?: CardSearchFilters
+    limit?: number
+}) {
+    const trimmed = query?.trim() ?? ""
+    const hasQuery = trimmed.length > 3
+    const hasFilters = Boolean(
+        filters?.type ||
+        filters?.race ||
+        filters?.subtype ||
+        filters?.level !== undefined ||
+        filters?.attribute,
+    )
+
+    if (!hasQuery && !hasFilters) return []
+
+    const conditions = []
+
+    if (hasQuery) {
+        conditions.push(ilike(cards.name, `%${trimmed}%`))
+    }
+
+    if (filters?.type) {
+        conditions.push(eq(cards.type, filters.type))
+    }
+
+    if (filters?.type === "Monster") {
+        if (filters.race) {
+            conditions.push(eq(cards.type1, filters.race))
+        }
+        if (filters.subtype) {
+            conditions.push(eq(cards.type2, filters.subtype))
+        }
+        if (filters.level !== undefined) {
+            conditions.push(eq(cards.level, filters.level))
+        }
+        if (filters.attribute) {
+            conditions.push(eq(cards.attribute, filters.attribute))
+        }
+    }
+
+    if (filters?.type === "Spell" || filters?.type === "Trap") {
+        if (filters.subtype) {
+            conditions.push(eq(cards.type1, filters.subtype))
+        }
+    }
+
+    const result = await db.query.cards.findMany({
+        where: conditions.length ? and(...conditions) : undefined,
+        ...(typeof limit === "number" ? { limit } : {}),
     })
 
     return result

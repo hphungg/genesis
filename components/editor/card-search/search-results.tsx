@@ -1,13 +1,49 @@
 "use client"
 
-import { ScrollArea } from "@/components/ui/scroll-area"
+import { Card } from "@/db/schema"
+import { useEditor } from "@/providers/editor-provider"
 
-export default function SearchResults() {
+interface CardSearchResultsProps {
+    results: Card[]
+}
+
+function CardThumbnail({
+    card,
+    onHover,
+}: {
+    card: Card
+    onHover: (card: Card) => void
+}) {
     return (
-        <ScrollArea className="flex-1">
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(4rem,1fr))] gap-1.5 p-1">
-                {/* Search result card slots will be rendered here */}
-            </div>
-        </ScrollArea>
+        <button
+            type="button"
+            className="group bg-muted focus-visible:ring-ring relative aspect-59/86 overflow-hidden rounded focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none"
+            title={card.name}
+            onMouseEnter={() => onHover(card)}
+            onFocus={() => onHover(card)}
+        >
+            <img
+                src={`https://images.ygoprodeck.com/images/cards/${card.id}.jpg`}
+                alt={card.name}
+                className="h-full w-full object-cover"
+                loading="lazy"
+            />
+        </button>
+    )
+}
+
+export default function SearchResults({ results }: CardSearchResultsProps) {
+    const { setHoveredCard } = useEditor()
+
+    return (
+        <div className="mx-auto grid w-fit grid-cols-2 gap-3 pb-4 sm:grid-cols-3 md:grid-cols-4">
+            {results.map((card) => (
+                <CardThumbnail
+                    key={card.id}
+                    card={card}
+                    onHover={setHoveredCard}
+                />
+            ))}
+        </div>
     )
 }
