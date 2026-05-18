@@ -24,12 +24,14 @@ import { cn } from "@/lib/utils"
 import { signInSchema, type SignInSchema } from "@/lib/validation/signin"
 import { useTransition } from "react"
 import { signIn } from "@/app/api/auth"
+import { useRouter } from "next/navigation"
 
 export function SignInForm({
     className,
     ...props
 }: React.ComponentProps<"div">) {
     const [isPending, startTransition] = useTransition()
+    const router = useRouter()
     const form = useForm<SignInSchema>({
         resolver: zodResolver(signInSchema),
         defaultValues: {
@@ -46,8 +48,12 @@ export function SignInForm({
 
             const response = await signIn(formData)
 
-            if (response?.error) {
-                toast.error(response.error)
+            if (response.success) {
+                toast.success("Signed in successfully!")
+                router.push("/")
+                return
+            } else {
+                toast.error(`Failed to sign in: ${response.error}`)
                 return
             }
         })

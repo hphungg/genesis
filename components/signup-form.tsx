@@ -24,12 +24,14 @@ import { cn } from "@/lib/utils"
 import { signUpSchema, type SignUpSchema } from "@/lib/validation/signup"
 import { useTransition } from "react"
 import { signUp } from "@/app/api/auth"
+import { useRouter } from "next/navigation"
 
 export function SignUpForm({
     className,
     ...props
 }: React.ComponentProps<"div">) {
     const [isPending, startTransition] = useTransition()
+    const router = useRouter()
     const form = useForm<SignUpSchema>({
         resolver: zodResolver(signUpSchema),
         defaultValues: {
@@ -50,8 +52,12 @@ export function SignUpForm({
 
             const response = await signUp(formData)
 
-            if (!response) {
-                toast.error("Error")
+            if (response.success) {
+                toast.success("Signed up successfully!")
+                router.push("/")
+                return
+            } else {
+                toast.error(`Failed to sign up: ${response.error}`)
                 return
             }
         })
