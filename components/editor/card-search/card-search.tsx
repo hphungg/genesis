@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useTransition } from "react"
 import { searchCards } from "@/app/api/cards"
-import { Card } from "@/db/schema"
+import { Cards } from "@/db/schema"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import CardFilterDrawer, {
     CardSearchFilters,
@@ -13,7 +13,7 @@ import SearchResults from "./search-results"
 
 export default function CardSearch() {
     const [query, setQuery] = useState("")
-    const [results, setResults] = useState<Card[]>([])
+    const [results, setResults] = useState<Cards[]>([])
     const [hasSearched, setHasSearched] = useState(false)
     const [filters, setFilters] = useState<CardSearchFilters>(DEFAULT_FILTERS)
     const [isFilterOpen, setIsFilterOpen] = useState(false)
@@ -61,7 +61,7 @@ export default function CardSearch() {
                     attribute: filters.attribute || undefined,
                 },
             })
-            setResults(found as Card[])
+            setResults(found as Cards[])
             setHasSearched(true)
         })
     }
@@ -87,7 +87,7 @@ export default function CardSearch() {
     }
 
     return (
-        <div className="flex h-full min-w-0 flex-2 flex-col gap-3 p-4">
+        <div className="flex h-full min-w-0 flex-3 flex-col gap-3 p-4">
             <SearchBar
                 query={query}
                 isPending={isPending}
@@ -97,7 +97,7 @@ export default function CardSearch() {
                 onOpenFilters={() => setIsFilterOpen(true)}
             />
 
-            <ScrollArea className="max-h-[calc(100vh-10rem)] min-h-0 flex-1">
+            <ScrollArea className="max-h-[calc(100vh-9rem)] min-h-0 flex-1">
                 {isPending && (
                     <div className="text-muted-foreground flex h-24 items-center justify-center text-sm">
                         Searching...

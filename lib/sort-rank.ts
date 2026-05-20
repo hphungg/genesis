@@ -1,4 +1,4 @@
-import { Card } from "@/db/schema"
+import { Cards } from "@/db/schema"
 
 const normalizeType = (value?: string) => (value ?? "").toLowerCase()
 
@@ -30,7 +30,7 @@ const getTrapRank = (type1?: string) => {
     return 3
 }
 
-export const getCardSortRank = (card: Card) => {
+export const getCardSortRank = (card: Cards) => {
     const type = normalizeType(card.type)
 
     if (type.includes("monster") || type.includes("extra")) {

@@ -1,5 +1,5 @@
 import { getAllSet } from "@/app/api/sets"
-import { getAllDeck } from "@/app/api/decks"
+import { getAllDecks } from "@/app/api/decks"
 import LobbyView from "@/components/lobby/lobby-view"
 import TopBar from "@/components/lobby/topbar"
 import { createClient } from "@/lib/supabase/server"
@@ -15,7 +15,7 @@ export default async function Lobby() {
         redirect("/signin")
     }
 
-    const [sets, decks] = await Promise.all([getAllSet(), getAllDeck(user.id)])
+    const [sets, decks] = await Promise.all([getAllSet(), getAllDecks()])
 
     return (
         <div className="bg-muted flex min-h-screen flex-col">

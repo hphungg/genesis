@@ -6,11 +6,11 @@ import {
     HoverCardContent,
     HoverCardTrigger,
 } from "@/components/ui/hover-card"
-import { Card } from "@/db/schema"
+import { Cards } from "@/db/schema"
 import { Badge } from "./ui/badge"
 
 interface CardPreviewProps {
-    card: Card
+    card: Cards
     children: React.ReactNode
 }
 
@@ -66,22 +66,22 @@ export function CardPreview({ card, children }: CardPreviewProps) {
 
                             {(card.type == "Monster" ||
                                 card.type == "Extra") && (
-                                <div className="flex gap-2">
-                                    {card.attribute && (
-                                        <Badge
-                                            className={`${getAttributeBadge(card.attribute)} border-white font-semibold`}
-                                        >
-                                            {card.attribute}
-                                        </Badge>
-                                    )}
+                                    <div className="flex gap-2">
+                                        {card.attribute && (
+                                            <Badge
+                                                className={`${getAttributeBadge(card.attribute)} border-white font-semibold`}
+                                            >
+                                                {card.attribute}
+                                            </Badge>
+                                        )}
 
-                                    {card.level && (
-                                        <div className="flex items-center gap-1 font-semibold">
-                                            <span>Level/Rank {card.level}</span>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
+                                        {card.level && (
+                                            <div className="flex items-center gap-1 font-semibold">
+                                                <span>Level/Rank {card.level}</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
 
                             {card.type == "Spell" && (
                                 <Badge className="border-white bg-[#06927b] font-semibold">

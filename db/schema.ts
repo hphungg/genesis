@@ -116,6 +116,6 @@ export const setCardsRelations = relations(setCards, ({ one }) => ({
     }),
 }))
 
-export type Card = InferSelectModel<typeof cards>
-export type Deck = InferSelectModel<typeof decks>
-export type Set = InferSelectModel<typeof sets>
+export type Cards = InferSelectModel<typeof cards>
+export type Decks = InferSelectModel<typeof decks>
+export type Sets = InferSelectModel<typeof sets>

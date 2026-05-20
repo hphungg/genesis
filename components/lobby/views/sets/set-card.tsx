@@ -1,8 +1,8 @@
 import { Badge } from "@/components/ui/badge"
-import { Set } from "@/db/schema"
+import { Sets } from "@/db/schema"
 
 interface SetCardProps {
-    set: Set
+    set: Sets
     onClick: () => void
 }
 

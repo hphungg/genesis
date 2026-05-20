@@ -1,16 +1,16 @@
 "use client"
 
 import { CheckCircleIcon, PlusCircleIcon } from "@phosphor-icons/react"
-import { Card } from "@/db/schema"
+import { Cards } from "@/db/schema"
 import { CardPreview } from "@/components/card-preview"
 
 interface CardSearchResultsProps {
-    results: Card[]
+    results: Cards[]
     inSetIds: Set<string>
-    onAdd: (card: Card) => void
+    onAdd: (card: Cards) => void
 }
 
-function CardThumbnail({ card, inSet, onAdd }: { card: Card; inSet: boolean; onAdd: () => void }) {
+function CardThumbnail({ card, inSet, onAdd }: { card: Cards; inSet: boolean; onAdd: () => void }) {
     return (
         <CardPreview card={card}>
             <button

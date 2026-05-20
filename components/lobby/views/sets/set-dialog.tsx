@@ -5,12 +5,12 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog"
-import { Set, Card } from "@/db/schema"
+import { Sets, Cards } from "@/db/schema"
 import { CardPreview } from "@/components/card-preview"
 import { Badge } from "@/components/ui/badge"
 import { Spinner } from "@/components/ui/spinner"
 
-type SetWithCards = Set & { cards?: Card[] }
+type SetWithCards = Sets & { cards?: Cards[] }
 
 interface SetDialogProps {
     selectedSet: SetWithCards | null
@@ -72,7 +72,7 @@ export function SetDialog({
                                             className="h-full w-full object-cover"
                                             loading="lazy"
                                         />
-                                        {card.point > 0 && (
+                                        {(card.point && card.point > 0) && (
                                             <span className="absolute top-1 left-1 rounded bg-red-600 px-2 py-0.5 text-xs font-bold text-white">
                                                 {card.point}
                                             </span>

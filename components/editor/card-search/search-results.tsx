@@ -1,18 +1,20 @@
 "use client"
 
-import { Card } from "@/db/schema"
+import { Cards } from "@/db/schema"
 import { useEditor } from "@/providers/editor-provider"
 
 interface CardSearchResultsProps {
-    results: Card[]
+    results: Cards[]
 }
 
-function CardThumbnail({
+function CardImage({
     card,
     onHover,
+    onAdd,
 }: {
-    card: Card
-    onHover: (card: Card) => void
+    card: Cards
+    onHover: (card: Cards) => void
+    onAdd: (card: Cards) => void
 }) {
     return (
         <button
@@ -21,6 +23,7 @@ function CardThumbnail({
             title={card.name}
             onMouseEnter={() => onHover(card)}
             onFocus={() => onHover(card)}
+            onClick={() => onAdd(card)}
         >
             <img
                 src={`https://images.ygoprodeck.com/images/cards/${card.id}.jpg`}
@@ -33,15 +36,16 @@ function CardThumbnail({
 }
 
 export default function SearchResults({ results }: CardSearchResultsProps) {
-    const { setHoveredCard } = useEditor()
+    const { setHoveredCard, addCard } = useEditor()
 
     return (
-        <div className="mx-auto grid w-fit grid-cols-2 gap-3 pb-4 sm:grid-cols-3 md:grid-cols-4">
+        <div className="mx-auto grid w-fit grid-cols-2 gap-1 pb-4 sm:grid-cols-3 md:grid-cols-6">
             {results.map((card) => (
-                <CardThumbnail
+                <CardImage
                     key={card.id}
                     card={card}
                     onHover={setHoveredCard}
+                    onAdd={addCard}
                 />
             ))}
         </div>

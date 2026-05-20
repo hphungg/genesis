@@ -4,13 +4,13 @@ import { useSearchParams } from "next/navigation"
 import SetsView from "@/components/lobby/views/sets-view"
 import DecksView from "@/components/lobby/views/decks-view"
 import type { DeckSummary } from "@/app/api/decks"
-import { Set } from "@/db/schema"
+import { Sets } from "@/db/schema"
 
 export default function LobbyView({
     initialSets,
     initialDecks,
 }: {
-    initialSets: Set[]
+    initialSets: Sets[]
     initialDecks: DeckSummary[]
 }) {
     const searchParams = useSearchParams()

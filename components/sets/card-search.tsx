@@ -4,14 +4,14 @@ import { useMemo, useState, useTransition } from "react"
 import { useSetEditor } from "@/providers/set-provider"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { searchCardsByName } from "@/app/api/cards"
-import { Card } from "@/db/schema"
+import { Cards } from "@/db/schema"
 import CardSearchBar from "./card-search/searchbar"
 import CardSearchResults from "./card-search/search-results"
 
 export default function SetEditorCardSearch() {
     const { set, addCard } = useSetEditor()
     const [query, setQuery] = useState("")
-    const [results, setResults] = useState<Card[]>([])
+    const [results, setResults] = useState<Cards[]>([])
     const [hasSearched, setHasSearched] = useState(false)
     const [isPending, startTransition] = useTransition()
 
@@ -21,7 +21,7 @@ export default function SetEditorCardSearch() {
         if (!query.trim()) return
         startTransition(async () => {
             const found = await searchCardsByName(query.trim())
-            setResults(found as Card[])
+            setResults(found as Cards[])
             setHasSearched(true)
         })
     }

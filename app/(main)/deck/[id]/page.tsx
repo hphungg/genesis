@@ -1,4 +1,4 @@
-import { getDeckById } from "@/app/api/decks"
+import { DeckContents, getDeckById } from "@/app/api/decks"
 
 import CardInfo from "@/components/editor/card-info/card-info"
 import CardSearch from "@/components/editor/card-search/card-search"
@@ -15,34 +15,54 @@ interface Props {
 
 export default async function Editor({ params }: Props) {
     const { id } = await params
-    let deck
+
+    let initialDeck: {
+        id: number
+        name: string
+        points: number
+        createdAt: Date
+        updatedAt: Date
+        coverId: string | null
+    }
+
+    let initialContents: DeckContents
 
     if (id === "new") {
-        deck = {
+        initialDeck = {
             id: 0,
             name: "New Deck",
-            main_deck: [],
-            extra_deck: [],
-            side_deck: [],
             points: 0,
+            coverId: null,
             createdAt: new Date(),
             updatedAt: new Date(),
         }
+        initialContents = {
+            main: [],
+            extra: [],
+            side: [],
+        }
     } else {
         const deckId = parseInt(id, 10)
-        if (Number.isNaN(deckId)) {
+        if (isNaN(deckId)) {
             notFound()
         }
 
-        deck = await getDeckById(deckId)
+        const deck = await getDeckById(deckId)
         if (!deck) {
             notFound()
         }
+
+        const { main, extra, side, ...rest } = deck
+        initialDeck = rest
+        initialContents = { main, extra, side }
     }
 
     return (
         <div className="bg-muted flex min-h-screen flex-col">
-            <EditorProvider initialDeck={deck}>
+            <EditorProvider
+                initialDeck={initialDeck}
+                initialContents={initialContents}
+            >
                 <TopBar />
                 <main className="flex flex-1 overflow-hidden px-4">
                     <div className="bg-background flex flex-1 flex-row gap-0 overflow-hidden rounded-t-2xl border border-b-0 shadow-md">

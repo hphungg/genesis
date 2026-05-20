@@ -57,7 +57,7 @@ export function SetCardList() {
                                     <span className="text-foreground flex-1 truncate font-medium">
                                         {card.name}
                                     </span>
-                                    {card.point > 0 && (
+                                    {(card.point && card.point > 0) && (
                                         <span className="rounded bg-red-600 px-1.5 py-0.5 text-[10px] font-bold text-white">
                                             {card.point}
                                         </span>

@@ -1,12 +1,12 @@
 "use client"
 
 import { createSet, updateSet } from "@/app/api/sets"
-import { Card, Set } from "@/db/schema"
+import { Cards, Sets } from "@/db/schema"
 import { getCardSortRank } from "@/lib/sort-rank"
 import { createContext, useContext, useState, useTransition } from "react"
 
-export type SetWithCards = Set & {
-    cards: Card[]
+export type SetWithCards = Sets & {
+    cards: Cards[]
 }
 
 interface SetContextType {
@@ -18,7 +18,7 @@ interface SetContextType {
     setCoverId: (id: string | null) => void
     addTag: (tag: string) => void
     removeTag: (tag: string) => void
-    addCard: (card: Card) => void
+    addCard: (card: Cards) => void
     removeCard: (cardId: string) => void
     save: () => Promise<void>
 }
@@ -62,7 +62,7 @@ export function SetProvider({
             tags: prev.tags.filter((t) => t !== tag),
         }))
 
-    const addCard = (card: Card) =>
+    const addCard = (card: Cards) =>
         setSet((prev) =>
             prev.cards.some((c) => c.id === card.id)
                 ? prev
