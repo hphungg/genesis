@@ -46,37 +46,44 @@ export default function CardInfo() {
                 <h2 className="text-center font-bold text-balance">
                     {hoveredCard.name}
                 </h2>
-                <div className="flex flex-wrap items-center gap-2 text-sm">
-                    {(hoveredCard.type === "Monster" ||
-                        hoveredCard.type === "Extra") && (
-                        <>
-                            {hoveredCard.attribute && (
-                                <Badge
-                                    className={`${getAttributeBadge(hoveredCard.attribute)} border-white font-semibold`}
-                                >
-                                    {hoveredCard.attribute}
-                                </Badge>
-                            )}
-                        </>
-                    )}
+                <div className="flex items-center justify-between w-full text-sm">
+                    <div className="flex flex-wrap items-center gap-2">
+                        {(hoveredCard.type === "Monster" ||
+                            hoveredCard.type === "Extra") && (
+                            <>
+                                {hoveredCard.attribute && (
+                                    <Badge
+                                        className={`${getAttributeBadge(hoveredCard.attribute)} border-white font-semibold`}
+                                    >
+                                        {hoveredCard.attribute}
+                                    </Badge>
+                                )}
+                            </>
+                        )}
 
-                    {hoveredCard.type === "Spell" && (
-                        <Badge className="border-white bg-[#06927b] font-semibold">
-                            Spell Card
-                        </Badge>
-                    )}
+                        {hoveredCard.type === "Spell" && (
+                            <Badge className="border-white bg-[#06927b] font-semibold">
+                                Spell Card
+                            </Badge>
+                        )}
 
-                    {hoveredCard.type === "Trap" && (
-                        <Badge className="border-white bg-[#a91f73] font-semibold">
-                            Trap Card
-                        </Badge>
-                    )}
+                        {hoveredCard.type === "Trap" && (
+                            <Badge className="border-white bg-[#a91f73] font-semibold">
+                                Trap Card
+                            </Badge>
+                        )}
 
-                    {hoveredCard.level && (
-                        <span className="font-semibold">
-                            {isXyz ? "Rank" : "Level"} {hoveredCard.level}
+                        {hoveredCard.level && (
+                            <span className="font-semibold">
+                                {isXyz ? "Rank" : "Level"} {hoveredCard.level}
+                            </span>
+                        )}
+                    </div>
+                    {hoveredCard.point && hoveredCard.point > 0 ? (
+                        <span className="rounded bg-red-600 px-2 py-0.5 text-xs font-bold text-white">
+                            {hoveredCard.point}
                         </span>
-                    )}
+                    ) : null}
                 </div>
 
                 <div className="text-sm font-semibold tracking-wide">

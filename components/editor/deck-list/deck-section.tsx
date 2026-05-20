@@ -44,6 +44,11 @@ function CardImage({
                 className="h-full w-full object-cover"
                 loading="lazy"
             />
+            {card.point && card.point > 0 ? (
+                <span className="absolute top-1 left-1 rounded bg-red-600 px-1 py-0.5 text-[9px] font-bold text-white leading-none z-10 shadow-md">
+                    {card.point}
+                </span>
+            ) : null}
         </button>
     )
 }

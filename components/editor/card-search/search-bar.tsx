@@ -10,7 +10,8 @@ interface SearchBarProps {
     canSearch: boolean
     onChange: (value: string) => void
     onSearch: () => void
-    onClearSearch?: () => void
+    onClearSearch: () => void
+    isClearDisabled: boolean
     onOpenFilters: () => void
 }
 
@@ -21,6 +22,7 @@ export default function SearchBar({
     onChange,
     onSearch,
     onClearSearch,
+    isClearDisabled,
     onOpenFilters,
 }: SearchBarProps) {
     return (
@@ -34,19 +36,17 @@ export default function SearchBar({
                             e.key === "Enter" && canSearch && onSearch()
                         }
                         placeholder="Search cards by name..."
-                        className="w-full pr-8"
+                        className="w-full"
                     />
-                    {query && onClearSearch && (
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="absolute right-0 top-0 h-full w-8 text-muted-foreground hover:text-foreground"
-                            onClick={onClearSearch}
-                        >
-                            <XIcon className="h-4 w-4" />
-                        </Button>
-                    )}
                 </div>
+                <Button
+                    variant="outline"
+                    onClick={onClearSearch}
+                    disabled={isClearDisabled}
+                    size="icon"
+                >
+                    <XIcon className="h-4 w-4" />
+                </Button>
                 <Button variant="outline" onClick={onOpenFilters} size="icon">
                     <FunnelIcon />
                 </Button>

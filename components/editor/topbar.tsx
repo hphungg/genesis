@@ -53,9 +53,16 @@ export default function TopBar() {
         return result
     }, [contents])
 
+    const totalPoints = useMemo(() => {
+        return [...contents.main, ...contents.extra, ...contents.side].reduce(
+            (sum, card) => sum + (card.point ?? 0),
+            0,
+        )
+    }, [contents])
+
     return (
         <header className="flex w-full flex-1 items-center gap-4 px-4 py-2">
-            <div className="flex flex-3 items-center">
+            <div className="flex flex-3 items-center justify-start gap-4">
                 <Button
                     variant="outline"
                     onClick={() => {
@@ -66,6 +73,21 @@ export default function TopBar() {
                     <ArrowLeftIcon />
                     Back
                 </Button>
+                <Select
+                    value={deck.coverId ?? ""}
+                    onValueChange={(val) => setCoverId(val || null)}
+                >
+                    <SelectTrigger className="w-36">
+                        <SelectValue placeholder="Select Cover" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {allCards.map((card) => (
+                            <SelectItem key={card.id} value={card.id}>
+                                {card.name}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
             </div>
 
             <Input
@@ -77,21 +99,15 @@ export default function TopBar() {
             />
 
             <div className="flex flex-3 items-center justify-end gap-4">
-                <Select
-                    value={deck.coverId ?? ""}
-                    onValueChange={(val) => setCoverId(val || null)}
+                <div
+                    className={`flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm font-semibold transition-colors ${
+                        totalPoints >= 101
+                            ? "border-red-600 text-red-600 dark:text-red-400"
+                            : "border-green-600 text-green-600 dark:text-green-400"
+                    }`}
                 >
-                    <SelectTrigger className="w-48">
-                        <SelectValue placeholder="Select Cover" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {allCards.map((card) => (
-                            <SelectItem key={card.id} value={card.id}>
-                                {card.name}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
+                    Total points: {totalPoints}
+                </div>
 
                 <Button variant="outline" onClick={sortCards}>
                     <ArrowsDownUpIcon />

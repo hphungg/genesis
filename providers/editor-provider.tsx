@@ -165,9 +165,15 @@ export function EditorProvider({
         let extraDeckIds = contents.extra.map((c) => c.id)
         let sideDeckIds = contents.side.map((c) => c.id)
 
+        const totalPoints = [
+            ...contents.main,
+            ...contents.extra,
+            ...contents.side,
+        ].reduce((sum, card) => sum + (card.point ?? 0), 0)
+
         const data = {
             name: deck.name,
-            points: deck.points,
+            points: totalPoints,
             coverId: deck.coverId ?? null,
             mainDeckIds,
             extraDeckIds,
@@ -179,11 +185,16 @@ export function EditorProvider({
             setDeck((prev) => ({
                 ...prev,
                 id: newDeck.id,
+                points: totalPoints,
                 updatedAt: new Date(),
             }))
         } else {
             await updateDeck(deck.id, data)
-            setDeck((prev) => ({ ...prev, updatedAt: new Date() }))
+            setDeck((prev) => ({
+                ...prev,
+                points: totalPoints,
+                updatedAt: new Date(),
+            }))
         }
     }
 

@@ -27,12 +27,15 @@ export default function SetEditorTopBar() {
     }
 
     return (
-        <header className="flex w-full items-center justify-between px-4 py-4 gap-4 shrink-0">
+        <header className="flex w-full shrink-0 items-center justify-between gap-4 px-4 py-4">
             <div className="flex items-center">
-                <Button variant="outline" onClick={() => {
-                    router.push("/sets")
-                    router.refresh()
-                }}>
+                <Button
+                    variant="outline"
+                    onClick={() => {
+                        router.push("/sets")
+                        router.refresh()
+                    }}
+                >
                     <ArrowLeftIcon />
                     Back
                 </Button>
@@ -41,8 +44,9 @@ export default function SetEditorTopBar() {
             <Input
                 value={set.name}
                 onChange={(e) => setName(e.target.value)}
-                className="max-w-md text-center font-bold text-2xl border-transparent bg-transparent shadow-none hover:border-none focus-visible:border-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors px-2"
+                className="max-w-md border-transparent bg-transparent px-2 text-center font-bold shadow-none"
                 placeholder="Set name..."
+                style={{ fontSize: "1.2rem" }}
             />
 
             <div className="flex items-center gap-3">

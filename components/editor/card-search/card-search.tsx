@@ -101,7 +101,8 @@ export default function CardSearch() {
                 canSearch={canSearch}
                 onChange={setQuery}
                 onSearch={handleSearch}
-                onClearSearch={handleClearSearch}
+                onClearSearch={handleClearFilters}
+                isClearDisabled={results.length === 0}
                 onOpenFilters={() => setIsFilterOpen(true)}
             />
 
