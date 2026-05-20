@@ -59,7 +59,7 @@ export async function searchCards({
     limit?: number
 }) {
     const trimmed = query?.trim() ?? ""
-    const hasQuery = trimmed.length > 3
+    const hasQuery = trimmed.length >= 2
     const hasFilters = Boolean(
         filters?.type ||
         filters?.race ||

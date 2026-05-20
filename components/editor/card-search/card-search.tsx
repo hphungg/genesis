@@ -23,7 +23,7 @@ export default function CardSearch() {
         () => Object.values(filters).filter(Boolean).length,
         [filters],
     )
-    const canSearch = query.trim().length > 3 || activeFilterCount > 0
+    const canSearch = query.trim().length >= 2 || activeFilterCount > 0
 
     const handleFilterChange = (
         key: keyof CardSearchFilters,
@@ -37,7 +37,7 @@ export default function CardSearch() {
 
     const handleSearch = () => {
         const trimmed = query.trim()
-        if (trimmed.length <= 3 && activeFilterCount === 0) {
+        if (trimmed.length < 2 && activeFilterCount === 0) {
             setHasSearched(false)
             setResults([])
             return
@@ -77,8 +77,15 @@ export default function CardSearch() {
         }))
     }
 
+    const handleClearSearch = () => {
+        setQuery("")
+        setHasSearched(false)
+        setResults([])
+    }
+
     const handleClearFilters = () => {
         setFilters(DEFAULT_FILTERS)
+        handleClearSearch()
     }
 
     const handleApplyFilters = () => {
@@ -87,17 +94,21 @@ export default function CardSearch() {
     }
 
     return (
-        <div className="flex h-full min-w-0 flex-3 flex-col gap-3 p-4">
+        <div className="flex h-full flex-3 flex-col gap-3 p-2">
             <SearchBar
                 query={query}
                 isPending={isPending}
                 canSearch={canSearch}
                 onChange={setQuery}
                 onSearch={handleSearch}
+                onClearSearch={handleClearSearch}
                 onOpenFilters={() => setIsFilterOpen(true)}
             />
 
-            <ScrollArea className="max-h-[calc(100vh-9rem)] min-h-0 flex-1">
+            <ScrollArea
+                type="auto"
+                className="max-h-[calc(100vh-9rem)] min-h-0 flex-1 rounded-sm bg-black/25"
+            >
                 {isPending && (
                     <div className="text-muted-foreground flex h-24 items-center justify-center text-sm">
                         Searching...

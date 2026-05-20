@@ -1,7 +1,7 @@
 "use client"
 
 import { createDeck, updateDeck } from "@/app/api/decks"
-import { Cards, cards } from "@/db/schema"
+import { Cards } from "@/db/schema"
 import { createContext, useContext, useState } from "react"
 import { type DeckDetail } from "@/app/api/decks"
 
@@ -19,8 +19,11 @@ interface EditorContextType {
     hoveredCard: Cards | null
     setHoveredCard: (card: Cards | null) => void
     setName: (name: string) => void
+    setCoverId: (id: string | null) => void
     addCard: (card: Cards) => void
+    addSideCard: (card: Cards) => void
     removeCard: (card: Cards, section: "main" | "extra" | "side") => void
+    sortCards: () => void
     save: () => Promise<void>
 }
 
@@ -47,6 +50,53 @@ export function EditorProvider({
 
     const setName = (name: string) => setDeck((prev) => ({ ...prev, name }))
 
+    const setCoverId = (id: string | null) =>
+        setDeck((prev) => ({ ...prev, coverId: id }))
+
+    const sortMainCards = (cards: Cards[]): Cards[] => {
+        const typeOrder = (card: Cards) => {
+            const t = card.type?.toLowerCase() ?? ""
+            if (t === "monster") return 0
+            if (t === "spell") return 1
+            if (t === "trap") return 2
+            return 3
+        }
+        return [...cards].sort((a, b) => {
+            const diff = typeOrder(a) - typeOrder(b)
+            if (diff !== 0) return diff
+            return a.name.localeCompare(b.name)
+        })
+    }
+
+    const sortExtraCards = (cards: Cards[]): Cards[] => {
+        const typeOrder = (card: Cards) => {
+            const t2 = card.type2?.toLowerCase() ?? ""
+            if (t2 === "fusion") return 0
+            if (t2 === "synchro") return 1
+            if (t2 === "xyz") return 2
+            return 3
+        }
+        return [...cards].sort((a, b) => {
+            const diff = typeOrder(a) - typeOrder(b)
+            if (diff !== 0) return diff
+            return a.name.localeCompare(b.name)
+        })
+    }
+
+    const sortSideCards = (cards: Cards[]): Cards[] => {
+        const mainCards = cards.filter((c) => c.type !== "Extra")
+        const extraCards = cards.filter((c) => c.type === "Extra")
+        return [...sortMainCards(mainCards), ...sortExtraCards(extraCards)]
+    }
+
+    const sortCards = () => {
+        setContents((prev) => ({
+            main: sortMainCards(prev.main),
+            extra: sortExtraCards(prev.extra),
+            side: sortSideCards(prev.side),
+        }))
+    }
+
     const addCard = (card: Cards) => {
         const totalCopies = [
             ...contents.main,
@@ -59,6 +109,9 @@ export function EditorProvider({
         }
 
         const isExtra = card.type === "Extra"
+
+        if (isExtra && contents.extra.length >= 15) return
+        if (!isExtra && contents.main.length >= 60) return
 
         setContents((prev) => {
             if (isExtra) {
@@ -73,6 +126,25 @@ export function EditorProvider({
                 }
             }
         })
+    }
+
+    const addSideCard = (card: Cards) => {
+        const totalCopies = [
+            ...contents.main,
+            ...contents.extra,
+            ...contents.side,
+        ].filter((x) => x.id === card.id).length
+
+        if (totalCopies >= 3) {
+            return
+        }
+
+        if (contents.side.length >= 15) return
+
+        setContents((prev) => ({
+            ...prev,
+            side: [...prev.side, card],
+        }))
     }
 
     const removeSingle = (cards: Cards[], target: Cards) => {
@@ -96,6 +168,7 @@ export function EditorProvider({
         const data = {
             name: deck.name,
             points: deck.points,
+            coverId: deck.coverId ?? null,
             mainDeckIds,
             extraDeckIds,
             sideDeckIds,
@@ -122,8 +195,11 @@ export function EditorProvider({
                 hoveredCard,
                 setHoveredCard,
                 setName,
+                setCoverId,
                 addCard,
+                addSideCard,
                 removeCard,
+                sortCards,
                 save,
             }}
         >

@@ -1,7 +1,7 @@
 "use server"
 
 import { db } from "@/db/database"
-import { deckCards, decks } from "@/db/schema"
+import { Cards, deckCards, decks } from "@/db/schema"
 import { createClient } from "@/lib/supabase/server"
 import { and, eq } from "drizzle-orm"
 import { revalidatePath } from "next/cache"
@@ -9,9 +9,9 @@ import { revalidatePath } from "next/cache"
 export type DeckSummary = Omit<typeof decks.$inferSelect, "userId">
 
 export type DeckContents = {
-    main: string[]
-    extra: string[]
-    side: string[]
+    main: Cards[]
+    extra: Cards[]
+    side: Cards[]
 }
 
 export type DeckDetail = Omit<typeof decks.$inferSelect, "userId"> &
@@ -73,20 +73,20 @@ export async function getDeckById(id: number): Promise<DeckDetail | null> {
 
     const result = await db.query.decks.findFirst({
         where: and(eq(decks.id, id), eq(decks.userId, user.id)),
-        with: { deckCards: true },
+        with: { deckCards: { with: { card: true } } },
     })
 
     if (!result) {
         return null
     }
 
-    const { deckCards: rows, ...deckData } = result
+    const { deckCards: rows, userId, ...deckData } = result
 
     return {
         ...deckData,
-        main: rows.filter((r) => r.section === "main").map((r) => r.cardId),
-        extra: rows.filter((r) => r.section === "extra").map((r) => r.cardId),
-        side: rows.filter((r) => r.section === "side").map((r) => r.cardId),
+        main: rows.filter((r) => r.section === "main").map((r) => r.card),
+        extra: rows.filter((r) => r.section === "extra").map((r) => r.card),
+        side: rows.filter((r) => r.section === "side").map((r) => r.card),
     }
 }
 
@@ -115,7 +115,12 @@ export async function createDeck(data: DeckEditorInput): Promise<DeckSummary> {
     revalidatePath(`/deck/${newDeck.id}`)
 
     const { userId, ...deckData } = newDeck
-    return deckData
+    return {
+        ...deckData,
+        coverId: deckData.coverId ?? null,
+        createdAt: new Date(deckData.createdAt),
+        updatedAt: new Date(deckData.updatedAt),
+    }
 }
 
 export async function updateDeck(
@@ -153,7 +158,12 @@ export async function updateDeck(
     revalidatePath(`/deck/${deckId}`)
 
     const { userId, ...deckData } = updatedDeck
-    return deckData
+    return {
+        ...deckData,
+        coverId: deckData.coverId ?? null,
+        createdAt: new Date(deckData.createdAt),
+        updatedAt: new Date(deckData.updatedAt),
+    }
 }
 
 export async function deleteDeck(

@@ -64,7 +64,7 @@ export default async function Editor({ params }: Props) {
                 initialContents={initialContents}
             >
                 <TopBar />
-                <main className="flex flex-1 overflow-hidden px-4">
+                <main className="flex flex-1 px-4">
                     <div className="bg-background flex flex-1 flex-row gap-0 overflow-hidden rounded-t-2xl border border-b-0 shadow-md">
                         <CardInfo />
                         <Separator

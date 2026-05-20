@@ -10,7 +10,7 @@ export default function DeckList() {
     return (
         <div className="flex min-w-0 flex-5 flex-col overflow-hidden p-4">
             <ScrollArea className="flex-1">
-                <div className="flex flex-col gap-3 p-1">
+                <div className="flex flex-col gap-2 p-1">
                     <DeckSection
                         title="Main Deck"
                         section="main"

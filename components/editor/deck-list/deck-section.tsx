@@ -13,7 +13,6 @@ interface DeckSectionProps {
     expandThreshold?: number
 }
 
-
 function CardImage({
     card,
     onHover,
@@ -30,13 +29,13 @@ function CardImage({
     return (
         <button
             type="button"
-            className={`group relative shrink-0 aspect-59/86 rounded hover:z-50 cursor-pointer hover:border-2 hover:border-red-500`}
+            className={`group relative aspect-59/86 shrink-0 cursor-pointer hover:z-50 hover:border-2 hover:border-white`}
             onMouseEnter={() => onHover(card)}
             onFocus={() => onHover(card)}
             onContextMenu={(e) => onContextMenu(e, card)}
             style={{
                 width: `${10}%`,
-                marginRight: lastItem ? '0%' : `${marginRight}%`,
+                marginRight: lastItem ? "0%" : `${marginRight}%`,
             }}
         >
             <img
@@ -73,49 +72,45 @@ export default function DeckSection({
     }
 
     const cardRows = Array.from({ length: rows }, (_, rowIndex) =>
-        cardList.slice(rowIndex * activeCols, (rowIndex + 1) * activeCols)
+        cardList.slice(rowIndex * activeCols, (rowIndex + 1) * activeCols),
     )
 
-    const marginRightPercent = isExpanded ? (100 - activeCols * 10) / (activeCols - 1) : 0
+    const marginRightPercent = isExpanded
+        ? (100 - activeCols * 10) / (activeCols - 1)
+        : 0
 
     return (
-        <div className="flex flex-col gap-1 w-full mx-auto">
+        <div className="mx-auto flex w-full flex-col gap-1">
             <div className="flex items-center justify-between">
                 <h3 className="text-base font-medium">{title}</h3>
-                <span className="font-bold text-sm">
-                    {cardList.length}
-                </span>
+                <span className="text-sm font-bold">{cardList.length}</span>
             </div>
 
-            <div className="w-full flex flex-col border rounded-sm p-1 gap-1" >
-                {
-                    cardRows.map((cards, rIndex) => (
-                        <div key={rIndex} className="flex w-full">
-                            {
-                                cards.map((card, cIndex) => {
-                                    const isLast = cIndex === cards.length - 1;
+            <div className="flex w-full flex-col gap-1 rounded-sm border bg-black/25 p-1">
+                {cardRows.map((cards, rIndex) => (
+                    <div key={rIndex} className="flex w-full">
+                        {cards.map((card, cIndex) => {
+                            const isLast = cIndex === cards.length - 1
 
-                                    return (
-                                        <CardImage
-                                            key={rIndex * 10 + cIndex}
-                                            card={card}
-                                            onContextMenu={handleRightClick}
-                                            onHover={setHoveredCard}
-                                            lastItem={isLast}
-                                            marginRight={marginRightPercent}
-                                        />
-                                    )
-                                })
-                            }
-                            {cards.length === 0 && (
-                                <div
-                                    className="shrink-0 aspect-[5.9/8.6] opacity-0 pointer-events-none"
-                                    style={{ width: `${10}%` }}
+                            return (
+                                <CardImage
+                                    key={rIndex * 10 + cIndex}
+                                    card={card}
+                                    onContextMenu={handleRightClick}
+                                    onHover={setHoveredCard}
+                                    lastItem={isLast}
+                                    marginRight={marginRightPercent}
                                 />
-                            )}
-                        </div>
-                    ))
-                }
+                            )
+                        })}
+                        {cards.length === 0 && (
+                            <div
+                                className="pointer-events-none aspect-[5.9/8.6] shrink-0 opacity-0"
+                                style={{ width: `${10}%` }}
+                            />
+                        )}
+                    </div>
+                ))}
             </div>
         </div>
     )

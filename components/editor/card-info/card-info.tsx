@@ -27,7 +27,7 @@ export default function CardInfo() {
     const { hoveredCard } = useEditor()
 
     if (!hoveredCard) {
-        return <div className="flex h-full min-w-0 flex-3 flex-col p-4" />
+        return <div className="flex h-full min-w-0 flex-2 flex-col p-3" />
     }
 
     const isXyz = [hoveredCard.type2, hoveredCard.type3].some(
@@ -47,20 +47,18 @@ export default function CardInfo() {
                     {hoveredCard.name}
                 </h2>
                 <div className="flex flex-wrap items-center gap-2 text-sm">
-
-
                     {(hoveredCard.type === "Monster" ||
                         hoveredCard.type === "Extra") && (
-                            <>
-                                {hoveredCard.attribute && (
-                                    <Badge
-                                        className={`${getAttributeBadge(hoveredCard.attribute)} border-white font-semibold`}
-                                    >
-                                        {hoveredCard.attribute}
-                                    </Badge>
-                                )}
-                            </>
-                        )}
+                        <>
+                            {hoveredCard.attribute && (
+                                <Badge
+                                    className={`${getAttributeBadge(hoveredCard.attribute)} border-white font-semibold`}
+                                >
+                                    {hoveredCard.attribute}
+                                </Badge>
+                            )}
+                        </>
+                    )}
 
                     {hoveredCard.type === "Spell" && (
                         <Badge className="border-white bg-[#06927b] font-semibold">
@@ -79,11 +77,9 @@ export default function CardInfo() {
                             {isXyz ? "Rank" : "Level"} {hoveredCard.level}
                         </span>
                     )}
-
-
                 </div>
 
-                <div className="font-semibold tracking-wide text-sm">
+                <div className="text-sm font-semibold tracking-wide">
                     [{hoveredCard.type1}
                     {hoveredCard.type2 ? `/${hoveredCard.type2}` : ""}
                     {hoveredCard.type3 ? `/${hoveredCard.type3}` : ""}]
@@ -94,7 +90,7 @@ export default function CardInfo() {
                 </p>
 
                 {(hoveredCard.atk !== null || hoveredCard.def !== null) && (
-                    <div className="flex justify-end gap-4 border-t pt-2 font-semibold text-sm">
+                    <div className="flex justify-end gap-4 border-t pt-2 text-sm font-semibold">
                         <span>
                             ATK/ {hoveredCard.atk == -1 ? "?" : hoveredCard.atk}
                         </span>

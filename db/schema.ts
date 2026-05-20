@@ -4,6 +4,7 @@ import {
     pgTable,
     pgEnum,
     primaryKey,
+    serial,
     text,
     timestamp,
     varchar,
@@ -69,6 +70,7 @@ export const deckSection = pgEnum("deck_section", ["main", "extra", "side"])
 export const deckCards = pgTable(
     "deck_cards",
     {
+        id: serial().primaryKey(),
         deckId: integer("deck_id")
             .notNull()
             .references(() => decks.id, { onDelete: "cascade" }),
@@ -77,9 +79,6 @@ export const deckCards = pgTable(
             .references(() => cards.id, { onDelete: "cascade" }),
         section: deckSection("section").notNull().default("main"),
     },
-    (t) => ({
-        pk: primaryKey({ columns: [t.deckId, t.cardId, t.section] }),
-    }),
 )
 
 export const decksRelations = relations(decks, ({ many }) => ({
