@@ -3,9 +3,26 @@
 import { db } from "@/db/database"
 import { sets, setCards } from "@/db/schema"
 import { eq } from "drizzle-orm"
-import { revalidatePath } from "next/cache"
+import {
+    revalidatePath,
+    cacheTag,
+    updateTag,
+} from "next/cache"
+import { createClient } from "@/lib/supabase/server"
+
+async function getAuthUser() {
+    const supabase = await createClient()
+    const {
+        data: { user },
+    } = await supabase.auth.getUser()
+    return user
+}
 
 export async function getSetById(setId: number) {
+    "use cache"
+
+    cacheTag("sets", `set-${setId}`)
+
     const result = await db.query.sets.findFirst({
         where: eq(sets.id, setId),
         with: {
@@ -36,6 +53,9 @@ export type CreateSetInput = {
 }
 
 export async function createSet(data: CreateSetInput) {
+    const user = await getAuthUser()
+    if (!user) throw new Error("Unauthorized")
+
     const [newSet] = await db
         .insert(sets)
         .values({
@@ -55,6 +75,8 @@ export async function createSet(data: CreateSetInput) {
         await db.insert(setCards).values(relationsToInsert)
     }
 
+    updateTag("sets")
+    revalidatePath("/")
     revalidatePath("/sets")
     return newSet
 }
@@ -69,6 +91,9 @@ export type UpdateSetInput = {
 }
 
 export async function updateSet(setId: number, data: UpdateSetInput) {
+    const user = await getAuthUser()
+    if (!user) throw new Error("Unauthorized")
+
     const setUpdateData: Partial<CreateSetInput> = {}
     if (data.name !== undefined) setUpdateData.name = data.name
     if (data.description !== undefined)
@@ -101,21 +126,35 @@ export async function updateSet(setId: number, data: UpdateSetInput) {
         with: { setCards: { with: { card: true } } },
     })
 
+    updateTag("sets")
+    updateTag(`set-${setId}`)
+    revalidatePath("/")
     revalidatePath("/sets")
     revalidatePath(`/sets/${setId}`)
     return updatedSet
 }
 
 export async function deleteSet(setId: number) {
+    const user = await getAuthUser()
+    if (!user) return { success: false, error: "Unauthorized" }
+
     const [deletedSet] = await db
         .delete(sets)
         .where(eq(sets.id, setId))
         .returning()
+
+    updateTag("sets")
+    updateTag(`set-${setId}`)
+    revalidatePath("/")
     revalidatePath("/sets")
     return deletedSet
 }
 
 export async function getAllSet() {
+    "use cache"
+
+    cacheTag("sets")
+
     return await db.query.sets.findMany({
         orderBy: (sets, { desc }) => [desc(sets.createdAt)],
     })

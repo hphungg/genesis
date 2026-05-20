@@ -97,54 +97,37 @@ export function EditorProvider({
         }))
     }
 
+    // Fixed: read state from the updater argument to avoid stale closure
     const addCard = (card: Cards) => {
-        const totalCopies = [
-            ...contents.main,
-            ...contents.extra,
-            ...contents.side,
-        ].filter((x) => x.id === card.id).length
-
-        if (totalCopies >= 3) {
-            return
-        }
-
-        const isExtra = card.type === "Extra"
-
-        if (isExtra && contents.extra.length >= 15) return
-        if (!isExtra && contents.main.length >= 60) return
-
         setContents((prev) => {
+            const totalCopies = [...prev.main, ...prev.extra, ...prev.side]
+                .filter((x) => x.id === card.id).length
+
+            if (totalCopies >= 3) return prev
+
+            const isExtra = card.type === "Extra"
+            if (isExtra && prev.extra.length >= 15) return prev
+            if (!isExtra && prev.main.length >= 60) return prev
+
             if (isExtra) {
-                return {
-                    ...prev,
-                    extra: [...prev.extra, card],
-                }
+                return { ...prev, extra: [...prev.extra, card] }
             } else {
-                return {
-                    ...prev,
-                    main: [...prev.main, card],
-                }
+                return { ...prev, main: [...prev.main, card] }
             }
         })
     }
 
+    // Fixed: read state from the updater argument to avoid stale closure
     const addSideCard = (card: Cards) => {
-        const totalCopies = [
-            ...contents.main,
-            ...contents.extra,
-            ...contents.side,
-        ].filter((x) => x.id === card.id).length
+        setContents((prev) => {
+            const totalCopies = [...prev.main, ...prev.extra, ...prev.side]
+                .filter((x) => x.id === card.id).length
 
-        if (totalCopies >= 3) {
-            return
-        }
+            if (totalCopies >= 3) return prev
+            if (prev.side.length >= 15) return prev
 
-        if (contents.side.length >= 15) return
-
-        setContents((prev) => ({
-            ...prev,
-            side: [...prev.side, card],
-        }))
+            return { ...prev, side: [...prev.side, card] }
+        })
     }
 
     const removeSingle = (cards: Cards[], target: Cards) => {

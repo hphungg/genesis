@@ -30,7 +30,6 @@ export default function TopBar() {
                 await save()
                 toast.success("Deck saved successfully")
                 router.push("/?view=decks")
-                router.refresh()
             } catch (error) {
                 toast.error("Failed to save deck")
             }
@@ -65,10 +64,7 @@ export default function TopBar() {
             <div className="flex flex-3 items-center justify-start gap-4">
                 <Button
                     variant="outline"
-                    onClick={() => {
-                        router.push("/?view=decks")
-                        router.refresh()
-                    }}
+                    onClick={() => router.push("/?view=decks")}
                 >
                     <ArrowLeftIcon />
                     Back

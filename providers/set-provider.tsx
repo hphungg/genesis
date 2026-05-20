@@ -75,34 +75,44 @@ export function SetProvider({
             cards: prev.cards.filter((c) => c.id !== cardId),
         }))
 
-    const save = async () => {
-        const sortedCards = [...set.cards].sort((a, b) => {
-            const rankDiff = getCardSortRank(a) - getCardSortRank(b)
-            if (rankDiff !== 0) return rankDiff
-            return a.name.localeCompare(b.name)
-        })
-        const sortedCardIds = sortedCards.map((c) => c.id)
-        setSet((prev) => ({ ...prev, cards: sortedCards }))
+    // Fixed: wrapped in startTransition so that isSaving (exposed as isPending) works correctly
+    const save = (): Promise<void> => {
+        return new Promise((resolve, reject) => {
+            startTransition(async () => {
+                try {
+                    const sortedCards = [...set.cards].sort((a, b) => {
+                        const rankDiff = getCardSortRank(a) - getCardSortRank(b)
+                        if (rankDiff !== 0) return rankDiff
+                        return a.name.localeCompare(b.name)
+                    })
+                    const sortedCardIds = sortedCards.map((c) => c.id)
+                    setSet((prev) => ({ ...prev, cards: sortedCards }))
 
-        if (set.id === 0) {
-            await createSet({
-                name: set.name,
-                description: set.description,
-                setType: set.setType,
-                coverId: set.coverId,
-                tags: set.tags,
-                cardIds: sortedCardIds,
+                    if (set.id === 0) {
+                        await createSet({
+                            name: set.name,
+                            description: set.description,
+                            setType: set.setType,
+                            coverId: set.coverId,
+                            tags: set.tags,
+                            cardIds: sortedCardIds,
+                        })
+                    } else {
+                        await updateSet(set.id, {
+                            name: set.name,
+                            description: set.description,
+                            setType: set.setType,
+                            coverId: set.coverId,
+                            tags: set.tags,
+                            cardIds: sortedCardIds,
+                        })
+                    }
+                    resolve()
+                } catch (e) {
+                    reject(e)
+                }
             })
-        } else {
-            await updateSet(set.id, {
-                name: set.name,
-                description: set.description,
-                setType: set.setType,
-                coverId: set.coverId,
-                tags: set.tags,
-                cardIds: sortedCardIds,
-            })
-        }
+        })
     }
 
     return (

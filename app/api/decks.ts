@@ -4,7 +4,11 @@ import { db } from "@/db/database"
 import { Cards, deckCards, decks } from "@/db/schema"
 import { createClient } from "@/lib/supabase/server"
 import { and, eq } from "drizzle-orm"
-import { revalidatePath } from "next/cache"
+import {
+    revalidatePath,
+    cacheTag,
+    updateTag,
+} from "next/cache"
 
 export type DeckSummary = Omit<typeof decks.$inferSelect, "userId">
 
@@ -51,36 +55,36 @@ async function getAuthUser() {
     return user
 }
 
-export async function getAllDecks(): Promise<DeckSummary[]> {
-    const user = await getAuthUser()
-    if (!user) {
-        return []
-    }
+async function getCachedAllDecks(userId: string): Promise<DeckSummary[]> {
+    "use cache"
+    cacheTag("decks", `decks-${userId}`)
 
     const results = await db.query.decks.findMany({
-        where: eq(decks.userId, user.id),
+        where: eq(decks.userId, userId),
         orderBy: (deck, { desc }) => [desc(deck.updatedAt)],
     })
 
     return results.map(({ userId, ...rest }) => rest)
 }
 
-export async function getDeckById(id: number): Promise<DeckDetail | null> {
+export async function getAllDecks(): Promise<DeckSummary[]> {
     const user = await getAuthUser()
-    if (!user) {
-        return null
-    }
+    if (!user) return []
+    return getCachedAllDecks(user.id)
+}
+
+async function getCachedDeckById(id: number, userId: string): Promise<DeckDetail | null> {
+    "use cache"
+    cacheTag("decks", `decks-${userId}`, `deck-${id}`)
 
     const result = await db.query.decks.findFirst({
-        where: and(eq(decks.id, id), eq(decks.userId, user.id)),
+        where: and(eq(decks.id, id), eq(decks.userId, userId)),
         with: { deckCards: { with: { card: true } } },
     })
 
-    if (!result) {
-        return null
-    }
+    if (!result) return null
 
-    const { deckCards: rows, userId, ...deckData } = result
+    const { deckCards: rows, userId: _, ...deckData } = result
 
     return {
         ...deckData,
@@ -88,6 +92,12 @@ export async function getDeckById(id: number): Promise<DeckDetail | null> {
         extra: rows.filter((r) => r.section === "extra").map((r) => r.card),
         side: rows.filter((r) => r.section === "side").map((r) => r.card),
     }
+}
+
+export async function getDeckById(id: number): Promise<DeckDetail | null> {
+    const user = await getAuthUser()
+    if (!user) return null
+    return getCachedDeckById(id, user.id)
 }
 
 export async function createDeck(data: DeckEditorInput): Promise<DeckSummary> {
@@ -111,6 +121,9 @@ export async function createDeck(data: DeckEditorInput): Promise<DeckSummary> {
         await db.insert(deckCards).values(rows)
     }
 
+    // Immediately invalidate the decks cache so the user sees the new deck
+    updateTag("decks")
+    updateTag(`decks-${user.id}`)
     revalidatePath("/")
     revalidatePath(`/deck/${newDeck.id}`)
 
@@ -154,6 +167,10 @@ export async function updateDeck(
         await db.insert(deckCards).values(rows)
     }
 
+    // Immediately invalidate so the user sees updated data after redirect
+    updateTag("decks")
+    updateTag(`decks-${user.id}`)
+    updateTag(`deck-${deckId}`)
     revalidatePath("/")
     revalidatePath(`/deck/${deckId}`)
 
@@ -183,6 +200,8 @@ export async function deleteDeck(
         return { success: false, error: "Deck not found or unauthorized" }
     }
 
+    updateTag("decks")
+    updateTag(`decks-${user.id}`)
     revalidatePath("/")
     return { success: true }
 }
