@@ -28,10 +28,10 @@ export default function TopBar() {
         startTransition(async () => {
             try {
                 await save()
-                toast.success("Deck saved successfully")
+                toast.success("Lưu bộ bài thành công!")
                 router.push("/?view=decks")
             } catch (error) {
-                toast.error("Failed to save deck")
+                toast.error("Lưu bộ bài thất bại")
             }
         })
     }
@@ -67,14 +67,14 @@ export default function TopBar() {
                     onClick={() => router.push("/?view=decks")}
                 >
                     <ArrowLeftIcon />
-                    Back
+                    Quay lại
                 </Button>
                 <Select
                     value={deck.coverId ?? ""}
                     onValueChange={(val) => setCoverId(val || null)}
                 >
                     <SelectTrigger className="w-36">
-                        <SelectValue placeholder="Select Cover" />
+                        <SelectValue placeholder="Lựa chọn ảnh bìa" />
                     </SelectTrigger>
                     <SelectContent>
                         {allCards.map((card) => (
@@ -91,7 +91,7 @@ export default function TopBar() {
                 onChange={(e) => setName(e.target.value)}
                 className="max-w-md flex-3 border-transparent bg-transparent px-2 text-center font-bold shadow-none"
                 style={{ fontSize: "1.2rem" }}
-                placeholder="Deck name..."
+                placeholder="Nhập tên bộ bài..."
             />
 
             <div className="flex flex-3 items-center justify-end gap-4">
@@ -102,16 +102,16 @@ export default function TopBar() {
                             : "border-green-600 text-green-600 dark:text-green-400"
                     }`}
                 >
-                    Total points: {totalPoints}
+                    {totalPoints} points
                 </div>
 
                 <Button variant="outline" onClick={sortCards}>
                     <ArrowsDownUpIcon />
-                    Sort
+                    Sắp xếp
                 </Button>
                 <Button onClick={handleSave} disabled={isPending}>
                     <FloppyDiskIcon />
-                    {isPending ? "Saving..." : "Save"}
+                    {isPending ? "Đang lưu..." : "Lưu bộ bài"}
                 </Button>
             </div>
         </header>

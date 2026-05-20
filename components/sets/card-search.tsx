@@ -15,7 +15,10 @@ export default function SetEditorCardSearch() {
     const [hasSearched, setHasSearched] = useState(false)
     const [isPending, startTransition] = useTransition()
 
-    const inSetIds = useMemo(() => new Set(set.cards.map((c) => c.id)), [set.cards])
+    const inSetIds = useMemo(
+        () => new Set(set.cards.map((c) => c.id)),
+        [set.cards],
+    )
 
     const handleSearch = () => {
         if (!query.trim()) return
@@ -27,7 +30,7 @@ export default function SetEditorCardSearch() {
     }
 
     return (
-        <div className="flex flex-col h-full flex-1 min-w-0 gap-3 p-4">
+        <div className="flex h-full min-w-0 flex-1 flex-col gap-3 p-4">
             <CardSearchBar
                 query={query}
                 isPending={isPending}
@@ -35,16 +38,16 @@ export default function SetEditorCardSearch() {
                 onSearch={handleSearch}
             />
 
-            <ScrollArea className="flex-1 min-h-0">
+            <ScrollArea className="min-h-0 flex-1">
                 {isPending && (
-                    <div className="flex items-center justify-center h-24 text-sm text-muted-foreground">
-                        Searching...
+                    <div className="text-muted-foreground flex h-24 items-center justify-center text-sm">
+                        Đang tìm kiếm...
                     </div>
                 )}
 
                 {!isPending && hasSearched && results.length === 0 && (
-                    <div className="flex items-center justify-center h-24 text-sm text-muted-foreground">
-                        No cards found for &quot;{query}&quot;
+                    <div className="text-muted-foreground flex h-24 items-center justify-center text-sm">
+                        Không tìm thấy kết quả nào cho &quot;{query}&quot;
                     </div>
                 )}
 

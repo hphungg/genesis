@@ -34,7 +34,7 @@ export function SetCardList() {
         <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-hidden p-4">
             <div className="flex items-center justify-between">
                 <span className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
-                    Cards
+                    Danh sách lá bài
                 </span>
                 <span className="text-muted-foreground text-xs font-medium tabular-nums">
                     {set.cards.length}
@@ -44,7 +44,7 @@ export function SetCardList() {
             <ScrollArea className="min-h-0 flex-1">
                 {set.cards.length === 0 ? (
                     <div className="text-muted-foreground flex h-32 flex-col items-center justify-center gap-1 text-sm">
-                        <span>No cards yet</span>
+                        <span>Không có lá bài nào.</span>
                     </div>
                 ) : (
                     <div className="flex flex-col gap-1 pr-2">
@@ -57,7 +57,7 @@ export function SetCardList() {
                                     <span className="text-foreground flex-1 truncate font-medium">
                                         {card.name}
                                     </span>
-                                    {(card.point && card.point > 0) && (
+                                    {card.point && card.point > 0 && (
                                         <span className="rounded bg-red-600 px-1.5 py-0.5 text-[10px] font-bold text-white">
                                             {card.point}
                                         </span>
@@ -68,7 +68,7 @@ export function SetCardList() {
                                             removeCard(card.id)
                                         }}
                                         className="text-destructive shrink-0 opacity-0 transition-opacity group-hover:opacity-60 hover:opacity-100!"
-                                        aria-label={`Remove card ${card.name}`}
+                                        aria-label={`Xóa ${card.name}`}
                                     >
                                         <XIcon size={14} />
                                     </button>

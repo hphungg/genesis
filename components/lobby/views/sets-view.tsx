@@ -69,7 +69,7 @@ export default function SetsView({
             <div className="flex-1 overflow-y-auto">
                 {filtered.length === 0 ? (
                     <div className="text-muted-foreground flex h-40 flex-col items-center justify-center gap-1 text-sm">
-                        <span>No {activeTab} sets yet.</span>
+                        <span>Không có {activeTab} nào.</span>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">

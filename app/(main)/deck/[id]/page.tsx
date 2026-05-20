@@ -30,7 +30,7 @@ export default async function Editor({ params }: Props) {
     if (id === "new") {
         initialDeck = {
             id: 0,
-            name: "New Deck",
+            name: "New",
             points: 0,
             coverId: null,
             createdAt: new Date(),

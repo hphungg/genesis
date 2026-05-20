@@ -22,20 +22,20 @@ export default function TopBar({ displayName }: TopBarProps) {
             const result = await signOut()
 
             if (result.success) {
-                toast.success("Signed out successfully!")
+                toast.success("Đăng xuất thành công!")
                 router.push("/signin")
             } else {
-                toast.error(`Failed to sign out: ${result.error}`)
+                toast.error(`Đăng xuất thất bại: ${result.error}`)
             }
         })
     }
 
     return (
         <header className="relative flex w-full items-center justify-between px-4 py-4">
-            <Button variant="outline">Format Rules</Button>
+            <Button variant="outline">Thông tin Format</Button>
 
             <h1 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-lg font-bold">
-                {displayName}&apos;s lobby
+                Xin chào {displayName}!
             </h1>
 
             <div className="flex items-center gap-4">
@@ -47,16 +47,18 @@ export default function TopBar({ displayName }: TopBarProps) {
                                 : "?view=decks"
                         }
                     >
-                        {currentView === "decks" ? "Back to Lobby" : "My Decks"}
+                        {currentView === "decks"
+                            ? "Quay về trang chủ"
+                            : "Bộ bài của tôi"}
                     </Link>
                 </Button>
                 <Button
                     variant="destructive"
-                    className="border-none shadow-md"
+                    className="border-red-300 shadow-md"
                     disabled={isPending}
                     onClick={handleSignOut}
                 >
-                    {isPending ? "Signing out..." : "Sign Out"}
+                    {isPending ? "Đang đăng xuất..." : "Đăng xuất"}
                 </Button>
             </div>
         </header>

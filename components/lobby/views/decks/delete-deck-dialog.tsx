@@ -32,22 +32,24 @@ export function DeleteDeckDialog({
         >
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Delete deck</DialogTitle>
+                    <DialogTitle className="text-xl">Xác nhận xóa</DialogTitle>
                     <DialogDescription>
-                        This will permanently delete
-                        {deckName ? ` ${deckName}` : " this deck"}.
+                        Hành động này sẽ không thể hoàn tác. Bạn có chắc chắn
+                        muốn xóa deck
+                        {deckName ? ` ${deckName}` : " này"} chứ?
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
                     <Button variant="outline" onClick={onCancel}>
-                        Cancel
+                        Hủy
                     </Button>
                     <Button
                         variant="destructive"
                         onClick={onConfirm}
                         disabled={isDeleting}
+                        className="border-red-200"
                     >
-                        {isDeleting ? "Deleting..." : "Delete"}
+                        {isDeleting ? "Đang xóa..." : "Xóa"}
                     </Button>
                 </DialogFooter>
             </DialogContent>

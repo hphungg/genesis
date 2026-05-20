@@ -53,23 +53,25 @@ export function SignUpForm({
             const response = await signUp(formData)
 
             if (response.success) {
-                toast.success("Signed up successfully!")
+                toast.success("Đăng ký thành công!")
                 router.push("/")
                 return
             } else {
-                toast.error(`Failed to sign up: ${response.error}`)
+                toast.error("Đăng ký thất bại")
                 return
             }
         })
     }
 
     return (
-        <div className={cn("flex flex-col gap-6", className)} {...props}>
+        <div className={cn("flex flex-col gap-4", className)} {...props}>
             <Card>
                 <CardHeader>
-                    <CardTitle>Create new account, Duelist!</CardTitle>
+                    <CardTitle className="text-xl font-bold">
+                        Duelist Unite
+                    </CardTitle>
                     <CardDescription>
-                        Enter your details below to create your account
+                        Điền đầy đủ thông tin để tạo tài khoản mới
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -86,7 +88,7 @@ export function SignUpForm({
                                         <Input
                                             id="email"
                                             type="email"
-                                            placeholder="Enter your email"
+                                            placeholder="Nhập email của bạn"
                                             {...field}
                                         />
                                         {fieldState.error && (
@@ -103,12 +105,12 @@ export function SignUpForm({
                                 render={({ field, fieldState }) => (
                                     <Field>
                                         <FieldLabel htmlFor="displayName">
-                                            Display name
+                                            Tên hiển thị
                                         </FieldLabel>
                                         <Input
                                             id="displayName"
                                             type="text"
-                                            placeholder="Enter your display name"
+                                            placeholder="Nhập tên hiển thị"
                                             {...field}
                                         />
                                         {fieldState.error && (
@@ -125,12 +127,12 @@ export function SignUpForm({
                                 render={({ field, fieldState }) => (
                                     <Field>
                                         <FieldLabel htmlFor="password">
-                                            Password
+                                            Mật khẩu
                                         </FieldLabel>
                                         <Input
                                             id="password"
                                             type="password"
-                                            placeholder="Enter your password"
+                                            placeholder="Nhập mật khẩu"
                                             {...field}
                                         />
                                         {fieldState.error && (
@@ -147,12 +149,12 @@ export function SignUpForm({
                                 render={({ field, fieldState }) => (
                                     <Field>
                                         <FieldLabel htmlFor="confirmPassword">
-                                            Confirm password
+                                            Nhập lại mật khẩu
                                         </FieldLabel>
                                         <Input
                                             id="confirmPassword"
                                             type="password"
-                                            placeholder="Confirm your password"
+                                            placeholder="Nhập lại mật khẩu"
                                             {...field}
                                         />
                                         {fieldState.error && (
@@ -169,13 +171,11 @@ export function SignUpForm({
                                     className="w-full"
                                     disabled={isPending}
                                 >
-                                    {isPending
-                                        ? "Creating account…"
-                                        : "Create account"}
+                                    {isPending ? "Đang tạo..." : "Đăng ký"}
                                 </Button>
                                 <FieldDescription className="text-center">
-                                    Already have an account?{" "}
-                                    <a href="/signin">Sign in</a>
+                                    Đã có tài khoản?{" "}
+                                    <a href="/signin">Đăng nhập ngay</a>
                                 </FieldDescription>
                             </Field>
                         </FieldGroup>

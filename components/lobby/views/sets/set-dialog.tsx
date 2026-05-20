@@ -43,7 +43,7 @@ export function SetDialog({
                         </div>
                     ) : (
                         <Badge className="border-white bg-black text-xs font-semibold tracking-wide uppercase">
-                            No tags
+                            Không có tags
                         </Badge>
                     )}
                     <DialogDescription className="mt-4 text-base">
@@ -56,7 +56,7 @@ export function SetDialog({
                         <Spinner className="mx-auto size-10" />
                     ) : selectedSet?.cards && selectedSet.cards.length === 0 ? (
                         <div className="text-muted-foreground flex h-40 items-center justify-center text-sm">
-                            No cards in this set yet.
+                            Không có lá bài nào nằm trong gói này.
                         </div>
                     ) : (
                         <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
@@ -72,7 +72,7 @@ export function SetDialog({
                                             className="h-full w-full object-cover"
                                             loading="lazy"
                                         />
-                                        {(card.point && card.point > 0) && (
+                                        {card.point && card.point > 0 && (
                                             <span className="absolute top-1 left-1 rounded bg-red-600 px-2 py-0.5 text-xs font-bold text-white">
                                                 {card.point}
                                             </span>

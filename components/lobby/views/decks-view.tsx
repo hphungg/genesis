@@ -31,9 +31,9 @@ export default function DecksView({
                     prev.filter((deck) => deck.id !== deckToDelete.id),
                 )
                 setDeckToDelete(null)
-                toast.success("Deck deleted")
+                toast.success("Xóa bộ bài thành công!")
             } else {
-                toast.error(result.error ?? "Failed to delete deck")
+                toast.error(result.error ?? "Xóa bộ bài thất bại.")
             }
         })
     }
@@ -43,30 +43,31 @@ export default function DecksView({
     }
 
     return (
-        <div className="flex w-full flex-1 flex-col p-6">
+        <div className="flex h-full w-full flex-1 flex-col p-4">
             <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-                <h2 className="text-2xl font-bold">My Decks</h2>
+                <h2 className="text-2xl font-bold">Bộ bài của tôi</h2>
                 <Button asChild>
-                    <Link href="/deck/new">Create New Deck</Link>
+                    <Link href="/deck/new">Tạo bộ bài mới</Link>
                 </Button>
             </div>
-
-            {decks.length === 0 ? (
-                <div className="text-muted-foreground flex h-40 items-center justify-center text-sm">
-                    No decks yet.
-                </div>
-            ) : (
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {decks.map((deck) => (
-                        <DeckCard
-                            key={deck.id}
-                            deck={deck}
-                            onDelete={() => handleDelete(deck)}
-                            onExport={handleExport}
-                        />
-                    ))}
-                </div>
-            )}
+            <div className="flex-1 overflow-y-auto">
+                {decks.length === 0 ? (
+                    <div className="text-muted-foreground flex h-40 items-center justify-center text-sm">
+                        Không có bộ bài nào.
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                        {decks.map((deck) => (
+                            <DeckCard
+                                key={deck.id}
+                                deck={deck}
+                                onDelete={() => handleDelete(deck)}
+                                onExport={handleExport}
+                            />
+                        ))}
+                    </div>
+                )}
+            </div>
 
             <DeleteDeckDialog
                 deckName={deckToDelete?.name}

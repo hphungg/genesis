@@ -11,19 +11,24 @@ interface CardSearchBarProps {
     onSearch: () => void
 }
 
-export default function CardSearchBar({ query, isPending, onChange, onSearch }: CardSearchBarProps) {
+export default function CardSearchBar({
+    query,
+    isPending,
+    onChange,
+    onSearch,
+}: CardSearchBarProps) {
     return (
-        <div className="flex items-center gap-1.5 shrink-0">
+        <div className="flex shrink-0 items-center gap-1.5">
             <Input
                 value={query}
                 onChange={(e) => onChange(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && onSearch()}
-                placeholder="Search cards by name..."
+                placeholder="Tìm kiếm tên lá bài..."
                 className="flex-1"
             />
             <Button onClick={onSearch} disabled={isPending || !query.trim()}>
                 <MagnifyingGlassIcon />
-                Search
+                Tìm
             </Button>
         </div>
     )

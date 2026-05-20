@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { PlusCircleIcon } from "@phosphor-icons/react"
+import { ArrowLeftIcon, PlusCircleIcon } from "@phosphor-icons/react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useTransition } from "react"
@@ -17,23 +17,26 @@ export default function LandingTopBar() {
     }
 
     return (
-        <header className="relative flex w-full items-center justify-between px-4 py-4 bg-background border-b">
+        <header className="bg-background relative flex w-full items-center justify-between border-b px-4 py-4">
             <Button variant="outline" asChild>
-                <Link href="/">Back to Lobby</Link>
+                <Link href="/">
+                    <ArrowLeftIcon />
+                    Về trang chủ
+                </Link>
             </Button>
 
-            <h1 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-lg font-bold">
-                Sets
+            <h1 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-lg font-bold">
+                Gói bài
             </h1>
 
             <div className="flex items-center gap-4">
                 <Button
-                    className="gap-2 px-6"
+                    className="gap-2"
                     onClick={handleCreate}
                     disabled={isPending}
                 >
                     <PlusCircleIcon size={20} />
-                    {isPending ? "Creating…" : "Create New Set"}
+                    {isPending ? "Đang tạo..." : "Tạo gói bài mới"}
                 </Button>
             </div>
         </header>

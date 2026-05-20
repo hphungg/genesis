@@ -49,11 +49,11 @@ export function SignInForm({
             const response = await signIn(formData)
 
             if (response.success) {
-                toast.success("Signed in successfully!")
+                toast.success("Đăng nhập thành công!")
                 router.push("/")
                 return
             } else {
-                toast.error(`Failed to sign in: ${response.error}`)
+                toast.error("Email hoặc mật khẩu không chính xác.")
                 return
             }
         })
@@ -63,10 +63,10 @@ export function SignInForm({
         <div className={cn("flex flex-col gap-6", className)} {...props}>
             <Card>
                 <CardHeader>
-                    <CardTitle>Sign In to your account</CardTitle>
-                    <CardDescription>
-                        Enter your email below to signin to your account
-                    </CardDescription>
+                    <CardTitle className="text-xl font-bold">
+                        Duelist Unite
+                    </CardTitle>
+                    <CardDescription>Đăng nhập vào hệ thống</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -82,7 +82,7 @@ export function SignInForm({
                                         <Input
                                             id="email"
                                             type="email"
-                                            placeholder="Enter your email"
+                                            placeholder="Nhập email của bạn"
                                             aria-invalid={fieldState.invalid}
                                             {...field}
                                         />
@@ -100,12 +100,12 @@ export function SignInForm({
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="password">
-                                            Password
+                                            Mật khẩu
                                         </FieldLabel>
                                         <Input
                                             id="password"
                                             type="password"
-                                            placeholder="Enter your password"
+                                            placeholder="Nhập mật khẩu của bạn"
                                             aria-invalid={fieldState.invalid}
                                             {...field}
                                         />
@@ -119,11 +119,13 @@ export function SignInForm({
                             />
                             <Field>
                                 <Button type="submit" disabled={isPending}>
-                                    {isPending ? "Signing in..." : "Sign In"}
+                                    {isPending
+                                        ? "Đang đăng nhập..."
+                                        : "Đăng nhập"}
                                 </Button>
                                 <FieldDescription className="text-center">
-                                    Don&apos;t have an account?{" "}
-                                    <a href="/signup">Sign up</a>
+                                    Chưa có tài khoản?{" "}
+                                    <a href="/signup">Đăng ký ngay</a>
                                 </FieldDescription>
                             </Field>
                         </FieldGroup>

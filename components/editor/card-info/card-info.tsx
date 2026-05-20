@@ -1,6 +1,5 @@
 "use client"
 
-import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { useEditor } from "@/providers/editor-provider"
 
@@ -46,7 +45,7 @@ export default function CardInfo() {
                 <h2 className="text-center font-bold text-balance">
                     {hoveredCard.name}
                 </h2>
-                <div className="flex items-center justify-between w-full text-sm">
+                <div className="flex w-full items-center justify-between text-sm">
                     <div className="flex flex-wrap items-center gap-2">
                         {(hoveredCard.type === "Monster" ||
                             hoveredCard.type === "Extra") && (
@@ -93,7 +92,7 @@ export default function CardInfo() {
                 </div>
 
                 <p className="h-full text-xs leading-relaxed whitespace-pre-wrap">
-                    {hoveredCard.effect || "No effect."}
+                    {hoveredCard.effect || "Không có hiệu ứng."}
                 </p>
 
                 {(hoveredCard.atk !== null || hoveredCard.def !== null) && (

@@ -53,10 +53,7 @@ const MONSTER_RACES = [
     "Aqua",
     "Beast",
     "Beast-Warrior",
-    "Creator God",
-    "Cyberse",
     "Dinosaur",
-    "Divine-Beast",
     "Dragon",
     "Fairy",
     "Fiend",
@@ -82,14 +79,7 @@ const MONSTER_SUBTYPES = [
     "Fusion",
     "Synchro",
     "Xyz",
-    "Link",
-    "Ritual",
-    "Pendulum",
     "Tuner",
-    "Gemini",
-    "Union",
-    "Spirit",
-    "Toon",
     "Flip",
 ]
 const SPELL_SUBTYPES = [
@@ -101,7 +91,7 @@ const SPELL_SUBTYPES = [
     "Ritual",
 ]
 const TRAP_SUBTYPES = ["Normal", "Continuous", "Counter"]
-const ATTRIBUTES = ["DARK", "LIGHT", "EARTH", "WATER", "FIRE", "WIND", "DIVINE"]
+const ATTRIBUTES = ["Dark", "Light", "Earth", "Water", "Fire", "Wind"]
 const LEVELS = Array.from({ length: 12 }, (_, index) => String(index + 1))
 
 const drawerWidthClassName =
@@ -135,23 +125,23 @@ export default function CardFilterDrawer({
         <Drawer open={open} onOpenChange={onOpenChange}>
             <DrawerContent className={cn(drawerWidthClassName)}>
                 <DrawerHeader className="mb-4">
-                    <DrawerTitle className="text-xl">Filter</DrawerTitle>
-                    <DrawerDescription>Select type first</DrawerDescription>
+                    <DrawerTitle className="text-xl">Bộ lọc</DrawerTitle>
+                    <DrawerDescription>Lọc kết quả theo...</DrawerDescription>
                 </DrawerHeader>
 
                 <div className="px-6 pb-6">
                     <div className="grid gap-4 sm:grid-cols-2">
                         <div className="grid gap-2">
-                            <Label>Type</Label>
+                            <Label>Loại bài</Label>
                             <Select
                                 value={filters.type || "any"}
                                 onValueChange={onTypeChange}
                             >
                                 <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Any" />
+                                    <SelectValue placeholder="Bất kỳ" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="any">Any</SelectItem>
+                                    <SelectItem value="any">Bất kỳ</SelectItem>
                                     {TYPE_OPTIONS.map((option) => (
                                         <SelectItem key={option} value={option}>
                                             {option}
@@ -167,7 +157,7 @@ export default function CardFilterDrawer({
                                 !isMonster && "opacity-30 grayscale",
                             )}
                         >
-                            <Label>Race</Label>
+                            <Label>Tộc bài</Label>
                             <Select
                                 value={filters.race || "any"}
                                 onValueChange={handleChange("race")}
@@ -177,7 +167,7 @@ export default function CardFilterDrawer({
                                     <SelectValue placeholder="Monster only" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="any">Any</SelectItem>
+                                    <SelectItem value="any">Bất kỳ</SelectItem>
                                     {MONSTER_RACES.map((option) => (
                                         <SelectItem key={option} value={option}>
                                             {option}
@@ -193,7 +183,7 @@ export default function CardFilterDrawer({
                                 !filters.type && "opacity-30 grayscale",
                             )}
                         >
-                            <Label>Subtype</Label>
+                            <Label>Tiêu chí phụ</Label>
                             <Select
                                 value={filters.subtype || "any"}
                                 onValueChange={handleChange("subtype")}
@@ -203,13 +193,13 @@ export default function CardFilterDrawer({
                                     <SelectValue
                                         placeholder={
                                             filters.type
-                                                ? "Any"
-                                                : "Pick a type first"
+                                                ? "Bất kỳ"
+                                                : "Lựa chọn loại bài trước"
                                         }
                                     />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="any">Any</SelectItem>
+                                    <SelectItem value="any">Bất kỳ</SelectItem>
                                     {subtypeOptions.map((option) => (
                                         <SelectItem key={option} value={option}>
                                             {option}
@@ -232,10 +222,10 @@ export default function CardFilterDrawer({
                                 disabled={!isMonster}
                             >
                                 <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Monster only" />
+                                    <SelectValue placeholder="Chỉ quái thú" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="any">Any</SelectItem>
+                                    <SelectItem value="any">Bất kỳ</SelectItem>
                                     {LEVELS.map((level) => (
                                         <SelectItem key={level} value={level}>
                                             Level {level}
@@ -251,17 +241,17 @@ export default function CardFilterDrawer({
                                 !isMonster && "opacity-30 grayscale",
                             )}
                         >
-                            <Label>Attribute</Label>
+                            <Label>Thuộc tính</Label>
                             <Select
                                 value={filters.attribute || "any"}
                                 onValueChange={handleChange("attribute")}
                                 disabled={!isMonster}
                             >
                                 <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Monster only" />
+                                    <SelectValue placeholder="Chỉ quái thú" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="any">Any</SelectItem>
+                                    <SelectItem value="any">Bất kỳ</SelectItem>
                                     {ATTRIBUTES.map((option) => (
                                         <SelectItem key={option} value={option}>
                                             {option}
@@ -280,7 +270,7 @@ export default function CardFilterDrawer({
                         variant="outline"
                         onClick={onClear}
                     >
-                        Clear filters
+                        Xóa bộ lọc
                     </Button>
                     <Button
                         size="sm"
@@ -288,7 +278,7 @@ export default function CardFilterDrawer({
                         onClick={onApply}
                         disabled={!canApply}
                     >
-                        Apply filters
+                        Áp dụng
                     </Button>
                 </DrawerFooter>
             </DrawerContent>

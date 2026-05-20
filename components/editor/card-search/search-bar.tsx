@@ -35,7 +35,7 @@ export default function SearchBar({
                         onKeyDown={(e) =>
                             e.key === "Enter" && canSearch && onSearch()
                         }
-                        placeholder="Search cards by name..."
+                        placeholder="Tìm kiếm tên lá bài..."
                         className="w-full"
                     />
                 </div>

@@ -10,7 +10,9 @@ import {
     updateTag,
 } from "next/cache"
 
-export type DeckSummary = Omit<typeof decks.$inferSelect, "userId">
+export type DeckSummary = Omit<typeof decks.$inferSelect, "userId"> & {
+    mainCount: number
+}
 
 export type DeckContents = {
     main: Cards[]
@@ -62,9 +64,20 @@ async function getCachedAllDecks(userId: string): Promise<DeckSummary[]> {
     const results = await db.query.decks.findMany({
         where: eq(decks.userId, userId),
         orderBy: (deck, { desc }) => [desc(deck.updatedAt)],
+        with: {
+            deckCards: {
+                columns: {
+                    section: true,
+                },
+            },
+        },
     })
 
-    return results.map(({ userId, ...rest }) => rest)
+    return results.map(({ userId, deckCards, ...rest }) => ({
+        ...rest,
+        coverId: rest.coverId ?? null,
+        mainCount: deckCards.filter((dc) => dc.section === "main").length,
+    }))
 }
 
 export async function getAllDecks(): Promise<DeckSummary[]> {
@@ -133,6 +146,7 @@ export async function createDeck(data: DeckEditorInput): Promise<DeckSummary> {
         coverId: deckData.coverId ?? null,
         createdAt: new Date(deckData.createdAt),
         updatedAt: new Date(deckData.updatedAt),
+        mainCount: data.mainDeckIds?.length ?? 0,
     }
 }
 
@@ -180,6 +194,7 @@ export async function updateDeck(
         coverId: deckData.coverId ?? null,
         createdAt: new Date(deckData.createdAt),
         updatedAt: new Date(deckData.updatedAt),
+        mainCount: data.mainDeckIds?.length ?? 0,
     }
 }
 

@@ -26,7 +26,7 @@ export async function signIn(formData: FormData) {
 
         return { success: true }
     } catch (err) {
-        return { success: false, error: "Unknown Error" }
+        return { success: false, error: "Lỗi không xác định" }
     }
 }
 
@@ -62,7 +62,7 @@ export async function signUp(formData: FormData) {
 
         return { success: true }
     } catch (err) {
-        return { success: false, error: "Unknown Error" }
+        return { success: false, error: "Lỗi không xác định" }
     }
 }
 
@@ -77,6 +77,6 @@ export async function signOut() {
 
         return { success: true }
     } catch (err) {
-        return { success: false, error: "Unknown Error" }
+        return { success: false, error: "Lỗi không xác định" }
     }
 }

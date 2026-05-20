@@ -23,7 +23,7 @@ export function SetTags() {
 
     return (
         <div className="flex flex-col gap-2">
-            <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+            <Label className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
                 Tags
             </Label>
 
@@ -32,12 +32,12 @@ export function SetTags() {
                     {set.tags.map((tag) => (
                         <Badge
                             key={tag}
-                            className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 bg-black"
+                            className="inline-flex items-center gap-1 bg-black px-2.5 py-0.5 text-xs font-semibold"
                         >
                             {tag}
                             <button
                                 onClick={() => removeTag(tag)}
-                                className="ml-0.5 opacity-70 hover:opacity-100 transition-opacity rounded-full"
+                                className="ml-0.5 rounded-full opacity-70 transition-opacity hover:opacity-100"
                                 aria-label={`Remove tag ${tag}`}
                             >
                                 <XIcon size={10} weight="bold" />
@@ -53,8 +53,8 @@ export function SetTags() {
                     value={tagInput}
                     onChange={(e) => setTagInput(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleAddTag()}
-                    placeholder="Add tag…"
-                    className="h-8 text-sm flex-1"
+                    placeholder="Thêm tag..."
+                    className="h-8 flex-1 text-sm"
                 />
                 <Button
                     size="sm"
@@ -63,7 +63,7 @@ export function SetTags() {
                     className="h-8 shrink-0"
                     disabled={!tagInput.trim()}
                 >
-                    Add
+                    Thêm
                 </Button>
             </div>
         </div>

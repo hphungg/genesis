@@ -4,20 +4,20 @@ export const signUpSchema = z
     .object({
         email: z
             .string()
-            .email("Enter a valid email address")
-            .min(1, "Email is required"),
+            .email("Email không hợp lệ")
+            .min(1, "Bạn phải nhập email"),
         displayName: z
             .string()
-            .min(1, "Display name is required")
-            .max(50, "Display name must be less than 50 characters"),
+            .min(1, "Bạn chưa đặt tên hiển thị")
+            .max(50, "Tên hiển thị không được dài hơn 50 ký tự"),
         password: z
             .string()
-            .min(1, "Password is required")
-            .min(6, "Password must be at least 6 characters long"),
-        confirmPassword: z.string().min(1, "You have to confirm your password"),
+            .min(1, "Bạn phải nhập mật khẩu")
+            .min(6, "Mật khẩu phải có ít nhất 6 ký tự"),
+        confirmPassword: z.string().min(1, "Hãy xác nhận mật khẩu của bạn"),
     })
     .refine((data) => data.password === data.confirmPassword, {
-        message: "Passwords don't match",
+        message: "Mật khảu không khớp",
         path: ["confirmPassword"],
     })
 

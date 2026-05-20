@@ -41,7 +41,7 @@ export function SetCard({ set, onClick }: SetCardProps) {
                     </div>
                 ) : (
                     <Badge className="border-white bg-black text-xs font-semibold tracking-wide uppercase">
-                        No tags
+                        Không có tags
                     </Badge>
                 )}
             </div>

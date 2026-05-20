@@ -17,10 +17,10 @@ export default function SetEditorTopBar() {
         startTransition(async () => {
             try {
                 await save()
-                toast.success("Set saved successfully")
+                toast.success("Lưu gói bài thành công!")
                 router.push("/sets")
             } catch (error) {
-                toast.error("Failed to save set")
+                toast.error("Lưu gói bài thất bại")
             }
         })
     }
@@ -28,12 +28,9 @@ export default function SetEditorTopBar() {
     return (
         <header className="flex w-full shrink-0 items-center justify-between gap-4 px-4 py-4">
             <div className="flex items-center">
-                <Button
-                    variant="outline"
-                    onClick={() => router.push("/sets")}
-                >
+                <Button variant="outline" onClick={() => router.push("/sets")}>
                     <ArrowLeftIcon />
-                    Back
+                    Quay lại
                 </Button>
             </div>
 
@@ -41,14 +38,14 @@ export default function SetEditorTopBar() {
                 value={set.name}
                 onChange={(e) => setName(e.target.value)}
                 className="max-w-md border-transparent bg-transparent px-2 text-center font-bold shadow-none"
-                placeholder="Set name..."
+                placeholder="Tên gói bài..."
                 style={{ fontSize: "1.2rem" }}
             />
 
             <div className="flex items-center gap-3">
                 <Button onClick={handleSave} disabled={isPending}>
                     <FloppyDiskIcon />
-                    {isPending ? "Saving…" : "Save"}
+                    {isPending ? "Đang lưu..." : "Lưu"}
                 </Button>
             </div>
         </header>

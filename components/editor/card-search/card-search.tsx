@@ -112,16 +112,16 @@ export default function CardSearch() {
             >
                 {isPending && (
                     <div className="text-muted-foreground flex h-24 items-center justify-center text-sm">
-                        Searching...
+                        Đang tìm kiếm...
                     </div>
                 )}
 
                 {!isPending && hasSearched && results.length === 0 && (
                     <div className="text-muted-foreground flex h-24 items-center justify-center text-sm">
-                        No cards found
+                        Không tìm thấy lá bài nào phù hợp
                         {query.trim()
-                            ? ` for "${query.trim()}"`
-                            : " with those filters"}
+                            ? ` với "${query.trim()}"`
+                            : " với bộ lọc"}
                         .
                     </div>
                 )}

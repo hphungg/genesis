@@ -6,12 +6,11 @@ import { SetCardList } from "./set-info/card-list"
 
 export default function SetInfo() {
     return (
-        <div className="flex flex-col h-full w-96 min-w-80 shrink-0 overflow-hidden">
-            <div className="flex flex-col gap-4 p-4 border-b">
+        <div className="flex h-full w-96 min-w-80 shrink-0 flex-col overflow-hidden">
+            <div className="flex flex-col gap-4 border-b p-4">
                 <SetDetails />
                 <SetTags />
             </div>
-
             <SetCardList />
         </div>
     )
