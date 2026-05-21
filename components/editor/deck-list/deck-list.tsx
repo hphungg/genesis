@@ -8,7 +8,7 @@ export default function DeckList() {
     const { contents } = useEditor()
 
     return (
-        <div className="mx-auto flex w-full min-w-0 flex-2 flex-col overflow-hidden p-2">
+        <div className="no-scrollbar mx-auto flex w-full min-w-0 flex-2 flex-col overflow-scroll p-2">
             <ScrollArea className="no-scrollbar flex-1">
                 <div className="flex flex-col gap-1 p-1">
                     <DeckSection
