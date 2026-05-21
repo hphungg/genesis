@@ -30,10 +30,12 @@ export default function RootLayout({
         >
             <body className="flex min-h-full flex-col">
                 <AppProgressProvider>
-                    <main>{children}</main>
+                    <main>
+                        {children}
+                        <SpeedInsights />
+                    </main>
                 </AppProgressProvider>
                 <Toaster richColors position="top-center" />
-                <SpeedInsights />
             </body>
         </html>
     )
