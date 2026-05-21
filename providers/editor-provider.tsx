@@ -30,7 +30,6 @@ interface EditorContextType {
 
 const EditorContext = createContext<EditorContextType | null>(null)
 
-
 export function EditorProvider({
     children,
     initialDeck,
@@ -99,11 +98,13 @@ export function EditorProvider({
         }))
     }
 
-    // Fixed: read state from the updater argument to avoid stale closure
     const addCard = (card: Cards) => {
         setContents((prev) => {
-            const totalCopies = [...prev.main, ...prev.extra, ...prev.side]
-                .filter((x) => x.id === card.id).length
+            const totalCopies = [
+                ...prev.main,
+                ...prev.extra,
+                ...prev.side,
+            ].filter((x) => x.id === card.id).length
 
             if (totalCopies >= 3) return prev
 
@@ -119,11 +120,13 @@ export function EditorProvider({
         })
     }
 
-    // Fixed: read state from the updater argument to avoid stale closure
     const addSideCard = (card: Cards) => {
         setContents((prev) => {
-            const totalCopies = [...prev.main, ...prev.extra, ...prev.side]
-                .filter((x) => x.id === card.id).length
+            const totalCopies = [
+                ...prev.main,
+                ...prev.extra,
+                ...prev.side,
+            ].filter((x) => x.id === card.id).length
 
             if (totalCopies >= 3) return prev
             if (prev.side.length >= 15) return prev
@@ -183,14 +186,16 @@ export function EditorProvider({
         }
     }
 
-    const isDirty = 
+    const isDirty =
         deck.name !== initialDeck.name ||
         deck.coverId !== (initialDeck.coverId ?? null) ||
         contents.main.length !== (initialContents?.main?.length ?? 0) ||
         contents.extra.length !== (initialContents?.extra?.length ?? 0) ||
         contents.side.length !== (initialContents?.side?.length ?? 0) ||
         contents.main.some((c, i) => c.id !== initialContents?.main?.[i]?.id) ||
-        contents.extra.some((c, i) => c.id !== initialContents?.extra?.[i]?.id) ||
+        contents.extra.some(
+            (c, i) => c.id !== initialContents?.extra?.[i]?.id,
+        ) ||
         contents.side.some((c, i) => c.id !== initialContents?.side?.[i]?.id)
 
     return (
@@ -214,7 +219,6 @@ export function EditorProvider({
         </EditorContext.Provider>
     )
 }
-
 
 export function useEditor() {
     const context = useContext(EditorContext)

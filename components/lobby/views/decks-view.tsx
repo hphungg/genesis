@@ -53,11 +53,12 @@ export default function DecksView({
     }
 
     const executeExport = async (deck: DeckSummary) => {
-        const toastId = toast.loading(`Đang tải dữ liệu bộ bài "${deck.name}"...`)
         try {
             const fileContent = await exportDeck(deck.id, userId)
 
-            const blob = new Blob([fileContent], { type: "text/plain;charset=utf-8" })
+            const blob = new Blob([fileContent], {
+                type: "text/plain;charset=utf-8",
+            })
             const url = URL.createObjectURL(blob)
             const link = document.createElement("a")
             link.href = url
@@ -66,11 +67,9 @@ export default function DecksView({
             link.click()
             document.body.removeChild(link)
             URL.revokeObjectURL(url)
-
-            toast.success(`Xuất bộ bài "${deck.name}" thành công!`, { id: toastId })
         } catch (error) {
             console.error(error)
-            toast.error("Đã xảy ra lỗi khi xuất bộ bài hoặc bạn không có quyền truy cập.", { id: toastId })
+            toast.error("Đã xảy ra lỗi khi xuất bộ bài.")
         }
     }
 
