@@ -4,18 +4,25 @@ import { deleteSet } from "@/app/api/sets"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { TrashIcon, PencilIcon } from "@phosphor-icons/react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useProgress } from "@bprogress/next"
+import { useRouter } from "next/navigation"
 
 export default function SetGrid({ initialSets }: { initialSets: any[] }) {
     const [sets, setSets] = useState(initialSets)
     const { start, stop } = useProgress()
+    const router = useRouter()
+
+    useEffect(() => {
+        setSets(initialSets)
+    }, [initialSets])
 
     const handleDelete = async (id: number) => {
         start()
         await deleteSet(id)
         setSets((prev) => prev.filter((s) => s.id !== id))
+        router.refresh()
         stop()
     }
 

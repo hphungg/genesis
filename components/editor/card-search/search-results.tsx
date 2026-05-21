@@ -49,7 +49,7 @@ export default function SearchResults({ results }: CardSearchResultsProps) {
     const { setHoveredCard, addCard, addSideCard } = useEditor()
 
     return (
-        <div className="mx-auto grid w-fit grid-cols-2 gap-1 pb-1 sm:grid-cols-3 md:grid-cols-6">
+        <div className="mx-auto grid w-fit grid-cols-2 gap-1 pb-1 sm:grid-cols-3 md:grid-cols-5">
             {results.map((card) => (
                 <CardImage
                     key={card.id}

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useTransition } from "react"
+import { useState, useTransition, useEffect } from "react"
 import { toast } from "sonner"
 import { deleteDeck, exportDeck } from "@/app/api/decks"
 import type { DeckSummary } from "@/app/api/decks"
@@ -24,6 +24,10 @@ export default function DecksView({
     const { start, stop } = useProgress()
     const router = useRouter()
 
+    useEffect(() => {
+        setDecks(initialDecks)
+    }, [initialDecks])
+
     const handleDelete = (deck: DeckSummary) => setDeckToDelete(deck)
 
     const handleConfirmDelete = () => {
@@ -39,6 +43,7 @@ export default function DecksView({
                 )
                 setDeckToDelete(null)
                 toast.success("Xóa bộ bài thành công!")
+                router.refresh()
             } else {
                 toast.error(result.error ?? "Xóa bộ bài thất bại.")
             }

@@ -34,7 +34,7 @@ export default function CardInfo() {
     )
 
     return (
-        <div className="flex h-full min-w-0 flex-2 flex-col gap-2 p-3">
+        <div className="flex h-full min-w-0 flex-1 flex-col gap-2 p-3">
             <img
                 src={`https://images.ygoprodeck.com/images/cards/${hoveredCard.id}.jpg`}
                 alt={hoveredCard.name}
@@ -91,7 +91,7 @@ export default function CardInfo() {
                     {hoveredCard.type3 ? `/${hoveredCard.type3}` : ""}]
                 </div>
 
-                <p className="min-h-0 flex-1 overflow-y-auto text-xs leading-relaxed whitespace-pre-wrap no-scrollbar">
+                <p className="no-scrollbar min-h-0 flex-1 overflow-y-auto text-xs leading-relaxed whitespace-pre-wrap">
                     {hoveredCard.effect || "Không có hiệu ứng."}
                 </p>
 

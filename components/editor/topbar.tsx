@@ -46,6 +46,7 @@ export default function TopBar() {
                 await save()
                 toast.success("Lưu bộ bài thành công!")
                 router.push("/?view=decks")
+                router.refresh()
                 stop()
             } catch (error) {
                 toast.error("Lưu bộ bài thất bại")

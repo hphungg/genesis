@@ -3,7 +3,6 @@
 import { db } from "@/db/database"
 import { sets, setCards } from "@/db/schema"
 import { eq } from "drizzle-orm"
-import { revalidatePath } from "next/cache"
 import { createClient } from "@/lib/supabase/server"
 
 async function getAuthUser() {
@@ -66,8 +65,6 @@ export async function createSet(data: CreateSetInput) {
         await db.insert(setCards).values(relationsToInsert)
     }
 
-    revalidatePath("/")
-    revalidatePath("/sets")
     return newSet
 }
 
@@ -116,9 +113,6 @@ export async function updateSet(setId: number, data: UpdateSetInput) {
         with: { setCards: { with: { card: true } } },
     })
 
-    revalidatePath("/")
-    revalidatePath("/sets")
-    revalidatePath(`/sets/${setId}`)
     return updatedSet
 }
 
@@ -131,8 +125,6 @@ export async function deleteSet(setId: number) {
         .where(eq(sets.id, setId))
         .returning()
 
-    revalidatePath("/")
-    revalidatePath("/sets")
     return deletedSet
 }
 

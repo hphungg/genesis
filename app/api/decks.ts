@@ -4,7 +4,6 @@ import { db } from "@/db/database"
 import { Cards, deckCards, decks } from "@/db/schema"
 import { createClient } from "@/lib/supabase/server"
 import { and, eq } from "drizzle-orm"
-import { revalidatePath } from "next/cache"
 
 export type DeckSummary = Omit<typeof decks.$inferSelect, "userId"> & {
     mainCount: number
@@ -117,9 +116,6 @@ export async function createDeck(data: DeckEditorInput): Promise<DeckSummary> {
         await db.insert(deckCards).values(rows)
     }
 
-    revalidatePath("/")
-    revalidatePath(`/deck/${newDeck.id}`)
-
     const { userId, ...deckData } = newDeck
     return {
         ...deckData,
@@ -161,9 +157,6 @@ export async function updateDeck(
         await db.insert(deckCards).values(rows)
     }
 
-    revalidatePath("/")
-    revalidatePath(`/deck/${deckId}`)
-
     const { userId, ...deckData } = updatedDeck
     return {
         ...deckData,
@@ -191,7 +184,6 @@ export async function deleteDeck(
         return { success: false, error: "Deck không hợp lệ." }
     }
 
-    revalidatePath("/")
     return { success: true }
 }
 

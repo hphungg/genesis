@@ -94,7 +94,7 @@ export default function CardSearch() {
     }
 
     return (
-        <div className="flex h-full flex-3 flex-col gap-3 p-2">
+        <div className="flex h-full flex-1 flex-col gap-3 p-2">
             <SearchBar
                 query={query}
                 isPending={isPending}
