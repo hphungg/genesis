@@ -26,7 +26,7 @@ export default function CardInfo() {
     const { hoveredCard } = useEditor()
 
     if (!hoveredCard) {
-        return <div className="flex h-full min-w-0 flex-3 flex-col p-3" />
+        return <div className="flex h-full min-w-0 flex-1 flex-col p-3" />
     }
 
     const isXyz = [hoveredCard.type2, hoveredCard.type3].some(
@@ -34,7 +34,7 @@ export default function CardInfo() {
     )
 
     return (
-        <div className="flex h-full min-w-0 flex-3 flex-col gap-2 p-3">
+        <div className="flex h-full min-w-0 flex-1 flex-col gap-2 p-3">
             <img
                 src={`https://images.ygoprodeck.com/images/cards/${hoveredCard.id}.jpg`}
                 alt={hoveredCard.name}
