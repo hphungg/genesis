@@ -2,7 +2,6 @@
 
 import { signOut } from "@/app/api/auth"
 import { Button } from "@/components/ui/button"
-import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useState, useTransition } from "react"
 import { toast } from "sonner"
@@ -36,6 +35,12 @@ export default function TopBar({ displayName }: TopBarProps) {
         })
     }
 
+    const handleViewChange = (view: string) => {
+        start()
+        router.push(`?view=${view}`)
+        stop()
+    }
+
     return (
         <header className="relative flex w-full items-center justify-between px-4 py-4">
             <Button variant="outline" onClick={() => setRulesOpen(true)}>
@@ -47,18 +52,16 @@ export default function TopBar({ displayName }: TopBarProps) {
             </h1>
 
             <div className="flex items-center gap-4">
-                <Button asChild className="border-none shadow-md">
-                    <Link
-                        href={
-                            currentView === "decks"
-                                ? "?view=sets"
-                                : "?view=decks"
-                        }
-                    >
-                        {currentView === "decks"
-                            ? "Quay về trang chủ"
-                            : "Bộ bài của tôi"}
-                    </Link>
+                <Button
+                    onClick={() =>
+                        handleViewChange(
+                            currentView === "decks" ? "sets" : "decks",
+                        )
+                    }
+                >
+                    {currentView === "decks"
+                        ? "Quay về trang chủ"
+                        : "Bộ bài của tôi"}
                 </Button>
                 <Button
                     variant="destructive"

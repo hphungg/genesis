@@ -22,7 +22,6 @@ function CardImage({
         <button
             type="button"
             className="group relative aspect-59/86 cursor-pointer hover:z-50 hover:border-2 hover:border-white"
-            title={card.name}
             onMouseEnter={() => onHover(card)}
             onFocus={() => onHover(card)}
             onClick={() => onAdd(card)}
@@ -38,7 +37,7 @@ function CardImage({
                 loading="lazy"
             />
             {card.point && card.point > 0 ? (
-                <span className="absolute top-1 left-1 rounded bg-red-600 px-1 py-0.5 text-[9px] font-bold text-white leading-none z-10 shadow-md">
+                <span className="absolute top-1 left-1 z-10 rounded bg-red-600 px-1 py-0.5 text-[9px] leading-none font-bold text-white shadow-md">
                     {card.point}
                 </span>
             ) : null}

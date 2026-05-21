@@ -69,7 +69,7 @@ export function SignInForm({
             <Card>
                 <CardHeader>
                     <CardTitle className="text-xl font-bold">
-                        Duelist Unite
+                        Duelists Unite
                     </CardTitle>
                     <CardDescription>Đăng nhập vào hệ thống</CardDescription>
                 </CardHeader>

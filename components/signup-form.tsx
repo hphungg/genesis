@@ -73,7 +73,7 @@ export function SignUpForm({
             <Card>
                 <CardHeader>
                     <CardTitle className="text-xl font-bold">
-                        Duelist Unite
+                        Duelists Unite
                     </CardTitle>
                     <CardDescription>
                         Điền đầy đủ thông tin để tạo tài khoản mới

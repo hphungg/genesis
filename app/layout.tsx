@@ -9,7 +9,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
 
 export const metadata: Metadata = {
-    title: "Duelist Unite",
+    title: "Duelists Unite",
     description: "Golden Yu-Gi-Oh! Era",
     icons: {
         icon: "/favicon.ico",

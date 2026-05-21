@@ -3,18 +3,13 @@
 import { db } from "@/db/database"
 import { sets, setCards } from "@/db/schema"
 import { eq } from "drizzle-orm"
-import {
-    revalidatePath,
-    cacheTag,
-    updateTag,
-} from "next/cache"
+import { revalidatePath, cacheTag, updateTag } from "next/cache"
 import { createClient } from "@/lib/supabase/server"
 
 async function getAuthUser() {
     const supabase = await createClient()
-    const {
-        data: { user },
-    } = await supabase.auth.getUser()
+    const { data } = await supabase.auth.getClaims()
+    const user = data?.claims
     return user
 }
 

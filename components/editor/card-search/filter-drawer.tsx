@@ -18,6 +18,15 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
+import {
+    ATTRIBUTES,
+    LEVELS,
+    MONSTER_RACES,
+    MONSTER_SUBTYPES,
+    SPELL_SUBTYPES,
+    TRAP_SUBTYPES,
+    TYPE_OPTIONS,
+} from "@/lib/constants"
 
 export type CardSearchFilters = {
     type: string
@@ -47,52 +56,6 @@ interface CardFilterDrawerProps {
     onApply: () => void
     canApply: boolean
 }
-
-const TYPE_OPTIONS = ["Monster", "Spell", "Trap"]
-const MONSTER_RACES = [
-    "Aqua",
-    "Beast",
-    "Beast-Warrior",
-    "Dinosaur",
-    "Dragon",
-    "Fairy",
-    "Fiend",
-    "Fish",
-    "Insect",
-    "Machine",
-    "Plant",
-    "Psychic",
-    "Pyro",
-    "Reptile",
-    "Rock",
-    "Sea Serpent",
-    "Spellcaster",
-    "Thunder",
-    "Warrior",
-    "Winged Beast",
-    "Wyrm",
-    "Zombie",
-]
-const MONSTER_SUBTYPES = [
-    "Normal",
-    "Effect",
-    "Fusion",
-    "Synchro",
-    "Xyz",
-    "Tuner",
-    "Flip",
-]
-const SPELL_SUBTYPES = [
-    "Normal",
-    "Continuous",
-    "Quick-Play",
-    "Field",
-    "Equip",
-    "Ritual",
-]
-const TRAP_SUBTYPES = ["Normal", "Continuous", "Counter"]
-const ATTRIBUTES = ["Dark", "Light", "Earth", "Water", "Fire", "Wind"]
-const LEVELS = Array.from({ length: 12 }, (_, index) => String(index + 1))
 
 const drawerWidthClassName =
     "data-[vaul-drawer-direction=bottom]:left-1/2 data-[vaul-drawer-direction=bottom]:right-auto data-[vaul-drawer-direction=bottom]:-translate-x-1/2 data-[vaul-drawer-direction=bottom]:mx-auto data-[vaul-drawer-direction=bottom]:w-[92vw] sm:data-[vaul-drawer-direction=bottom]:w-[70vw] lg:data-[vaul-drawer-direction=bottom]:w-[50vw]"

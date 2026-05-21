@@ -51,9 +51,9 @@ export function SetDialog({
                     </DialogDescription>
                 </DialogHeader>
 
-                <div className="mt-2 min-h-0 flex-1 overflow-y-auto pr-2">
+                <div className="mt-2 h-full flex-1 overflow-y-auto pr-2">
                     {isLoading ? (
-                        <Spinner className="mx-auto size-10" />
+                        <Spinner className="mt-auto size-10" />
                     ) : selectedSet?.cards && selectedSet.cards.length === 0 ? (
                         <div className="text-muted-foreground flex h-40 items-center justify-center text-sm">
                             Không có lá bài nào nằm trong gói này.

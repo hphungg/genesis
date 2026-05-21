@@ -48,7 +48,6 @@ async function getAuthUser() {
     const supabase = await createClient()
     const { data } = await supabase.auth.getClaims()
     const user = data?.claims
-
     return user
 }
 

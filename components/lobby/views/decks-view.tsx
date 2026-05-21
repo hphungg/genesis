@@ -1,6 +1,5 @@
 "use client"
 
-import Link from "next/link"
 import { useState, useTransition } from "react"
 import { toast } from "sonner"
 import { deleteDeck, exportDeck } from "@/app/api/decks"
@@ -10,6 +9,7 @@ import { DeleteDeckDialog } from "@/components/lobby/views/decks/delete-deck-dia
 import { ConfirmExportDialog } from "@/components/lobby/views/decks/confirm-export-dialog"
 import { Button } from "@/components/ui/button"
 import { useProgress } from "@bprogress/next"
+import { useRouter } from "next/navigation"
 
 export default function DecksView({
     initialDecks,
@@ -22,6 +22,7 @@ export default function DecksView({
     const [deckToDelete, setDeckToDelete] = useState<DeckSummary | null>(null)
     const [isPending, startTransition] = useTransition()
     const { start, stop } = useProgress()
+    const router = useRouter()
 
     const handleDelete = (deck: DeckSummary) => setDeckToDelete(deck)
 
@@ -79,13 +80,19 @@ export default function DecksView({
         stop()
     }
 
+    const handleCreateNewDeck = () => {
+        start()
+        startTransition(() => {
+            router.push(`/deck/new`)
+        })
+        stop()
+    }
+
     return (
         <div className="flex h-full w-full flex-1 flex-col p-6">
             <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
                 <h2 className="text-2xl font-bold">Bộ bài của tôi</h2>
-                <Button asChild>
-                    <Link href="/deck/new">Tạo bộ bài mới</Link>
-                </Button>
+                <Button onClick={handleCreateNewDeck}>Tạo bộ bài mới</Button>
             </div>
             <div className="flex-1 overflow-y-auto">
                 {decks.length === 0 ? (

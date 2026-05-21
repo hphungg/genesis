@@ -1,6 +1,5 @@
 "use client"
 
-import { CheckCircleIcon, PlusCircleIcon } from "@phosphor-icons/react"
 import { Cards } from "@/db/schema"
 import { CardPreview } from "@/components/card-preview"
 
@@ -30,7 +29,6 @@ function CardThumbnail({
                         ? "cursor-default opacity-50 grayscale-[0.3]"
                         : "cursor-pointer",
                 ].join(" ")}
-                title={card.name}
             >
                 <img
                     src={`https://images.ygoprodeck.com/images/cards/${card.id}.jpg`}
@@ -38,26 +36,6 @@ function CardThumbnail({
                     className="h-full w-full object-cover"
                     loading="lazy"
                 />
-
-                {inSet && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                        <CheckCircleIcon
-                            size={24}
-                            className="text-white drop-shadow-md"
-                            weight="fill"
-                        />
-                    </div>
-                )}
-
-                {!inSet && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
-                        <PlusCircleIcon
-                            size={24}
-                            className="text-white drop-shadow-md"
-                            weight="fill"
-                        />
-                    </div>
-                )}
             </button>
         </CardPreview>
     )
