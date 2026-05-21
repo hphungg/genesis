@@ -4,6 +4,7 @@ import { Inter } from "next/font/google"
 import { cn } from "@/lib/utils"
 import { Toaster } from "sonner"
 import { AppProgressProvider } from "@/providers/progress-provider"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
 
@@ -32,6 +33,7 @@ export default function RootLayout({
                     <main>{children}</main>
                 </AppProgressProvider>
                 <Toaster richColors position="top-center" />
+                <SpeedInsights />
             </body>
         </html>
     )
