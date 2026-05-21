@@ -101,7 +101,7 @@ export function CardPreview({ card, children }: CardPreviewProps) {
                                 {card.type3 ? `/${card.type3}` : ""}]
                             </div>
 
-                            <div className="flex-1 overflow-y-scroll py-1 text-xs leading-relaxed whitespace-pre-wrap">
+                            <div className="flex-1 overflow-y-scroll py-1 text-xs leading-relaxed whitespace-pre-wrap no-scrollbar">
                                 {card.effect}
                             </div>
 

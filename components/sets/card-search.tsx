@@ -38,7 +38,7 @@ export default function SetEditorCardSearch() {
                 onSearch={handleSearch}
             />
 
-            <ScrollArea className="min-h-0 flex-1">
+            <ScrollArea className="min-h-0 flex-1 no-scrollbar">
                 {isPending && (
                     <div className="text-muted-foreground flex h-24 items-center justify-center text-sm">
                         Đang tìm kiếm...

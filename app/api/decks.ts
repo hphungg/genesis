@@ -4,7 +4,7 @@ import { db } from "@/db/database"
 import { Cards, deckCards, decks } from "@/db/schema"
 import { createClient } from "@/lib/supabase/server"
 import { and, eq } from "drizzle-orm"
-import { revalidatePath, cacheTag, updateTag } from "next/cache"
+import { revalidatePath } from "next/cache"
 
 export type DeckSummary = Omit<typeof decks.$inferSelect, "userId"> & {
     mainCount: number
@@ -51,9 +51,8 @@ async function getAuthUser() {
     return user
 }
 
-async function getCachedAllDecks(userId: string): Promise<DeckSummary[]> {
-    "use cache"
-    cacheTag("decks", `decks-${userId}`)
+export async function getAllDecks(userId: string): Promise<DeckSummary[]> {
+    if (!userId) return []
 
     const results = await db.query.decks.findMany({
         where: eq(decks.userId, userId),
@@ -67,24 +66,18 @@ async function getCachedAllDecks(userId: string): Promise<DeckSummary[]> {
         },
     })
 
-    return results.map(({ userId, deckCards, ...rest }) => ({
+    return results.map(({ userId: _, deckCards, ...rest }) => ({
         ...rest,
         coverId: rest.coverId ?? null,
         mainCount: deckCards.filter((dc) => dc.section === "main").length,
     }))
 }
 
-export async function getAllDecks(userId: string): Promise<DeckSummary[]> {
-    if (!userId) return []
-    return getCachedAllDecks(userId)
-}
-
-async function getCachedDeckById(
+export async function getDeckById(
     id: number,
     userId: string,
 ): Promise<DeckDetail | null> {
-    "use cache"
-    cacheTag("decks", `decks-${userId}`, `deck-${id}`)
+    if (!userId) return null
 
     const result = await db.query.decks.findFirst({
         where: and(eq(decks.id, id), eq(decks.userId, userId)),
@@ -101,14 +94,6 @@ async function getCachedDeckById(
         extra: rows.filter((r) => r.section === "extra").map((r) => r.card),
         side: rows.filter((r) => r.section === "side").map((r) => r.card),
     }
-}
-
-export async function getDeckById(
-    id: number,
-    userId: string,
-): Promise<DeckDetail | null> {
-    if (!userId) return null
-    return getCachedDeckById(id, userId)
 }
 
 export async function createDeck(data: DeckEditorInput): Promise<DeckSummary> {
@@ -132,8 +117,6 @@ export async function createDeck(data: DeckEditorInput): Promise<DeckSummary> {
         await db.insert(deckCards).values(rows)
     }
 
-    updateTag("decks")
-    updateTag(`decks-${user.id}`)
     revalidatePath("/")
     revalidatePath(`/deck/${newDeck.id}`)
 
@@ -178,9 +161,6 @@ export async function updateDeck(
         await db.insert(deckCards).values(rows)
     }
 
-    updateTag("decks")
-    updateTag(`decks-${user.id}`)
-    updateTag(`deck-${deckId}`)
     revalidatePath("/")
     revalidatePath(`/deck/${deckId}`)
 
@@ -211,8 +191,6 @@ export async function deleteDeck(
         return { success: false, error: "Deck không hợp lệ." }
     }
 
-    updateTag("decks")
-    updateTag(`decks-${user.id}`)
     revalidatePath("/")
     return { success: true }
 }

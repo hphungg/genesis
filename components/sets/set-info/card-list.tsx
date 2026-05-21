@@ -41,7 +41,7 @@ export function SetCardList() {
                 </span>
             </div>
 
-            <ScrollArea className="min-h-0 flex-1">
+            <ScrollArea className="min-h-0 flex-1 no-scrollbar">
                 {set.cards.length === 0 ? (
                     <div className="text-muted-foreground flex h-32 flex-col items-center justify-center gap-1 text-sm">
                         <span>Không có lá bài nào.</span>

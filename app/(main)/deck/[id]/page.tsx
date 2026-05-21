@@ -67,13 +67,13 @@ export default async function Editor({ params }: Props) {
     }
 
     return (
-        <div className="bg-muted flex min-h-screen flex-col">
+        <div className="bg-muted flex h-screen flex-col overflow-hidden">
             <EditorProvider
                 initialDeck={initialDeck}
                 initialContents={initialContents}
             >
                 <TopBar />
-                <main className="flex flex-1 px-4">
+                <main className="flex flex-1 px-4 min-h-0 overflow-hidden">
                     <div className="bg-background flex flex-1 flex-row gap-0 overflow-hidden rounded-t-2xl border border-b-0 shadow-md">
                         <CardInfo />
                         <Separator

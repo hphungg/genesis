@@ -40,10 +40,10 @@ export default async function SetEditorPage({ params }: Props) {
     }
 
     return (
-        <div className="flex flex-col min-h-screen bg-muted">
+        <div className="flex flex-col h-screen overflow-hidden bg-muted">
             <SetProvider initialSet={set}>
                 <SetEditorTopBar />
-                <main className="flex flex-1 overflow-hidden px-4">
+                <main className="flex flex-1 px-4 min-h-0 overflow-hidden">
                     <div className="flex flex-1 bg-background rounded-t-2xl shadow-md border border-b-0 flex-row gap-0 overflow-hidden">
                         <SetEditorCardSearch />
                         <Separator orientation="vertical" className="self-stretch" />

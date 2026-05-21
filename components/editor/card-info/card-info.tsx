@@ -91,7 +91,7 @@ export default function CardInfo() {
                     {hoveredCard.type3 ? `/${hoveredCard.type3}` : ""}]
                 </div>
 
-                <p className="h-full text-xs leading-relaxed whitespace-pre-wrap">
+                <p className="min-h-0 flex-1 overflow-y-auto text-xs leading-relaxed whitespace-pre-wrap no-scrollbar">
                     {hoveredCard.effect || "Không có hiệu ứng."}
                 </p>
 

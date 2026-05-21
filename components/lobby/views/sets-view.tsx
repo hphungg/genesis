@@ -70,9 +70,9 @@ export default function SetsView({
                 </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto">
+            <div className="no-scrollbar flex-1 overflow-y-auto">
                 {filtered.length === 0 ? (
-                    <div className="text-muted-foreground flex h-40 flex-col items-center justify-center gap-1 text-sm">
+                    <div className="text-muted-foreground flex h-40 flex-col items-center justify-center gap-1">
                         <span>Không có {activeTab} nào.</span>
                     </div>
                 ) : (

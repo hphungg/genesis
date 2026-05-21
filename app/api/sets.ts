@@ -3,7 +3,7 @@
 import { db } from "@/db/database"
 import { sets, setCards } from "@/db/schema"
 import { eq } from "drizzle-orm"
-import { revalidatePath, cacheTag, updateTag } from "next/cache"
+import { revalidatePath } from "next/cache"
 import { createClient } from "@/lib/supabase/server"
 
 async function getAuthUser() {
@@ -14,10 +14,6 @@ async function getAuthUser() {
 }
 
 export async function getSetById(setId: number) {
-    "use cache"
-
-    cacheTag("sets", `set-${setId}`)
-
     const result = await db.query.sets.findFirst({
         where: eq(sets.id, setId),
         with: {
@@ -70,7 +66,6 @@ export async function createSet(data: CreateSetInput) {
         await db.insert(setCards).values(relationsToInsert)
     }
 
-    updateTag("sets")
     revalidatePath("/")
     revalidatePath("/sets")
     return newSet
@@ -121,8 +116,6 @@ export async function updateSet(setId: number, data: UpdateSetInput) {
         with: { setCards: { with: { card: true } } },
     })
 
-    updateTag("sets")
-    updateTag(`set-${setId}`)
     revalidatePath("/")
     revalidatePath("/sets")
     revalidatePath(`/sets/${setId}`)
@@ -138,18 +131,12 @@ export async function deleteSet(setId: number) {
         .where(eq(sets.id, setId))
         .returning()
 
-    updateTag("sets")
-    updateTag(`set-${setId}`)
     revalidatePath("/")
     revalidatePath("/sets")
     return deletedSet
 }
 
 export async function getAllSet() {
-    "use cache"
-
-    cacheTag("sets")
-
     return await db.query.sets.findMany({
         orderBy: (sets, { desc }) => [desc(sets.createdAt)],
     })

@@ -73,7 +73,7 @@ export function FormatRulesDialog({
                         Dựa trên format Genesys của Yu-Gi-Oh! OCG.
                     </DialogDescription>
                 </DialogHeader>
-                <ScrollArea className="mt-2 pr-4">
+                <ScrollArea className="mt-2 pr-4 no-scrollbar">
                     <div className="text-foreground flex flex-col gap-1">
                         {parseMarkdown(RULES_MARKDOWN)}
                     </div>

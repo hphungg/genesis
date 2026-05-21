@@ -108,7 +108,7 @@ export default function CardSearch() {
 
             <ScrollArea
                 type="auto"
-                className="max-h-[calc(100vh-9rem)] min-h-0 flex-1 rounded-sm bg-black/25"
+                className="no-scrollbar min-h-0 flex-1 rounded-sm"
             >
                 {isPending && (
                     <div className="text-muted-foreground flex h-24 items-center justify-center text-sm">

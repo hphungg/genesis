@@ -18,7 +18,7 @@ import {
 import { useRouter } from "next/navigation"
 import { useMemo, useState, useTransition } from "react"
 import { toast } from "sonner"
-import { ConfirmDiscardDialog } from "@/components/editor/confirm-discard-dialog"
+import { ConfirmDiscardDialog } from "@/components/confirm-discard-dialog"
 import { useProgress } from "@bprogress/next"
 
 export default function TopBar() {
@@ -77,7 +77,7 @@ export default function TopBar() {
     }, [contents])
 
     return (
-        <header className="flex w-full flex-1 items-center gap-4 px-4 py-2">
+        <header className="flex w-full shrink-0 items-center gap-4 px-4 py-2">
             <div className="flex flex-3 items-center justify-start gap-4">
                 <Button variant="outline" onClick={handleBack}>
                     <ArrowLeftIcon />

@@ -94,7 +94,7 @@ export default function DecksView({
                 <h2 className="text-2xl font-bold">Bộ bài của tôi</h2>
                 <Button onClick={handleCreateNewDeck}>Tạo bộ bài mới</Button>
             </div>
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 overflow-y-auto no-scrollbar">
                 {decks.length === 0 ? (
                     <div className="text-muted-foreground flex h-40 items-center justify-center text-sm">
                         Không có bộ bài nào.

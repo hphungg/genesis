@@ -7,7 +7,7 @@ import { ArrowLeftIcon, FloppyDiskIcon } from "@phosphor-icons/react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { useState, useTransition } from "react"
-import { ConfirmDiscardDialog } from "@/components/editor/confirm-discard-dialog"
+import { ConfirmDiscardDialog } from "@/components/confirm-discard-dialog"
 import { useProgress } from "@bprogress/next"
 
 export default function SetEditorTopBar() {

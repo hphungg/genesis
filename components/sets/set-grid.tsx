@@ -62,7 +62,7 @@ export default function SetGrid({ initialSets }: { initialSets: any[] }) {
                             <Button
                                 variant="destructive"
                                 size="icon"
-                                className="bg-background h-8 w-8"
+                                className="bg-background h-8 w-8 hover:bg-red-200"
                                 onClick={() => handleDelete(set.id)}
                             >
                                 <TrashIcon size={14} weight="bold" />

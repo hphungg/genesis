@@ -51,11 +51,13 @@ export function SetDialog({
                     </DialogDescription>
                 </DialogHeader>
 
-                <div className="mt-2 h-full flex-1 overflow-y-auto pr-2">
+                <div className="no-scrollbar mt-2 h-full flex-1 overflow-y-auto pr-2">
                     {isLoading ? (
-                        <Spinner className="mt-auto size-10" />
+                        <div className="flex h-full items-center justify-center">
+                            <Spinner className="mx-auto size-10" />
+                        </div>
                     ) : selectedSet?.cards && selectedSet.cards.length === 0 ? (
-                        <div className="text-muted-foreground flex h-40 items-center justify-center text-sm">
+                        <div className="text-muted-foreground flex h-40 items-center justify-center">
                             Không có lá bài nào nằm trong gói này.
                         </div>
                     ) : (
