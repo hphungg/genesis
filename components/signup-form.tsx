@@ -26,6 +26,7 @@ import { useTransition } from "react"
 import { signUp } from "@/app/api/auth"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { useProgress } from "@bprogress/next"
 
 export function SignUpForm({
     className,
@@ -33,6 +34,7 @@ export function SignUpForm({
 }: React.ComponentProps<"div">) {
     const [isPending, startTransition] = useTransition()
     const router = useRouter()
+    const { start, stop } = useProgress()
     const form = useForm<SignUpSchema>({
         resolver: zodResolver(signUpSchema),
         defaultValues: {
@@ -54,8 +56,10 @@ export function SignUpForm({
             const response = await signUp(formData)
 
             if (response.success) {
+                start()
                 toast.success("Đăng ký thành công!")
                 router.push("/")
+                stop()
                 return
             } else {
                 toast.error("Đăng ký thất bại")

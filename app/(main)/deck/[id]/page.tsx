@@ -16,9 +16,8 @@ interface Props {
 
 export default async function Editor({ params }: Props) {
     const supabase = await createClient()
-    const {
-        data: { user },
-    } = await supabase.auth.getUser()
+    const { data } = await supabase.auth.getClaims()
+    const user = data?.claims
 
     if (!user) {
         redirect("/signin")

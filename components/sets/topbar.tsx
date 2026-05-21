@@ -5,15 +5,19 @@ import { ArrowLeftIcon, PlusCircleIcon } from "@phosphor-icons/react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useTransition } from "react"
+import { useProgress } from "@bprogress/next"
 
 export default function LandingTopBar() {
     const router = useRouter()
     const [isPending, startTransition] = useTransition()
+    const { start, stop } = useProgress()
 
     const handleCreate = () => {
+        start()
         startTransition(() => {
             router.push(`/sets/new`)
         })
+        stop()
     }
 
     return (

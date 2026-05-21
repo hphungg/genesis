@@ -34,9 +34,8 @@ export async function updateSession(request: NextRequest) {
         },
     )
 
-    const {
-        data: { user },
-    } = await supabase.auth.getUser()
+    const { data } = await supabase.auth.getClaims()
+    const user = data?.claims
 
     const isAuthRoute =
         request.nextUrl.pathname.startsWith("/signin") ||
@@ -46,8 +45,12 @@ export async function updateSession(request: NextRequest) {
         request.nextUrl.pathname.startsWith("/sets") ||
         request.nextUrl.pathname.startsWith("/deck")
 
-    if (!user && isProtectedRoute && !isAuthRoute) {
+    if (!user && isProtectedRoute) {
         return NextResponse.redirect(new URL("/signin", request.url))
+    }
+
+    if (user && isAuthRoute) {
+        return NextResponse.redirect(new URL("/", request.url))
     }
 
     return response

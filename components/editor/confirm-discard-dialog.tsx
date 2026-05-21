@@ -28,24 +28,24 @@ export function ConfirmDiscardDialog({
         >
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle className="text-xl text-red-500">Thay đổi chưa lưu</DialogTitle>
-                    <DialogDescription className="text-sm text-muted-foreground mt-2">
-                        Bạn có những thay đổi chưa lưu. Nếu rời đi bây giờ, tất cả thay đổi này sẽ bị hủy bỏ.
-                        <br />
-                        <br />
-                        Bạn có chắc chắn muốn rời đi và hủy bỏ các thay đổi này chứ?
+                    <DialogTitle className="text-xl text-red-500">
+                        Thay đổi chưa lưu
+                    </DialogTitle>
+                    <DialogDescription className="text-muted-foreground text-sm">
+                        Bạn có những thay đổi chưa lưu. Bạn có chắc chắn muốn
+                        rời đi và hủy bỏ các thay đổi này chứ?
                     </DialogDescription>
                 </DialogHeader>
-                <DialogFooter className="mt-4">
+                <DialogFooter className="mt-2">
                     <Button variant="outline" onClick={onCancel}>
-                        Ở lại
+                        Hủy
                     </Button>
                     <Button
                         variant="destructive"
                         onClick={onConfirm}
-                        className="bg-red-500 hover:bg-red-600 text-white border-none"
+                        className="border-none bg-red-500 text-white hover:bg-red-600"
                     >
-                        Rời đi & Hủy bỏ
+                        Rời đi
                     </Button>
                 </DialogFooter>
             </DialogContent>

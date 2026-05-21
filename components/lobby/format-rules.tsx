@@ -1,12 +1,10 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
 import {
     Dialog,
     DialogContent,
     DialogHeader,
     DialogTitle,
-    DialogFooter,
     DialogDescription,
 } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -85,9 +83,6 @@ export function FormatRulesDialog({
                         {parseMarkdown(RULES_MARKDOWN)}
                     </div>
                 </ScrollArea>
-                <DialogFooter className="pt-2x`">
-                    <Button onClick={() => onOpenChange(false)}>Đóng</Button>
-                </DialogFooter>
             </DialogContent>
         </Dialog>
     )

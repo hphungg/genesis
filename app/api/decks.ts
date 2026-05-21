@@ -46,9 +46,8 @@ function buildDeckCards(deckId: number, data: DeckEditorInput) {
 
 async function getAuthUser() {
     const supabase = await createClient()
-    const {
-        data: { user },
-    } = await supabase.auth.getUser()
+    const { data } = await supabase.auth.getClaims()
+    const user = data?.claims
 
     return user
 }
@@ -134,7 +133,6 @@ export async function createDeck(data: DeckEditorInput): Promise<DeckSummary> {
         await db.insert(deckCards).values(rows)
     }
 
-    // Immediately invalidate the decks cache so the user sees the new deck
     updateTag("decks")
     updateTag(`decks-${user.id}`)
     revalidatePath("/")
@@ -181,7 +179,6 @@ export async function updateDeck(
         await db.insert(deckCards).values(rows)
     }
 
-    // Immediately invalidate so the user sees updated data after redirect
     updateTag("decks")
     updateTag(`decks-${user.id}`)
     updateTag(`deck-${deckId}`)

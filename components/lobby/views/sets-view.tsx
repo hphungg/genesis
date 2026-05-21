@@ -6,6 +6,7 @@ import { SetCard } from "@/components/lobby/views/sets/set-card"
 import { SetDialog } from "@/components/lobby/views/sets/set-dialog"
 import { Sets, Cards } from "@/db/schema"
 import { getSetById } from "@/app/api/sets"
+import { useProgress } from "@bprogress/next"
 
 type SetWithCards = Sets & { cards?: Cards[] }
 
@@ -25,6 +26,7 @@ export default function SetsView({
     >("archetype")
     const [selectedSet, setSelectedSet] = useState<SetWithCards | null>(null)
     const [isLoadingSet, setIsLoadingSet] = useState(false)
+    const { start, stop } = useProgress()
 
     const filtered = initialSets.filter(
         (s) => (s.setType ?? "").toLowerCase() === activeTab,
@@ -32,6 +34,7 @@ export default function SetsView({
 
     const handleOpenSet = async (set: SetWithCards) => {
         setSelectedSet(set)
+        start()
         setIsLoadingSet(true)
 
         try {
@@ -42,6 +45,7 @@ export default function SetsView({
         } finally {
             setIsLoadingSet(false)
         }
+        stop()
     }
 
     return (

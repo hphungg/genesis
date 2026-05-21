@@ -6,13 +6,17 @@ import { Card } from "@/components/ui/card"
 import { TrashIcon, PencilIcon } from "@phosphor-icons/react"
 import { useState } from "react"
 import Link from "next/link"
+import { useProgress } from "@bprogress/next"
 
 export default function SetGrid({ initialSets }: { initialSets: any[] }) {
     const [sets, setSets] = useState(initialSets)
+    const { start, stop } = useProgress()
 
     const handleDelete = async (id: number) => {
+        start()
         await deleteSet(id)
         setSets((prev) => prev.filter((s) => s.id !== id))
+        stop()
     }
 
     if (sets.length === 0) {

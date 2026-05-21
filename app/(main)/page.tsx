@@ -7,9 +7,8 @@ import { redirect } from "next/navigation"
 
 export default async function Lobby() {
     const supabase = await createClient()
-    const {
-        data: { user },
-    } = await supabase.auth.getUser()
+    const { data } = await supabase.auth.getClaims()
+    const user = data?.claims
 
     if (!user) {
         redirect("/signin")
@@ -31,7 +30,6 @@ export default async function Lobby() {
                         initialDecks={decks}
                         userId={user.id}
                     />
-
                 </div>
             </main>
         </div>

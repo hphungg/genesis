@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { useState, useTransition } from "react"
 import { toast } from "sonner"
 import { FormatRulesDialog } from "@/components/lobby/format-rules"
+import { useProgress } from "@bprogress/next"
 
 interface TopBarProps {
     displayName?: string
@@ -18,14 +19,17 @@ export default function TopBar({ displayName }: TopBarProps) {
     const currentView = searchParams.get("view") || "sets"
     const [isPending, startTransition] = useTransition()
     const [rulesOpen, setRulesOpen] = useState(false)
+    const { start, stop } = useProgress()
 
     const handleSignOut = () => {
         startTransition(async () => {
             const result = await signOut()
 
             if (result.success) {
+                start()
                 toast.success("Đăng xuất thành công!")
                 router.push("/signin")
+                stop()
             } else {
                 toast.error(`Đăng xuất thất bại: ${result.error}`)
             }

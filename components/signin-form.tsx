@@ -25,6 +25,7 @@ import { signInSchema, type SignInSchema } from "@/lib/validation/signin"
 import { useTransition } from "react"
 import { signIn } from "@/app/api/auth"
 import { useRouter } from "next/navigation"
+import { useProgress } from "@bprogress/next"
 import Link from "next/link"
 
 export function SignInForm({
@@ -40,6 +41,7 @@ export function SignInForm({
             password: "",
         },
     })
+    const { start, stop } = useProgress()
 
     const onSubmit = (values: SignInSchema) => {
         startTransition(async () => {
@@ -50,8 +52,10 @@ export function SignInForm({
             const response = await signIn(formData)
 
             if (response.success) {
+                start()
                 toast.success("Đăng nhập thành công!")
                 router.push("/")
+                stop()
                 return
             } else {
                 toast.error("Email hoặc mật khẩu không chính xác.")

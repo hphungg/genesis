@@ -9,6 +9,7 @@ import { DeckCard } from "@/components/lobby/views/decks/deck-card"
 import { DeleteDeckDialog } from "@/components/lobby/views/decks/delete-deck-dialog"
 import { ConfirmExportDialog } from "@/components/lobby/views/decks/confirm-export-dialog"
 import { Button } from "@/components/ui/button"
+import { useProgress } from "@bprogress/next"
 
 export default function DecksView({
     initialDecks,
@@ -20,12 +21,14 @@ export default function DecksView({
     const [decks, setDecks] = useState(initialDecks)
     const [deckToDelete, setDeckToDelete] = useState<DeckSummary | null>(null)
     const [isPending, startTransition] = useTransition()
+    const { start, stop } = useProgress()
 
     const handleDelete = (deck: DeckSummary) => setDeckToDelete(deck)
 
     const handleConfirmDelete = () => {
         if (!deckToDelete) return
 
+        start()
         startTransition(async () => {
             const result = await deleteDeck(deckToDelete.id)
 
@@ -39,6 +42,7 @@ export default function DecksView({
                 toast.error(result.error ?? "Xóa bộ bài thất bại.")
             }
         })
+        stop()
     }
 
     const [deckToExport, setDeckToExport] = useState<DeckSummary | null>(null)
@@ -53,6 +57,7 @@ export default function DecksView({
     }
 
     const executeExport = async (deck: DeckSummary) => {
+        start()
         try {
             const fileContent = await exportDeck(deck.id, userId)
 
@@ -71,6 +76,7 @@ export default function DecksView({
             console.error(error)
             toast.error("Đã xảy ra lỗi khi xuất bộ bài.")
         }
+        stop()
     }
 
     return (

@@ -19,27 +19,34 @@ import { useRouter } from "next/navigation"
 import { useMemo, useState, useTransition } from "react"
 import { toast } from "sonner"
 import { ConfirmDiscardDialog } from "@/components/editor/confirm-discard-dialog"
+import { useProgress } from "@bprogress/next"
 
 export default function TopBar() {
-    const { deck, contents, isDirty, setName, setCoverId, sortCards, save } = useEditor()
+    const { deck, contents, isDirty, setName, setCoverId, sortCards, save } =
+        useEditor()
     const router = useRouter()
     const [isPending, startTransition] = useTransition()
     const [showDiscardDialog, setShowDiscardDialog] = useState(false)
+    const { start, stop } = useProgress()
 
     const handleBack = () => {
         if (isDirty) {
             setShowDiscardDialog(true)
         } else {
+            start()
             router.push("/?view=decks")
+            stop()
         }
     }
 
     const handleSave = () => {
         startTransition(async () => {
             try {
+                start()
                 await save()
                 toast.success("Lưu bộ bài thành công!")
                 router.push("/?view=decks")
+                stop()
             } catch (error) {
                 toast.error("Lưu bộ bài thất bại")
             }
@@ -72,10 +79,7 @@ export default function TopBar() {
     return (
         <header className="flex w-full flex-1 items-center gap-4 px-4 py-2">
             <div className="flex flex-3 items-center justify-start gap-4">
-                <Button
-                    variant="outline"
-                    onClick={handleBack}
-                >
+                <Button variant="outline" onClick={handleBack}>
                     <ArrowLeftIcon />
                     Quay lại
                 </Button>

@@ -4,6 +4,7 @@ import { createDeck, updateDeck } from "@/app/api/decks"
 import { Cards } from "@/db/schema"
 import { createContext, useContext, useState } from "react"
 import { type DeckDetail } from "@/app/api/decks"
+import { useProgress } from "@bprogress/next"
 
 type EditorDeck = Omit<DeckDetail, "main" | "extra" | "side">
 
@@ -48,6 +49,7 @@ export function EditorProvider({
             side: [],
         },
     )
+    const { start, stop } = useProgress()
 
     const setName = (name: string) => setDeck((prev) => ({ ...prev, name }))
 
@@ -149,6 +151,7 @@ export function EditorProvider({
     }
 
     const save = async () => {
+        start()
         let mainDeckIds = contents.main.map((c) => c.id)
         let extraDeckIds = contents.extra.map((c) => c.id)
         let sideDeckIds = contents.side.map((c) => c.id)
@@ -184,6 +187,7 @@ export function EditorProvider({
                 updatedAt: new Date(),
             }))
         }
+        stop()
     }
 
     const isDirty =

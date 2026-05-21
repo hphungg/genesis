@@ -8,23 +8,28 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { useState, useTransition } from "react"
 import { ConfirmDiscardDialog } from "@/components/editor/confirm-discard-dialog"
+import { useProgress } from "@bprogress/next"
 
 export default function SetEditorTopBar() {
     const { set, isDirty, setName, save } = useSetEditor()
     const router = useRouter()
     const [isPending, startTransition] = useTransition()
     const [showDiscardDialog, setShowDiscardDialog] = useState(false)
+    const { start, stop } = useProgress()
 
     const handleBack = () => {
+        start()
         if (isDirty) {
             setShowDiscardDialog(true)
         } else {
             router.push("/sets")
         }
+        stop()
     }
 
     const handleSave = () => {
         startTransition(async () => {
+            start()
             try {
                 await save()
                 toast.success("Lưu gói bài thành công!")
@@ -32,6 +37,7 @@ export default function SetEditorTopBar() {
             } catch (error) {
                 toast.error("Lưu gói bài thất bại")
             }
+            stop()
         })
     }
 

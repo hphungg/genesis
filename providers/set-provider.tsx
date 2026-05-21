@@ -4,6 +4,7 @@ import { createSet, updateSet } from "@/app/api/sets"
 import { Cards, Sets } from "@/db/schema"
 import { getCardSortRank } from "@/lib/sort-rank"
 import { createContext, useContext, useState, useTransition } from "react"
+import { useProgress } from "@bprogress/next"
 
 export type SetWithCards = Sets & {
     cards: Cards[]
@@ -35,6 +36,7 @@ export function SetProvider({
 }) {
     const [set, setSet] = useState<SetWithCards>(initialSet)
     const [isPending, startTransition] = useTransition()
+    const { start, stop } = useProgress()
 
     const setName = (name: string) => setSet((prev) => ({ ...prev, name }))
 
@@ -79,6 +81,7 @@ export function SetProvider({
     const save = (): Promise<void> => {
         return new Promise((resolve, reject) => {
             startTransition(async () => {
+                start()
                 try {
                     const sortedCards = [...set.cards].sort((a, b) => {
                         const rankDiff = getCardSortRank(a) - getCardSortRank(b)
@@ -111,6 +114,7 @@ export function SetProvider({
                 } catch (e) {
                     reject(e)
                 }
+                stop()
             })
         })
     }
