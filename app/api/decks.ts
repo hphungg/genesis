@@ -4,11 +4,7 @@ import { db } from "@/db/database"
 import { Cards, deckCards, decks } from "@/db/schema"
 import { createClient } from "@/lib/supabase/server"
 import { and, eq } from "drizzle-orm"
-import {
-    revalidatePath,
-    cacheTag,
-    updateTag,
-} from "next/cache"
+import { revalidatePath, cacheTag, updateTag } from "next/cache"
 
 export type DeckSummary = Omit<typeof decks.$inferSelect, "userId"> & {
     mainCount: number
@@ -85,7 +81,10 @@ export async function getAllDecks(userId: string): Promise<DeckSummary[]> {
     return getCachedAllDecks(userId)
 }
 
-async function getCachedDeckById(id: number, userId: string): Promise<DeckDetail | null> {
+async function getCachedDeckById(
+    id: number,
+    userId: string,
+): Promise<DeckDetail | null> {
     "use cache"
     cacheTag("decks", `decks-${userId}`, `deck-${id}`)
 
@@ -106,7 +105,10 @@ async function getCachedDeckById(id: number, userId: string): Promise<DeckDetail
     }
 }
 
-export async function getDeckById(id: number, userId: string): Promise<DeckDetail | null> {
+export async function getDeckById(
+    id: number,
+    userId: string,
+): Promise<DeckDetail | null> {
     if (!userId) return null
     return getCachedDeckById(id, userId)
 }
@@ -210,11 +212,37 @@ export async function deleteDeck(
         .returning()
 
     if (!deleted) {
-        return { success: false, error: "Deck not found or unauthorized" }
+        return { success: false, error: "Deck không hợp lệ." }
     }
 
     updateTag("decks")
     updateTag(`decks-${user.id}`)
     revalidatePath("/")
     return { success: true }
+}
+
+export async function exportDeck(
+    deckId: number,
+    userId: string,
+): Promise<string> {
+    const details = await getDeckById(deckId, userId)
+    if (!details) {
+        throw new Error("Deck không hợp lệ.")
+    }
+
+    const mainIds = details.main.map((card) => card.id)
+    const extraIds = details.extra.map((card) => card.id)
+    const sideIds = details.side.map((card) => card.id)
+
+    const lines = [
+        "#main",
+        ...mainIds,
+        "",
+        "#extra",
+        ...extraIds,
+        "",
+        "!side",
+        ...sideIds,
+    ]
+    return lines.join("\n")
 }

@@ -17,6 +17,7 @@ interface EditorContextType {
     deck: EditorDeck
     contents: DeckContents
     hoveredCard: Cards | null
+    isDirty: boolean
     setHoveredCard: (card: Cards | null) => void
     setName: (name: string) => void
     setCoverId: (id: string | null) => void
@@ -28,6 +29,7 @@ interface EditorContextType {
 }
 
 const EditorContext = createContext<EditorContextType | null>(null)
+
 
 export function EditorProvider({
     children,
@@ -181,12 +183,23 @@ export function EditorProvider({
         }
     }
 
+    const isDirty = 
+        deck.name !== initialDeck.name ||
+        deck.coverId !== (initialDeck.coverId ?? null) ||
+        contents.main.length !== (initialContents?.main?.length ?? 0) ||
+        contents.extra.length !== (initialContents?.extra?.length ?? 0) ||
+        contents.side.length !== (initialContents?.side?.length ?? 0) ||
+        contents.main.some((c, i) => c.id !== initialContents?.main?.[i]?.id) ||
+        contents.extra.some((c, i) => c.id !== initialContents?.extra?.[i]?.id) ||
+        contents.side.some((c, i) => c.id !== initialContents?.side?.[i]?.id)
+
     return (
         <EditorContext.Provider
             value={{
                 deck,
                 contents,
                 hoveredCard,
+                isDirty,
                 setHoveredCard,
                 setName,
                 setCoverId,
@@ -201,6 +214,7 @@ export function EditorProvider({
         </EditorContext.Provider>
     )
 }
+
 
 export function useEditor() {
     const context = useContext(EditorContext)

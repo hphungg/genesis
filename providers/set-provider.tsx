@@ -12,6 +12,7 @@ export type SetWithCards = Sets & {
 interface SetContextType {
     set: SetWithCards
     isSaving: boolean
+    isDirty: boolean
     setName: (name: string) => void
     setDescription: (desc: string) => void
     setSetType: (type: string) => void
@@ -75,7 +76,6 @@ export function SetProvider({
             cards: prev.cards.filter((c) => c.id !== cardId),
         }))
 
-    // Fixed: wrapped in startTransition so that isSaving (exposed as isPending) works correctly
     const save = (): Promise<void> => {
         return new Promise((resolve, reject) => {
             startTransition(async () => {
@@ -115,11 +115,22 @@ export function SetProvider({
         })
     }
 
+    const isDirty =
+        set.name !== initialSet.name ||
+        set.description !== initialSet.description ||
+        set.setType !== initialSet.setType ||
+        set.coverId !== (initialSet.coverId ?? null) ||
+        set.tags.length !== initialSet.tags.length ||
+        set.tags.some((t, i) => t !== initialSet.tags[i]) ||
+        set.cards.length !== initialSet.cards.length ||
+        set.cards.some((c, i) => c.id !== initialSet.cards[i].id)
+
     return (
         <SetContext.Provider
             value={{
                 set,
                 isSaving: isPending,
+                isDirty,
                 setName,
                 setDescription,
                 setSetType,

@@ -16,13 +16,23 @@ import {
     FloppyDiskIcon,
 } from "@phosphor-icons/react"
 import { useRouter } from "next/navigation"
-import { useMemo, useTransition } from "react"
+import { useMemo, useState, useTransition } from "react"
 import { toast } from "sonner"
+import { ConfirmDiscardDialog } from "@/components/editor/confirm-discard-dialog"
 
 export default function TopBar() {
-    const { deck, contents, setName, setCoverId, sortCards, save } = useEditor()
+    const { deck, contents, isDirty, setName, setCoverId, sortCards, save } = useEditor()
     const router = useRouter()
     const [isPending, startTransition] = useTransition()
+    const [showDiscardDialog, setShowDiscardDialog] = useState(false)
+
+    const handleBack = () => {
+        if (isDirty) {
+            setShowDiscardDialog(true)
+        } else {
+            router.push("/?view=decks")
+        }
+    }
 
     const handleSave = () => {
         startTransition(async () => {
@@ -64,7 +74,7 @@ export default function TopBar() {
             <div className="flex flex-3 items-center justify-start gap-4">
                 <Button
                     variant="outline"
-                    onClick={() => router.push("/?view=decks")}
+                    onClick={handleBack}
                 >
                     <ArrowLeftIcon />
                     Quay lại
@@ -114,6 +124,14 @@ export default function TopBar() {
                     {isPending ? "Đang lưu..." : "Lưu bộ bài"}
                 </Button>
             </div>
+            <ConfirmDiscardDialog
+                open={showDiscardDialog}
+                onCancel={() => setShowDiscardDialog(false)}
+                onConfirm={() => {
+                    setShowDiscardDialog(false)
+                    router.push("/?view=decks")
+                }}
+            />
         </header>
     )
 }

@@ -26,7 +26,12 @@ export default async function Lobby() {
             />
             <main className="flex flex-1 overflow-hidden px-4">
                 <div className="bg-background flex flex-1 flex-row gap-0 overflow-hidden rounded-t-2xl border border-b-0 shadow-md">
-                    <LobbyView initialSets={sets} initialDecks={decks} />
+                    <LobbyView
+                        initialSets={sets}
+                        initialDecks={decks}
+                        userId={user.id}
+                    />
+
                 </div>
             </main>
         </div>

@@ -3,16 +3,19 @@
 import Link from "next/link"
 import { useState, useTransition } from "react"
 import { toast } from "sonner"
-import { deleteDeck } from "@/app/api/decks"
+import { deleteDeck, exportDeck } from "@/app/api/decks"
 import type { DeckSummary } from "@/app/api/decks"
 import { DeckCard } from "@/components/lobby/views/decks/deck-card"
 import { DeleteDeckDialog } from "@/components/lobby/views/decks/delete-deck-dialog"
+import { ConfirmExportDialog } from "@/components/lobby/views/decks/confirm-export-dialog"
 import { Button } from "@/components/ui/button"
 
 export default function DecksView({
     initialDecks,
+    userId,
 }: {
     initialDecks: DeckSummary[]
+    userId: string
 }) {
     const [decks, setDecks] = useState(initialDecks)
     const [deckToDelete, setDeckToDelete] = useState<DeckSummary | null>(null)
@@ -38,8 +41,37 @@ export default function DecksView({
         })
     }
 
-    const handleExport = () => {
-        toast.message("Export is coming soon")
+    const [deckToExport, setDeckToExport] = useState<DeckSummary | null>(null)
+
+    const handleExport = (deck: DeckSummary) => {
+        const isValid = (deck.mainCount ?? 0) >= 40 && deck.points <= 100
+        if (isValid) {
+            executeExport(deck)
+        } else {
+            setDeckToExport(deck)
+        }
+    }
+
+    const executeExport = async (deck: DeckSummary) => {
+        const toastId = toast.loading(`Đang tải dữ liệu bộ bài "${deck.name}"...`)
+        try {
+            const fileContent = await exportDeck(deck.id, userId)
+
+            const blob = new Blob([fileContent], { type: "text/plain;charset=utf-8" })
+            const url = URL.createObjectURL(blob)
+            const link = document.createElement("a")
+            link.href = url
+            link.download = `${deck.name}.ydk`
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
+            URL.revokeObjectURL(url)
+
+            toast.success(`Xuất bộ bài "${deck.name}" thành công!`, { id: toastId })
+        } catch (error) {
+            console.error(error)
+            toast.error("Đã xảy ra lỗi khi xuất bộ bài hoặc bạn không có quyền truy cập.", { id: toastId })
+        }
     }
 
     return (
@@ -62,7 +94,7 @@ export default function DecksView({
                                 key={deck.id}
                                 deck={deck}
                                 onDelete={() => handleDelete(deck)}
-                                onExport={handleExport}
+                                onExport={() => handleExport(deck)}
                             />
                         ))}
                     </div>
@@ -75,6 +107,17 @@ export default function DecksView({
                 isDeleting={isPending}
                 onCancel={() => setDeckToDelete(null)}
                 onConfirm={handleConfirmDelete}
+            />
+            <ConfirmExportDialog
+                deckName={deckToExport?.name}
+                open={!!deckToExport}
+                onCancel={() => setDeckToExport(null)}
+                onConfirm={() => {
+                    if (deckToExport) {
+                        executeExport(deckToExport)
+                        setDeckToExport(null)
+                    }
+                }}
             />
         </div>
     )

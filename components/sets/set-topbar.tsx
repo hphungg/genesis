@@ -6,12 +6,22 @@ import { Input } from "@/components/ui/input"
 import { ArrowLeftIcon, FloppyDiskIcon } from "@phosphor-icons/react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
-import { useTransition } from "react"
+import { useState, useTransition } from "react"
+import { ConfirmDiscardDialog } from "@/components/editor/confirm-discard-dialog"
 
 export default function SetEditorTopBar() {
-    const { set, setName, save } = useSetEditor()
+    const { set, isDirty, setName, save } = useSetEditor()
     const router = useRouter()
     const [isPending, startTransition] = useTransition()
+    const [showDiscardDialog, setShowDiscardDialog] = useState(false)
+
+    const handleBack = () => {
+        if (isDirty) {
+            setShowDiscardDialog(true)
+        } else {
+            router.push("/sets")
+        }
+    }
 
     const handleSave = () => {
         startTransition(async () => {
@@ -28,7 +38,7 @@ export default function SetEditorTopBar() {
     return (
         <header className="flex w-full shrink-0 items-center justify-between gap-4 px-4 py-4">
             <div className="flex items-center">
-                <Button variant="outline" onClick={() => router.push("/sets")}>
+                <Button variant="outline" onClick={handleBack}>
                     <ArrowLeftIcon />
                     Quay lại
                 </Button>
@@ -48,6 +58,14 @@ export default function SetEditorTopBar() {
                     {isPending ? "Đang lưu..." : "Lưu"}
                 </Button>
             </div>
+            <ConfirmDiscardDialog
+                open={showDiscardDialog}
+                onCancel={() => setShowDiscardDialog(false)}
+                onConfirm={() => {
+                    setShowDiscardDialog(false)
+                    router.push("/sets")
+                }}
+            />
         </header>
     )
 }

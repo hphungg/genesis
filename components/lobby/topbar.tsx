@@ -4,8 +4,9 @@ import { signOut } from "@/app/api/auth"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
-import { useTransition } from "react"
+import { useState, useTransition } from "react"
 import { toast } from "sonner"
+import { FormatRulesDialog } from "@/components/lobby/format-rules"
 
 interface TopBarProps {
     displayName?: string
@@ -16,6 +17,7 @@ export default function TopBar({ displayName }: TopBarProps) {
     const router = useRouter()
     const currentView = searchParams.get("view") || "sets"
     const [isPending, startTransition] = useTransition()
+    const [rulesOpen, setRulesOpen] = useState(false)
 
     const handleSignOut = () => {
         startTransition(async () => {
@@ -32,7 +34,9 @@ export default function TopBar({ displayName }: TopBarProps) {
 
     return (
         <header className="relative flex w-full items-center justify-between px-4 py-4">
-            <Button variant="outline">Thông tin Format</Button>
+            <Button variant="outline" onClick={() => setRulesOpen(true)}>
+                Thông tin Format
+            </Button>
 
             <h1 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-lg font-bold">
                 Xin chào {displayName}!
@@ -61,6 +65,7 @@ export default function TopBar({ displayName }: TopBarProps) {
                     {isPending ? "Đang đăng xuất..." : "Đăng xuất"}
                 </Button>
             </div>
+            <FormatRulesDialog open={rulesOpen} onOpenChange={setRulesOpen} />
         </header>
     )
 }

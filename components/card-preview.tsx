@@ -43,7 +43,7 @@ export function CardPreview({ card, children }: CardPreviewProps) {
             <HoverCardContent
                 side="right"
                 align="start"
-                sideOffset={16}
+                sideOffset={18}
                 className="w-auto bg-black/80 p-2 shadow-none"
             >
                 <div className="flex items-start gap-4">
