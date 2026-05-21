@@ -43,7 +43,7 @@ export default function DecksView({
     }
 
     return (
-        <div className="flex h-full w-full flex-1 flex-col p-4">
+        <div className="flex h-full w-full flex-1 flex-col p-6">
             <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
                 <h2 className="text-2xl font-bold">Bộ bài của tôi</h2>
                 <Button asChild>

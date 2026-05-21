@@ -3,6 +3,7 @@ import "./globals.css"
 import { Inter } from "next/font/google"
 import { cn } from "@/lib/utils"
 import { Toaster } from "sonner"
+import { AppProgressProvider } from "@/providers/progress-provider"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
 
@@ -27,7 +28,9 @@ export default function RootLayout({
             className={cn("h-full antialiased", "font-sans", inter.variable)}
         >
             <body className="flex min-h-full flex-col">
-                <main>{children}</main>
+                <AppProgressProvider>
+                    <main>{children}</main>
+                </AppProgressProvider>
                 <Toaster richColors position="top-center" />
             </body>
         </html>

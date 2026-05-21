@@ -15,7 +15,7 @@ export default async function Lobby() {
         redirect("/signin")
     }
 
-    const [sets, decks] = await Promise.all([getAllSet(), getAllDecks()])
+    const [sets, decks] = await Promise.all([getAllSet(), getAllDecks(user.id)])
 
     return (
         <div className="bg-muted flex min-h-screen flex-col">

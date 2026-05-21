@@ -7,13 +7,23 @@ import TopBar from "@/components/editor/topbar"
 
 import { Separator } from "@/components/ui/separator"
 import { EditorProvider } from "@/providers/editor-provider"
-import { notFound } from "next/navigation"
+import { createClient } from "@/lib/supabase/server"
+import { notFound, redirect } from "next/navigation"
 
 interface Props {
     params: Promise<{ id: string }>
 }
 
 export default async function Editor({ params }: Props) {
+    const supabase = await createClient()
+    const {
+        data: { user },
+    } = await supabase.auth.getUser()
+
+    if (!user) {
+        redirect("/signin")
+    }
+
     const { id } = await params
 
     let initialDeck: {
@@ -47,7 +57,7 @@ export default async function Editor({ params }: Props) {
             notFound()
         }
 
-        const deck = await getDeckById(deckId)
+        const deck = await getDeckById(deckId, user.id)
         if (!deck) {
             notFound()
         }

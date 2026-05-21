@@ -25,6 +25,7 @@ import { signInSchema, type SignInSchema } from "@/lib/validation/signin"
 import { useTransition } from "react"
 import { signIn } from "@/app/api/auth"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 
 export function SignInForm({
     className,
@@ -125,7 +126,7 @@ export function SignInForm({
                                 </Button>
                                 <FieldDescription className="text-center">
                                     Chưa có tài khoản?{" "}
-                                    <a href="/signup">Đăng ký ngay</a>
+                                    <Link href="/signup">Đăng ký ngay</Link>
                                 </FieldDescription>
                             </Field>
                         </FieldGroup>

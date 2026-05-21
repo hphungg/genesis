@@ -80,10 +80,9 @@ async function getCachedAllDecks(userId: string): Promise<DeckSummary[]> {
     }))
 }
 
-export async function getAllDecks(): Promise<DeckSummary[]> {
-    const user = await getAuthUser()
-    if (!user) return []
-    return getCachedAllDecks(user.id)
+export async function getAllDecks(userId: string): Promise<DeckSummary[]> {
+    if (!userId) return []
+    return getCachedAllDecks(userId)
 }
 
 async function getCachedDeckById(id: number, userId: string): Promise<DeckDetail | null> {
@@ -107,10 +106,9 @@ async function getCachedDeckById(id: number, userId: string): Promise<DeckDetail
     }
 }
 
-export async function getDeckById(id: number): Promise<DeckDetail | null> {
-    const user = await getAuthUser()
-    if (!user) return null
-    return getCachedDeckById(id, user.id)
+export async function getDeckById(id: number, userId: string): Promise<DeckDetail | null> {
+    if (!userId) return null
+    return getCachedDeckById(id, userId)
 }
 
 export async function createDeck(data: DeckEditorInput): Promise<DeckSummary> {

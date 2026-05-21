@@ -74,7 +74,7 @@ export default function TopBar() {
                     onValueChange={(val) => setCoverId(val || null)}
                 >
                     <SelectTrigger className="w-36">
-                        <SelectValue placeholder="Lựa chọn ảnh bìa" />
+                        <SelectValue placeholder="Chọn ảnh bìa" />
                     </SelectTrigger>
                     <SelectContent>
                         {allCards.map((card) => (
