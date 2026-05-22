@@ -2,6 +2,7 @@
 
 import { db } from "@/db/database"
 import { and, eq } from "drizzle-orm"
+import { revalidatePath } from "next/cache"
 import { createClient } from "@/lib/supabase/server"
 import { Cards, deckCards, Decks, decks } from "@/db/schema"
 
@@ -122,6 +123,8 @@ export async function createDeck(data: DeckEditorInput): Promise<DeckSummary> {
         await db.insert(deckCards).values(rows)
     }
 
+    revalidatePath("/")
+
     const { ...deckData } = newDeck
     return {
         ...deckData,
@@ -163,6 +166,8 @@ export async function updateDeck(
         await db.insert(deckCards).values(rows)
     }
 
+    revalidatePath("/")
+
     const { ...deckData } = updatedDeck
     return {
         ...deckData,
@@ -189,6 +194,8 @@ export async function deleteDeck(
     if (!deleted) {
         return { success: false, error: "Deck không hợp lệ." }
     }
+
+    revalidatePath("/")
 
     return { success: true }
 }
