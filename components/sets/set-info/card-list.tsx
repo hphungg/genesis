@@ -1,8 +1,9 @@
 "use client"
 
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { XIcon } from "@phosphor-icons/react"
 import { useSetEditor } from "@/providers/set-provider"
+
+import { XIcon } from "@phosphor-icons/react"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { CardPreview } from "@/components/card-preview"
 
 const getCardTypeColor = (type?: string, subtype?: string) => {
@@ -41,7 +42,7 @@ export function SetCardList() {
                 </span>
             </div>
 
-            <ScrollArea className="min-h-0 flex-1 no-scrollbar">
+            <ScrollArea className="no-scrollbar min-h-0 flex-1">
                 {set.cards.length === 0 ? (
                     <div className="text-muted-foreground flex h-32 flex-col items-center justify-center gap-1 text-sm">
                         <span>Không có lá bài nào.</span>

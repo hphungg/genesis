@@ -1,5 +1,3 @@
-"use client"
-
 import { SetDetails } from "./set-info/details"
 import { SetTags } from "./set-info/tags"
 import { SetCardList } from "./set-info/card-list"

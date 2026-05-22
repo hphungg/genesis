@@ -1,13 +1,14 @@
 "use client"
 
-import { deleteSet } from "@/app/api/sets"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { TrashIcon, PencilIcon } from "@phosphor-icons/react"
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useProgress } from "@bprogress/next"
-import { useRouter } from "next/navigation"
+import { TrashIcon, PencilIcon } from "@phosphor-icons/react"
+import { deleteSet } from "@/app/api/sets"
+
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 
 export default function SetGrid({ initialSets }: { initialSets: any[] }) {
     const [sets, setSets] = useState(initialSets)

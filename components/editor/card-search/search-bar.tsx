@@ -1,8 +1,8 @@
 "use client"
 
+import { FunnelIcon, MagnifyingGlassIcon, XIcon } from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { FunnelIcon, MagnifyingGlassIcon, XIcon } from "@phosphor-icons/react"
 
 interface SearchBarProps {
     query: string

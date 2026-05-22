@@ -1,13 +1,14 @@
 "use client"
 
 import * as React from "react"
+import { Cards } from "@/db/schema"
+
+import { Badge } from "@/components/ui/badge"
 import {
     HoverCard,
     HoverCardContent,
     HoverCardTrigger,
 } from "@/components/ui/hover-card"
-import { Cards } from "@/db/schema"
-import { Badge } from "./ui/badge"
 
 interface CardPreviewProps {
     card: Cards
@@ -101,7 +102,7 @@ export function CardPreview({ card, children }: CardPreviewProps) {
                                 {card.type3 ? `/${card.type3}` : ""}]
                             </div>
 
-                            <div className="flex-1 overflow-y-scroll py-1 text-xs leading-relaxed whitespace-pre-wrap no-scrollbar">
+                            <div className="no-scrollbar flex-1 overflow-y-scroll py-1 text-xs leading-relaxed whitespace-pre-wrap">
                                 {card.effect}
                             </div>
 

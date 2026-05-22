@@ -1,12 +1,14 @@
 "use client"
 
 import { useMemo, useState, useTransition } from "react"
-import { useSetEditor } from "@/providers/set-provider"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { searchCardsByName } from "@/app/api/cards"
 import { Cards } from "@/db/schema"
-import CardSearchBar from "./card-search/searchbar"
+
+import { useSetEditor } from "@/providers/set-provider"
 import CardSearchResults from "./card-search/search-results"
+import CardSearchBar from "./card-search/searchbar"
+
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 export default function SetEditorCardSearch() {
     const { set, addCard } = useSetEditor()
@@ -38,7 +40,7 @@ export default function SetEditorCardSearch() {
                 onSearch={handleSearch}
             />
 
-            <ScrollArea className="min-h-0 flex-1 no-scrollbar">
+            <ScrollArea className="no-scrollbar min-h-0 flex-1">
                 {isPending && (
                     <div className="text-muted-foreground flex h-24 items-center justify-center text-sm">
                         Đang tìm kiếm...

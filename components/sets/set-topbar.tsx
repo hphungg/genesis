@@ -1,14 +1,15 @@
 "use client"
 
+import { useState, useTransition } from "react"
+import { useRouter } from "next/navigation"
+import { useProgress } from "@bprogress/next"
+import { toast } from "sonner"
+
 import { useSetEditor } from "@/providers/set-provider"
+import { ConfirmDiscardDialog } from "@/components/confirm-discard-dialog"
+import { ArrowLeftIcon, FloppyDiskIcon } from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { ArrowLeftIcon, FloppyDiskIcon } from "@phosphor-icons/react"
-import { useRouter } from "next/navigation"
-import { toast } from "sonner"
-import { useState, useTransition } from "react"
-import { ConfirmDiscardDialog } from "@/components/confirm-discard-dialog"
-import { useProgress } from "@bprogress/next"
 
 export default function SetEditorTopBar() {
     const { set, isDirty, setName, save } = useSetEditor()

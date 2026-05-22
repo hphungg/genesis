@@ -1,3 +1,4 @@
+import { Sets, Cards } from "@/db/schema"
 import {
     Dialog,
     DialogContent,
@@ -5,10 +6,9 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog"
-import { Sets, Cards } from "@/db/schema"
 import { CardPreview } from "@/components/card-preview"
-import { Badge } from "@/components/ui/badge"
 import { Spinner } from "@/components/ui/spinner"
+import { Badge } from "@/components/ui/badge"
 
 type SetWithCards = Sets & { cards?: Cards[] }
 

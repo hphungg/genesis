@@ -1,12 +1,19 @@
 "use client"
 
-import { createDeck, updateDeck } from "@/app/api/decks"
-import { Cards } from "@/db/schema"
 import { createContext, useContext, useState } from "react"
-import { type DeckDetail } from "@/app/api/decks"
 import { useProgress } from "@bprogress/next"
 
-type EditorDeck = Omit<DeckDetail, "main" | "extra" | "side">
+import { Cards } from "@/db/schema"
+import { createDeck, updateDeck } from "@/app/api/decks"
+
+export interface EditorDeck {
+    id: number
+    name: string
+    points: number
+    coverId: string | null
+    createdAt: Date
+    updatedAt: Date
+}
 
 interface DeckContents {
     main: Cards[]

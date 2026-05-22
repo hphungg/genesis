@@ -1,6 +1,7 @@
 "use client"
 
 import { Cards } from "@/db/schema"
+
 import { CardPreview } from "@/components/card-preview"
 
 interface CardSearchResultsProps {

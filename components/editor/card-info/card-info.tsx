@@ -1,7 +1,7 @@
 "use client"
 
-import { Badge } from "@/components/ui/badge"
 import { useEditor } from "@/providers/editor-provider"
+import { Badge } from "@/components/ui/badge"
 
 const getAttributeBadge = (attribute: string) => {
     switch (attribute) {

@@ -1,28 +1,18 @@
+import { notFound } from "next/navigation"
+import { EditorProvider } from "@/providers/editor-provider"
 import { DeckContents, getDeckById } from "@/app/api/decks"
 
 import CardInfo from "@/components/editor/card-info/card-info"
 import CardSearch from "@/components/editor/card-search/card-search"
 import DeckList from "@/components/editor/deck-list/deck-list"
 import TopBar from "@/components/editor/topbar"
-
 import { Separator } from "@/components/ui/separator"
-import { EditorProvider } from "@/providers/editor-provider"
-import { createClient } from "@/lib/supabase/server"
-import { notFound, redirect } from "next/navigation"
 
 interface Props {
     params: Promise<{ id: string }>
 }
 
 export default async function Editor({ params }: Props) {
-    const supabase = await createClient()
-    const { data } = await supabase.auth.getClaims()
-    const user = data?.claims
-
-    if (!user) {
-        redirect("/signin")
-    }
-
     const { id } = await params
 
     let initialDeck: {
@@ -56,7 +46,7 @@ export default async function Editor({ params }: Props) {
             notFound()
         }
 
-        const deck = await getDeckById(deckId, user.id)
+        const deck = await getDeckById(deckId)
         if (!deck) {
             notFound()
         }
@@ -73,7 +63,7 @@ export default async function Editor({ params }: Props) {
                 initialContents={initialContents}
             >
                 <TopBar />
-                <main className="flex flex-1 px-4 min-h-0 overflow-hidden">
+                <main className="flex min-h-0 flex-1 overflow-hidden px-4">
                     <div className="bg-background flex flex-1 flex-row gap-0 overflow-hidden rounded-t-2xl border border-b-0 shadow-md">
                         <CardInfo />
                         <Separator

@@ -1,11 +1,22 @@
 "use server"
 
 import { db } from "@/db/database"
-import { Cards, deckCards, decks } from "@/db/schema"
-import { createClient } from "@/lib/supabase/server"
 import { and, eq } from "drizzle-orm"
+import { createClient } from "@/lib/supabase/server"
+import { Cards, deckCards, Decks, decks } from "@/db/schema"
 
-export type DeckSummary = Omit<typeof decks.$inferSelect, "userId"> & {
+async function getAuthUser() {
+    const supabase = await createClient()
+    const { data } = await supabase.auth.getClaims()
+    const user = data?.claims
+    if (!user) return null
+    return {
+        ...user,
+        id: user.sub,
+    }
+}
+
+export type DeckSummary = Decks & {
     mainCount: number
 }
 
@@ -15,8 +26,7 @@ export type DeckContents = {
     side: Cards[]
 }
 
-export type DeckDetail = Omit<typeof decks.$inferSelect, "userId"> &
-    DeckContents
+export type DeckDetail = Decks & DeckContents
 
 export type DeckEditorInput = {
     name: string
@@ -43,18 +53,14 @@ function buildDeckCards(deckId: number, data: DeckEditorInput) {
     ]
 }
 
-async function getAuthUser() {
-    const supabase = await createClient()
-    const { data } = await supabase.auth.getClaims()
-    const user = data?.claims
-    return user
-}
-
-export async function getAllDecks(userId: string): Promise<DeckSummary[]> {
-    if (!userId) return []
+export async function getAllDecks(): Promise<DeckSummary[]> {
+    const user = await getAuthUser()
+    if (!user) {
+        throw new Error("Chưa xác thực")
+    }
 
     const results = await db.query.decks.findMany({
-        where: eq(decks.userId, userId),
+        where: eq(decks.userId, user.id),
         orderBy: (deck, { desc }) => [desc(deck.updatedAt)],
         with: {
             deckCards: {
@@ -65,27 +71,27 @@ export async function getAllDecks(userId: string): Promise<DeckSummary[]> {
         },
     })
 
-    return results.map(({ userId: _, deckCards, ...rest }) => ({
+    return results.map(({ deckCards, ...rest }) => ({
         ...rest,
         coverId: rest.coverId ?? null,
         mainCount: deckCards.filter((dc) => dc.section === "main").length,
     }))
 }
 
-export async function getDeckById(
-    id: number,
-    userId: string,
-): Promise<DeckDetail | null> {
-    if (!userId) return null
+export async function getDeckById(id: number): Promise<DeckDetail | null> {
+    const user = await getAuthUser()
+    if (!user) {
+        throw new Error("Chưa xác thực")
+    }
 
     const result = await db.query.decks.findFirst({
-        where: and(eq(decks.id, id), eq(decks.userId, userId)),
+        where: and(eq(decks.id, id), eq(decks.userId, user.id)),
         with: { deckCards: { with: { card: true } } },
     })
 
     if (!result) return null
 
-    const { deckCards: rows, userId: _, ...deckData } = result
+    const { deckCards: rows, ...deckData } = result
 
     return {
         ...deckData,
@@ -98,7 +104,7 @@ export async function getDeckById(
 export async function createDeck(data: DeckEditorInput): Promise<DeckSummary> {
     const user = await getAuthUser()
     if (!user) {
-        throw new Error("Unauthorized")
+        throw new Error("Chưa xác thực")
     }
 
     const [newDeck] = await db
@@ -116,7 +122,7 @@ export async function createDeck(data: DeckEditorInput): Promise<DeckSummary> {
         await db.insert(deckCards).values(rows)
     }
 
-    const { userId, ...deckData } = newDeck
+    const { ...deckData } = newDeck
     return {
         ...deckData,
         coverId: deckData.coverId ?? null,
@@ -132,7 +138,7 @@ export async function updateDeck(
 ): Promise<DeckSummary> {
     const user = await getAuthUser()
     if (!user) {
-        throw new Error("Unauthorized")
+        throw new Error("Chưa xác thực")
     }
 
     const [updatedDeck] = await db
@@ -147,7 +153,7 @@ export async function updateDeck(
         .returning()
 
     if (!updatedDeck) {
-        throw new Error("Deck not found or unauthorized")
+        throw new Error("Không tìm thấy deck hoặc bạn chưa xác thực.")
     }
 
     await db.delete(deckCards).where(eq(deckCards.deckId, deckId))
@@ -157,7 +163,7 @@ export async function updateDeck(
         await db.insert(deckCards).values(rows)
     }
 
-    const { userId, ...deckData } = updatedDeck
+    const { ...deckData } = updatedDeck
     return {
         ...deckData,
         coverId: deckData.coverId ?? null,
@@ -172,7 +178,7 @@ export async function deleteDeck(
 ): Promise<{ success: boolean; error?: string }> {
     const user = await getAuthUser()
     if (!user) {
-        return { success: false, error: "Unauthorized" }
+        return { success: false, error: "Chưa xác thực" }
     }
 
     const [deleted] = await db
@@ -187,11 +193,13 @@ export async function deleteDeck(
     return { success: true }
 }
 
-export async function exportDeck(
-    deckId: number,
-    userId: string,
-): Promise<string> {
-    const details = await getDeckById(deckId, userId)
+export async function exportDeck(deckId: number): Promise<string> {
+    const user = await getAuthUser()
+    if (!user) {
+        throw new Error("Chưa xác thực")
+    }
+
+    const details = await getDeckById(deckId)
     if (!details) {
         throw new Error("Deck không hợp lệ.")
     }

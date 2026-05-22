@@ -1,22 +1,21 @@
 "use client"
 
 import { useState, useTransition, useEffect } from "react"
-import { toast } from "sonner"
-import { deleteDeck, exportDeck } from "@/app/api/decks"
-import type { DeckSummary } from "@/app/api/decks"
-import { DeckCard } from "@/components/lobby/views/decks/deck-card"
-import { DeleteDeckDialog } from "@/components/lobby/views/decks/delete-deck-dialog"
-import { ConfirmExportDialog } from "@/components/lobby/views/decks/confirm-export-dialog"
-import { Button } from "@/components/ui/button"
-import { useProgress } from "@bprogress/next"
 import { useRouter } from "next/navigation"
+import { useProgress } from "@bprogress/next"
+import { toast } from "sonner"
+import type { DeckSummary } from "@/app/api/decks"
+import { deleteDeck, exportDeck } from "@/app/api/decks"
+
+import { ConfirmExportDialog } from "@/components/lobby/views/decks/confirm-export-dialog"
+import { DeleteDeckDialog } from "@/components/lobby/views/decks/delete-deck-dialog"
+import { DeckCard } from "@/components/lobby/views/decks/deck-card"
+import { Button } from "@/components/ui/button"
 
 export default function DecksView({
     initialDecks,
-    userId,
 }: {
     initialDecks: DeckSummary[]
-    userId: string
 }) {
     const [decks, setDecks] = useState(initialDecks)
     const [deckToDelete, setDeckToDelete] = useState<DeckSummary | null>(null)
@@ -65,7 +64,7 @@ export default function DecksView({
     const executeExport = async (deck: DeckSummary) => {
         start()
         try {
-            const fileContent = await exportDeck(deck.id, userId)
+            const fileContent = await exportDeck(deck.id)
 
             const blob = new Blob([fileContent], {
                 type: "text/plain;charset=utf-8",
@@ -99,7 +98,7 @@ export default function DecksView({
                 <h2 className="text-2xl font-bold">Bộ bài của tôi</h2>
                 <Button onClick={handleCreateNewDeck}>Tạo bộ bài mới</Button>
             </div>
-            <div className="flex-1 overflow-y-auto no-scrollbar">
+            <div className="no-scrollbar flex-1 overflow-y-auto">
                 {decks.length === 0 ? (
                     <div className="text-muted-foreground flex h-40 items-center justify-center text-sm">
                         Không có bộ bài nào.

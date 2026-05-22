@@ -1,6 +1,4 @@
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import {
     ExportIcon,
     NotePencilIcon,
@@ -8,6 +6,9 @@ import {
     WarningIcon,
 } from "@phosphor-icons/react"
 import type { DeckSummary } from "@/app/api/decks"
+
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 
 interface DeckCardProps {
     deck: DeckSummary

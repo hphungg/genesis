@@ -16,6 +16,10 @@ export const metadata: Metadata = {
         shortcut: "/favicon.ico",
         apple: "/favicon.ico",
     },
+    other: {
+        rel: "preconnect",
+        href: "https://images.ygoprodeck.com",
+    },
 }
 
 export default function RootLayout({

@@ -1,6 +1,10 @@
 "use client"
 
+import { useSetEditor } from "@/providers/set-provider"
+
+import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
 import {
     Select,
     SelectContent,
@@ -8,9 +12,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { useSetEditor } from "@/providers/set-provider"
 
 export function SetDetails() {
     const { set, setDescription, setSetType, setCoverId } = useSetEditor()

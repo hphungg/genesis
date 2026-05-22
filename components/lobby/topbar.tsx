@@ -1,18 +1,15 @@
 "use client"
 
-import { signOut } from "@/app/api/auth"
-import { Button } from "@/components/ui/button"
-import { useRouter, useSearchParams } from "next/navigation"
 import { useState, useTransition } from "react"
-import { toast } from "sonner"
-import { FormatRulesDialog } from "@/components/lobby/format-rules"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useProgress } from "@bprogress/next"
+import { signOut } from "@/app/api/auth"
+import { toast } from "sonner"
 
-interface TopBarProps {
-    displayName?: string
-}
+import { Button } from "@/components/ui/button"
+import { FormatRulesDialog } from "@/components/lobby/format-rules"
 
-export default function TopBar({ displayName }: TopBarProps) {
+export default function TopBar() {
     const searchParams = useSearchParams()
     const router = useRouter()
     const currentView = searchParams.get("view") || "sets"
@@ -48,7 +45,7 @@ export default function TopBar({ displayName }: TopBarProps) {
             </Button>
 
             <h1 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-lg font-bold">
-                Xin chào {displayName}!
+                Trang chủ
             </h1>
 
             <div className="flex items-center gap-4">

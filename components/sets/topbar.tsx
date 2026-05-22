@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation"
 import { useTransition } from "react"
 import { useProgress } from "@bprogress/next"
 
-export default function LandingTopBar() {
+export default function TopBar() {
     const router = useRouter()
     const [isPending, startTransition] = useTransition()
     const { start, stop } = useProgress()

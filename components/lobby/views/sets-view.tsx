@@ -1,12 +1,13 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { SetCard } from "@/components/lobby/views/sets/set-card"
-import { SetDialog } from "@/components/lobby/views/sets/set-dialog"
+import { useProgress } from "@bprogress/next"
 import { Sets, Cards } from "@/db/schema"
 import { getSetById } from "@/app/api/sets"
-import { useProgress } from "@bprogress/next"
+
+import { SetDialog } from "@/components/lobby/views/sets/set-dialog"
+import { SetCard } from "@/components/lobby/views/sets/set-card"
+import { Button } from "@/components/ui/button"
 
 type SetWithCards = Sets & { cards?: Cards[] }
 

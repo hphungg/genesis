@@ -1,8 +1,8 @@
 "use client"
 
+import { MagnifyingGlassIcon } from "@phosphor-icons/react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { MagnifyingGlassIcon } from "@phosphor-icons/react"
 
 interface CardSearchBarProps {
     query: string

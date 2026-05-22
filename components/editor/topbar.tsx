@@ -1,5 +1,17 @@
 "use client"
 
+import { useMemo, useState, useTransition } from "react"
+import { useRouter } from "next/navigation"
+import { useProgress } from "@bprogress/next"
+import { toast } from "sonner"
+import {
+    ArrowLeftIcon,
+    ArrowsDownUpIcon,
+    FloppyDiskIcon,
+} from "@phosphor-icons/react"
+import { useEditor } from "@/providers/editor-provider"
+
+import { ConfirmDiscardDialog } from "@/components/confirm-discard-dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -9,17 +21,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { useEditor } from "@/providers/editor-provider"
-import {
-    ArrowLeftIcon,
-    ArrowsDownUpIcon,
-    FloppyDiskIcon,
-} from "@phosphor-icons/react"
-import { useRouter } from "next/navigation"
-import { useMemo, useState, useTransition } from "react"
-import { toast } from "sonner"
-import { ConfirmDiscardDialog } from "@/components/confirm-discard-dialog"
-import { useProgress } from "@bprogress/next"
 
 export default function TopBar() {
     const { deck, contents, isDirty, setName, setCoverId, sortCards, save } =

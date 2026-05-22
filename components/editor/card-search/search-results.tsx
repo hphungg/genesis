@@ -1,7 +1,7 @@
 "use client"
 
-import { Cards } from "@/db/schema"
 import { useEditor } from "@/providers/editor-provider"
+import { Cards } from "@/db/schema"
 
 interface CardSearchResultsProps {
     results: Cards[]

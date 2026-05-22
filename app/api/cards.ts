@@ -1,8 +1,8 @@
 "use server"
 
+import { and, eq, ilike } from "drizzle-orm"
 import { db } from "@/db/database"
 import { cards } from "@/db/schema"
-import { and, eq, ilike } from "drizzle-orm"
 
 export async function getAllCards() {
     const result = await db.query.cards.findMany()

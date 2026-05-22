@@ -1,15 +1,19 @@
 "use server"
 
-import { db } from "@/db/database"
-import { sets, setCards } from "@/db/schema"
 import { eq } from "drizzle-orm"
 import { createClient } from "@/lib/supabase/server"
+import { db } from "@/db/database"
+import { sets, setCards } from "@/db/schema"
 
 async function getAuthUser() {
     const supabase = await createClient()
     const { data } = await supabase.auth.getClaims()
     const user = data?.claims
-    return user
+    if (!user) return null
+    return {
+        ...user,
+        id: user.sub,
+    }
 }
 
 export async function getSetById(setId: number) {

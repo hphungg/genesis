@@ -1,12 +1,13 @@
 "use client"
 
 import { useState, useRef } from "react"
+import { useSetEditor } from "@/providers/set-provider"
+
+import { XIcon } from "@phosphor-icons/react"
+import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { XIcon } from "@phosphor-icons/react"
-import { useSetEditor } from "@/providers/set-provider"
 
 export function SetTags() {
     const { set, addTag, removeTag } = useSetEditor()

@@ -1,5 +1,7 @@
 "use client"
 
+import { RULES_MARKDOWN } from "@/lib/constants"
+
 import {
     Dialog,
     DialogContent,
@@ -8,7 +10,6 @@ import {
     DialogDescription,
 } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { RULES_MARKDOWN } from "@/lib/constants"
 
 interface FormatRulesDialogProps {
     open: boolean
@@ -73,7 +74,7 @@ export function FormatRulesDialog({
                         Dựa trên format Genesys của Yu-Gi-Oh! OCG.
                     </DialogDescription>
                 </DialogHeader>
-                <ScrollArea className="mt-2 pr-4 no-scrollbar">
+                <ScrollArea className="no-scrollbar mt-2 pr-4">
                     <div className="text-foreground flex flex-col gap-1">
                         {parseMarkdown(RULES_MARKDOWN)}
                     </div>

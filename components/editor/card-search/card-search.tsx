@@ -3,13 +3,14 @@
 import { useMemo, useState, useTransition } from "react"
 import { searchCards } from "@/app/api/cards"
 import { Cards } from "@/db/schema"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import CardFilterDrawer, {
     CardSearchFilters,
     DEFAULT_FILTERS,
 } from "./filter-drawer"
-import SearchBar from "./search-bar"
 import SearchResults from "./search-results"
+import SearchBar from "./search-bar"
+
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 export default function CardSearch() {
     const [query, setQuery] = useState("")

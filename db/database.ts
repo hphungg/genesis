@@ -1,7 +1,7 @@
 import "dotenv/config"
 
-import { drizzle } from "drizzle-orm/postgres-js"
 import postgres from "postgres"
+import { drizzle } from "drizzle-orm/postgres-js"
 import * as schema from "./schema"
 
 let connectionString = process.env.NEXT_PUBLIC_DATABASE_URL!

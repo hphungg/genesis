@@ -1,7 +1,8 @@
 "use client"
 
-import { ScrollArea } from "@/components/ui/scroll-area"
 import DeckSection from "./deck-section"
+
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { useEditor } from "@/providers/editor-provider"
 
 export default function DeckList() {
