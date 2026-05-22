@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useTransition } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { useProgress } from "@bprogress/next"
 import { toast } from "sonner"
@@ -12,9 +12,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
 export default function SetEditorTopBar() {
-    const { set, isDirty, setName, save } = useSetEditor()
+    const { set, isSaving, isDirty, setName, save } = useSetEditor()
     const router = useRouter()
-    const [isPending, startTransition] = useTransition()
     const [showDiscardDialog, setShowDiscardDialog] = useState(false)
     const { start, stop } = useProgress()
 
@@ -28,19 +27,15 @@ export default function SetEditorTopBar() {
         stop()
     }
 
-    const handleSave = () => {
-        startTransition(async () => {
-            start()
-            try {
-                await save()
-                toast.success("Lưu gói bài thành công!")
-                router.push("/sets")
-                router.refresh()
-            } catch (error) {
-                toast.error("Lưu gói bài thất bại")
-            }
-            stop()
-        })
+    const handleSave = async () => {
+        try {
+            await save()
+            toast.success("Lưu gói bài thành công!")
+            router.push("/sets")
+            router.refresh()
+        } catch (error) {
+            toast.error("Lưu gói bài thất bại")
+        }
     }
 
     return (
@@ -61,9 +56,9 @@ export default function SetEditorTopBar() {
             />
 
             <div className="flex items-center gap-3">
-                <Button onClick={handleSave} disabled={isPending}>
+                <Button onClick={handleSave} disabled={isSaving}>
                     <FloppyDiskIcon />
-                    {isPending ? "Đang lưu..." : "Lưu"}
+                    {isSaving ? "Đang lưu..." : "Lưu"}
                 </Button>
             </div>
             <ConfirmDiscardDialog

@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState, useTransition } from "react"
+import { useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useProgress } from "@bprogress/next"
 import { toast } from "sonner"
@@ -23,10 +23,9 @@ import {
 } from "@/components/ui/select"
 
 export default function TopBar() {
-    const { deck, contents, isDirty, setName, setCoverId, sortCards, save } =
+    const { deck, contents, isSaving, isDirty, setName, setCoverId, sortCards, save } =
         useEditor()
     const router = useRouter()
-    const [isPending, startTransition] = useTransition()
     const [showDiscardDialog, setShowDiscardDialog] = useState(false)
     const { start, stop } = useProgress()
 
@@ -40,19 +39,15 @@ export default function TopBar() {
         }
     }
 
-    const handleSave = () => {
-        startTransition(async () => {
-            try {
-                start()
-                await save()
-                toast.success("Lưu bộ bài thành công!")
-                router.push("/?view=decks")
-                router.refresh()
-                stop()
-            } catch (error) {
-                toast.error("Lưu bộ bài thất bại")
-            }
-        })
+    const handleSave = async () => {
+        try {
+            await save()
+            toast.success("Lưu bộ bài thành công!")
+            router.push("/?view=decks")
+            router.refresh()
+        } catch (error) {
+            toast.error("Lưu bộ bài thất bại")
+        }
     }
 
     const allCards = useMemo(() => {
@@ -125,9 +120,9 @@ export default function TopBar() {
                     <ArrowsDownUpIcon />
                     Sắp xếp
                 </Button>
-                <Button onClick={handleSave} disabled={isPending}>
+                <Button onClick={handleSave} disabled={isSaving}>
                     <FloppyDiskIcon />
-                    {isPending ? "Đang lưu..." : "Lưu bộ bài"}
+                    {isSaving ? "Đang lưu..." : "Lưu bộ bài"}
                 </Button>
             </div>
             <ConfirmDiscardDialog

@@ -26,6 +26,7 @@ interface EditorContextType {
     contents: DeckContents
     hoveredCard: Cards | null
     isDirty: boolean
+    isSaving: boolean
     setHoveredCard: (card: Cards | null) => void
     setName: (name: string) => void
     setCoverId: (id: string | null) => void
@@ -56,6 +57,7 @@ export function EditorProvider({
             side: [],
         },
     )
+    const [isSaving, setIsSaving] = useState(false)
     const { start, stop } = useProgress()
 
     const setName = (name: string) => setDeck((prev) => ({ ...prev, name }))
@@ -158,43 +160,48 @@ export function EditorProvider({
     }
 
     const save = async () => {
+        setIsSaving(true)
         start()
-        let mainDeckIds = contents.main.map((c) => c.id)
-        let extraDeckIds = contents.extra.map((c) => c.id)
-        let sideDeckIds = contents.side.map((c) => c.id)
+        try {
+            let mainDeckIds = contents.main.map((c) => c.id)
+            let extraDeckIds = contents.extra.map((c) => c.id)
+            let sideDeckIds = contents.side.map((c) => c.id)
 
-        const totalPoints = [
-            ...contents.main,
-            ...contents.extra,
-            ...contents.side,
-        ].reduce((sum, card) => sum + (card.point ?? 0), 0)
+            const totalPoints = [
+                ...contents.main,
+                ...contents.extra,
+                ...contents.side,
+            ].reduce((sum, card) => sum + (card.point ?? 0), 0)
 
-        const data = {
-            name: deck.name,
-            points: totalPoints,
-            coverId: deck.coverId ?? null,
-            mainDeckIds,
-            extraDeckIds,
-            sideDeckIds,
-        }
-
-        if (deck.id === 0) {
-            const newDeck = await createDeck(data)
-            setDeck((prev) => ({
-                ...prev,
-                id: newDeck.id,
+            const data = {
+                name: deck.name,
                 points: totalPoints,
-                updatedAt: new Date(),
-            }))
-        } else {
-            await updateDeck(deck.id, data)
-            setDeck((prev) => ({
-                ...prev,
-                points: totalPoints,
-                updatedAt: new Date(),
-            }))
+                coverId: deck.coverId ?? null,
+                mainDeckIds,
+                extraDeckIds,
+                sideDeckIds,
+            }
+
+            if (deck.id === 0) {
+                const newDeck = await createDeck(data)
+                setDeck((prev) => ({
+                    ...prev,
+                    id: newDeck.id,
+                    points: totalPoints,
+                    updatedAt: new Date(),
+                }))
+            } else {
+                await updateDeck(deck.id, data)
+                setDeck((prev) => ({
+                    ...prev,
+                    points: totalPoints,
+                    updatedAt: new Date(),
+                }))
+            }
+        } finally {
+            setIsSaving(false)
+            stop()
         }
-        stop()
     }
 
     const isDirty =
@@ -216,6 +223,7 @@ export function EditorProvider({
                 contents,
                 hoveredCard,
                 isDirty,
+                isSaving,
                 setHoveredCard,
                 setName,
                 setCoverId,

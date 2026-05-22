@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useState, useTransition } from "react"
+import { createContext, useContext, useState } from "react"
 import { useProgress } from "@bprogress/next"
 
 import { Cards, Sets } from "@/db/schema"
@@ -36,7 +36,7 @@ export function SetProvider({
     initialSet: SetWithCards
 }) {
     const [set, setSet] = useState<SetWithCards>(initialSet)
-    const [isPending, startTransition] = useTransition()
+    const [isSaving, setIsSaving] = useState(false)
     const { start, stop } = useProgress()
 
     const setName = (name: string) => setSet((prev) => ({ ...prev, name }))
@@ -79,45 +79,41 @@ export function SetProvider({
             cards: prev.cards.filter((c) => c.id !== cardId),
         }))
 
-    const save = (): Promise<void> => {
-        return new Promise((resolve, reject) => {
-            startTransition(async () => {
-                start()
-                try {
-                    const sortedCards = [...set.cards].sort((a, b) => {
-                        const rankDiff = getCardSortRank(a) - getCardSortRank(b)
-                        if (rankDiff !== 0) return rankDiff
-                        return a.name.localeCompare(b.name)
-                    })
-                    const sortedCardIds = sortedCards.map((c) => c.id)
-                    setSet((prev) => ({ ...prev, cards: sortedCards }))
-
-                    if (set.id === 0) {
-                        await createSet({
-                            name: set.name,
-                            description: set.description,
-                            setType: set.setType,
-                            coverId: set.coverId,
-                            tags: set.tags,
-                            cardIds: sortedCardIds,
-                        })
-                    } else {
-                        await updateSet(set.id, {
-                            name: set.name,
-                            description: set.description,
-                            setType: set.setType,
-                            coverId: set.coverId,
-                            tags: set.tags,
-                            cardIds: sortedCardIds,
-                        })
-                    }
-                    resolve()
-                } catch (e) {
-                    reject(e)
-                }
-                stop()
+    const save = async (): Promise<void> => {
+        setIsSaving(true)
+        start()
+        try {
+            const sortedCards = [...set.cards].sort((a, b) => {
+                const rankDiff = getCardSortRank(a) - getCardSortRank(b)
+                if (rankDiff !== 0) return rankDiff
+                return a.name.localeCompare(b.name)
             })
-        })
+            const sortedCardIds = sortedCards.map((c) => c.id)
+            setSet((prev) => ({ ...prev, cards: sortedCards }))
+
+            if (set.id === 0) {
+                await createSet({
+                    name: set.name,
+                    description: set.description,
+                    setType: set.setType,
+                    coverId: set.coverId,
+                    tags: set.tags,
+                    cardIds: sortedCardIds,
+                })
+            } else {
+                await updateSet(set.id, {
+                    name: set.name,
+                    description: set.description,
+                    setType: set.setType,
+                    coverId: set.coverId,
+                    tags: set.tags,
+                    cardIds: sortedCardIds,
+                })
+            }
+        } finally {
+            setIsSaving(false)
+            stop()
+        }
     }
 
     const isDirty =
@@ -134,7 +130,7 @@ export function SetProvider({
         <SetContext.Provider
             value={{
                 set,
-                isSaving: isPending,
+                isSaving,
                 isDirty,
                 setName,
                 setDescription,

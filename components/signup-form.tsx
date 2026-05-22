@@ -1,6 +1,6 @@
 "use client"
 
-import { useTransition } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useProgress } from "@bprogress/next"
@@ -33,7 +33,7 @@ export function SignUpForm({
     className,
     ...props
 }: React.ComponentProps<"div">) {
-    const [isPending, startTransition] = useTransition()
+    const [isPending, setIsPending] = useState(false)
     const router = useRouter()
     const { start, stop } = useProgress()
     const form = useForm<SignUpSchema>({
@@ -46,8 +46,10 @@ export function SignUpForm({
         },
     })
 
-    const onSubmit = (values: SignUpSchema) => {
-        startTransition(async () => {
+    const onSubmit = async (values: SignUpSchema) => {
+        setIsPending(true)
+        start()
+        try {
             const formData = new FormData()
             formData.set("email", values.email)
             formData.set("displayName", values.displayName)
@@ -60,13 +62,16 @@ export function SignUpForm({
                 start()
                 toast.success("Đăng ký thành công!")
                 router.push("/")
-                stop()
-                return
             } else {
                 toast.error("Đăng ký thất bại")
-                return
             }
-        })
+        } catch (error) {
+            console.error(error)
+            toast.error("Đã xảy ra lỗi khi đăng ký.")
+        } finally {
+            stop()
+            setIsPending(false)
+        }
     }
 
     return (

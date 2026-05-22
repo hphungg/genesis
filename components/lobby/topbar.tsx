@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useTransition } from "react"
+import { useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useProgress } from "@bprogress/next"
 import { signOut } from "@/app/api/auth"
@@ -13,23 +13,29 @@ export default function TopBar() {
     const searchParams = useSearchParams()
     const router = useRouter()
     const currentView = searchParams.get("view") || "sets"
-    const [isPending, startTransition] = useTransition()
+    const [isPending, setIsPending] = useState(false)
     const [rulesOpen, setRulesOpen] = useState(false)
     const { start, stop } = useProgress()
 
-    const handleSignOut = () => {
-        startTransition(async () => {
+    const handleSignOut = async () => {
+        setIsPending(true)
+        start()
+        try {
             const result = await signOut()
 
             if (result.success) {
-                start()
                 toast.success("Đăng xuất thành công!")
                 router.push("/signin")
-                stop()
             } else {
                 toast.error(`Đăng xuất thất bại: ${result.error}`)
+                setIsPending(false)
+                stop()
             }
-        })
+        } catch (error) {
+            toast.error("Đăng xuất thất bại")
+            setIsPending(false)
+            stop()
+        }
     }
 
     const handleViewChange = (view: string) => {

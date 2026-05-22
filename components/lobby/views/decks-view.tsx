@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useTransition, useEffect } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useProgress } from "@bprogress/next"
 import { toast } from "sonner"
@@ -19,7 +19,7 @@ export default function DecksView({
 }) {
     const [decks, setDecks] = useState(initialDecks)
     const [deckToDelete, setDeckToDelete] = useState<DeckSummary | null>(null)
-    const [isPending, startTransition] = useTransition()
+    const [isDeleting, setIsDeleting] = useState(false)
     const { start, stop } = useProgress()
     const router = useRouter()
 
@@ -29,11 +29,12 @@ export default function DecksView({
 
     const handleDelete = (deck: DeckSummary) => setDeckToDelete(deck)
 
-    const handleConfirmDelete = () => {
+    const handleConfirmDelete = async () => {
         if (!deckToDelete) return
 
+        setIsDeleting(true)
         start()
-        startTransition(async () => {
+        try {
             const result = await deleteDeck(deckToDelete.id)
 
             if (result.success) {
@@ -46,8 +47,13 @@ export default function DecksView({
             } else {
                 toast.error(result.error ?? "Xóa bộ bài thất bại.")
             }
-        })
-        stop()
+        } catch (error) {
+            console.error(error)
+            toast.error("Đã xảy ra lỗi khi xóa bộ bài.")
+        } finally {
+            setIsDeleting(false)
+            stop()
+        }
     }
 
     const [deckToExport, setDeckToExport] = useState<DeckSummary | null>(null)
@@ -86,10 +92,7 @@ export default function DecksView({
 
     const handleCreateNewDeck = () => {
         start()
-        startTransition(() => {
-            router.push(`/deck/new`)
-        })
-        stop()
+        router.push(`/deck/new`)
     }
 
     return (
@@ -120,7 +123,7 @@ export default function DecksView({
             <DeleteDeckDialog
                 deckName={deckToDelete?.name}
                 open={!!deckToDelete}
-                isDeleting={isPending}
+                isDeleting={isDeleting}
                 onCancel={() => setDeckToDelete(null)}
                 onConfirm={handleConfirmDelete}
             />

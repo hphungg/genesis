@@ -1,6 +1,6 @@
 "use client"
 
-import { useTransition } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useProgress } from "@bprogress/next"
@@ -33,7 +33,7 @@ export function SignInForm({
     className,
     ...props
 }: React.ComponentProps<"div">) {
-    const [isPending, startTransition] = useTransition()
+    const [isPending, setIsPending] = useState(false)
     const router = useRouter()
     const form = useForm<SignInSchema>({
         resolver: zodResolver(signInSchema),
@@ -44,8 +44,10 @@ export function SignInForm({
     })
     const { start, stop } = useProgress()
 
-    const onSubmit = (values: SignInSchema) => {
-        startTransition(async () => {
+    const onSubmit = async (values: SignInSchema) => {
+        setIsPending(true)
+        start()
+        try {
             const formData = new FormData()
             formData.set("email", values.email)
             formData.set("password", values.password)
@@ -56,13 +58,16 @@ export function SignInForm({
                 start()
                 toast.success("Đăng nhập thành công!")
                 router.push("/")
-                stop()
-                return
             } else {
                 toast.error("Email hoặc mật khẩu không chính xác.")
-                return
             }
-        })
+        } catch (error) {
+            console.error(error)
+            toast.error("Đã xảy ra lỗi khi đăng nhập.")
+        } finally {
+            setIsPending(false)
+            stop()
+        }
     }
 
     return (
