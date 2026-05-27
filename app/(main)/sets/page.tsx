@@ -5,6 +5,8 @@ import { getAllSet } from "@/app/api/sets"
 import TopBar from "@/components/sets/topbar"
 import SetGrid from "@/components/sets/set-grid"
 
+export const dynamic = "force-dynamic"
+
 export default async function CreateSetLanding() {
     return (
         <div className="bg-muted flex min-h-screen flex-col">

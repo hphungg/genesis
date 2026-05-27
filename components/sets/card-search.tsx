@@ -57,7 +57,7 @@ export default function SetEditorCardSearch() {
                     <CardSearchResults
                         results={results}
                         inSetIds={inSetIds}
-                        onAdd={(card) => addCard(card as any)}
+                        onAdd={addCard}
                     />
                 )}
             </ScrollArea>

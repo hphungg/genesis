@@ -4,7 +4,7 @@ import SetEditorTopBar from "@/components/sets/set-topbar"
 
 import { getSetById } from "@/app/api/sets"
 import { Separator } from "@/components/ui/separator"
-import { SetProvider } from "@/providers/set-provider"
+import { SetProvider, type SetWithCards } from "@/providers/set-provider"
 import { notFound } from "next/navigation"
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
 
 export default async function SetEditorPage({ params }: Props) {
     const { id } = await params
-    let set;
+    let set: SetWithCards
 
     if (id === "new") {
         set = {
@@ -26,27 +26,31 @@ export default async function SetEditorPage({ params }: Props) {
             cards: [],
             createdAt: new Date(),
             updatedAt: new Date(),
-        } as any
+        }
     } else {
         const setId = parseInt(id, 10)
         if (isNaN(setId)) {
             notFound()
         }
 
-        set = await getSetById(setId)
-        if (!set) {
+        const loadedSet = await getSetById(setId)
+        if (!loadedSet) {
             notFound()
         }
+        set = loadedSet
     }
 
     return (
-        <div className="flex flex-col h-screen overflow-hidden bg-muted">
+        <div className="bg-muted flex h-screen flex-col overflow-hidden">
             <SetProvider initialSet={set}>
                 <SetEditorTopBar />
-                <main className="flex flex-1 px-4 min-h-0 overflow-hidden">
-                    <div className="flex flex-1 bg-background rounded-t-2xl shadow-md border border-b-0 flex-row gap-0 overflow-hidden">
+                <main className="flex min-h-0 flex-1 overflow-hidden px-4">
+                    <div className="bg-background flex flex-1 flex-row gap-0 overflow-hidden rounded-t-2xl border border-b-0 shadow-md">
                         <SetEditorCardSearch />
-                        <Separator orientation="vertical" className="self-stretch" />
+                        <Separator
+                            orientation="vertical"
+                            className="self-stretch"
+                        />
                         <SetInfo />
                     </div>
                 </main>

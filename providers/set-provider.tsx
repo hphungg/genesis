@@ -5,7 +5,7 @@ import { useProgress } from "@bprogress/next"
 
 import { Cards, Sets } from "@/db/schema"
 import { createSet, updateSet } from "@/app/api/sets"
-import { getCardSortRank } from "@/lib/sort-rank"
+import { sortCards } from "@/lib/sort-rank"
 
 export type SetWithCards = Sets & {
     cards: Cards[]
@@ -70,7 +70,7 @@ export function SetProvider({
         setSet((prev) =>
             prev.cards.some((c) => c.id === card.id)
                 ? prev
-                : { ...prev, cards: [...prev.cards, card] },
+                : { ...prev, cards: sortCards([...prev.cards, card]) },
         )
 
     const removeCard = (cardId: string) =>
@@ -83,11 +83,7 @@ export function SetProvider({
         setIsSaving(true)
         start()
         try {
-            const sortedCards = [...set.cards].sort((a, b) => {
-                const rankDiff = getCardSortRank(a) - getCardSortRank(b)
-                if (rankDiff !== 0) return rankDiff
-                return a.name.localeCompare(b.name)
-            })
+            const sortedCards = sortCards(set.cards)
             const sortedCardIds = sortedCards.map((c) => c.id)
             setSet((prev) => ({ ...prev, cards: sortedCards }))
 

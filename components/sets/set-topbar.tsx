@@ -32,7 +32,8 @@ export default function SetEditorTopBar() {
             await save()
             toast.success("Lưu gói bài thành công!")
             router.push("/sets")
-        } catch (error) {
+            router.refresh()
+        } catch {
             toast.error("Lưu gói bài thất bại")
         }
     }

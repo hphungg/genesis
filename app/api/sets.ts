@@ -5,6 +5,31 @@ import { revalidatePath } from "next/cache"
 import { createClient } from "@/lib/supabase/server"
 import { db } from "@/db/database"
 import { sets, setCards } from "@/db/schema"
+import type { Cards } from "@/db/schema"
+import { sortCards } from "@/lib/sort-rank"
+
+type SetWithCardRows = {
+    setCards: { card: Cards }[]
+}
+
+function revalidateSetViews(setId?: number) {
+    revalidatePath("/sets", "page")
+    revalidatePath("/", "page")
+    if (setId) {
+        revalidatePath(`/sets/${setId}`, "page")
+    }
+}
+
+function mapSetWithCards<T extends SetWithCardRows>(result: T) {
+    const setData = Object.fromEntries(
+        Object.entries(result).filter(([key]) => key !== "setCards"),
+    ) as Omit<T, "setCards">
+
+    return {
+        ...setData,
+        cards: sortCards(result.setCards.map((sc) => sc.card)),
+    }
+}
 
 async function getAuthUser() {
     const supabase = await createClient()
@@ -31,11 +56,7 @@ export async function getSetById(setId: number) {
 
     if (!result) return null
 
-    const { setCards: _, ...setData } = result
-    return {
-        ...setData,
-        cards: result.setCards.map((sc) => sc.card),
-    }
+    return mapSetWithCards(result)
 }
 
 export type CreateSetInput = {
@@ -70,8 +91,7 @@ export async function createSet(data: CreateSetInput) {
         await db.insert(setCards).values(relationsToInsert)
     }
 
-    revalidatePath("/sets")
-    revalidatePath("/")
+    revalidateSetViews(newSet.id)
 
     return newSet
 }
@@ -121,10 +141,11 @@ export async function updateSet(setId: number, data: UpdateSetInput) {
         with: { setCards: { with: { card: true } } },
     })
 
-    revalidatePath("/sets")
-    revalidatePath("/")
+    revalidateSetViews(setId)
 
-    return updatedSet
+    if (!updatedSet) return null
+
+    return mapSetWithCards(updatedSet)
 }
 
 export async function deleteSet(setId: number) {
@@ -136,8 +157,7 @@ export async function deleteSet(setId: number) {
         .where(eq(sets.id, setId))
         .returning()
 
-    revalidatePath("/sets")
-    revalidatePath("/")
+    revalidateSetViews(setId)
 
     return deletedSet
 }

@@ -2,8 +2,6 @@
 
 import { Cards } from "@/db/schema"
 
-import { CardPreview } from "@/components/card-preview"
-
 interface CardSearchResultsProps {
     results: Cards[]
     inSetIds: Set<string>
@@ -20,25 +18,23 @@ function CardThumbnail({
     onAdd: () => void
 }) {
     return (
-        <CardPreview card={card}>
-            <button
-                onClick={() => !inSet && onAdd()}
-                disabled={inSet}
-                className={[
-                    "group bg-muted focus-visible:ring-ring relative aspect-59/86 overflow-hidden rounded focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none",
-                    inSet
-                        ? "cursor-default opacity-50 grayscale-[0.3]"
-                        : "cursor-pointer",
-                ].join(" ")}
-            >
-                <img
-                    src={`https://images.ygoprodeck.com/images/cards/${card.id}.jpg`}
-                    alt={card.name}
-                    className="h-full w-full object-cover"
-                    loading="lazy"
-                />
-            </button>
-        </CardPreview>
+        <button
+            onClick={() => !inSet && onAdd()}
+            disabled={inSet}
+            className={[
+                "group bg-muted focus-visible:ring-ring relative aspect-59/86 overflow-hidden rounded focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none",
+                inSet
+                    ? "cursor-default opacity-50 grayscale-[0.3]"
+                    : "cursor-pointer",
+            ].join(" ")}
+        >
+            <img
+                src={`https://images.ygoprodeck.com/images/cards/${card.id}.jpg`}
+                alt={card.name}
+                className="h-full w-full object-cover"
+                loading="lazy"
+            />
+        </button>
     )
 }
 

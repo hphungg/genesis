@@ -1,28 +1,30 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useProgress } from "@bprogress/next"
 import { TrashIcon, PencilIcon } from "@phosphor-icons/react"
 import { deleteSet } from "@/app/api/sets"
+import type { Sets } from "@/db/schema"
 
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 
-export default function SetGrid({ initialSets }: { initialSets: any[] }) {
-    const [sets, setSets] = useState(initialSets)
+export default function SetGrid({ initialSets }: { initialSets: Sets[] }) {
+    const [deletedIds, setDeletedIds] = useState<Set<number>>(() => new Set())
     const { start, stop } = useProgress()
     const router = useRouter()
 
-    useEffect(() => {
-        setSets(initialSets)
-    }, [initialSets])
+    const sets = useMemo(
+        () => initialSets.filter((set) => !deletedIds.has(set.id)),
+        [deletedIds, initialSets],
+    )
 
     const handleDelete = async (id: number) => {
         start()
         await deleteSet(id)
-        setSets((prev) => prev.filter((s) => s.id !== id))
+        setDeletedIds((prev) => new Set(prev).add(id))
         router.refresh()
         stop()
     }

@@ -14,6 +14,8 @@ interface PageProps {
     searchParams: Promise<{ view?: string }>
 }
 
+export const dynamic = "force-dynamic"
+
 export default async function Lobby({ searchParams }: PageProps) {
     const { view } = await searchParams
     const currentView = view || "sets"
