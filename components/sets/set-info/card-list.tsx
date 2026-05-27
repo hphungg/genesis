@@ -51,12 +51,12 @@ export function SetCardList() {
                         {set.cards.map((card) => (
                             <div
                                 key={card.id}
-                                className="bg-muted/30 hover:bg-muted/60 group flex min-w-0 cursor-default items-center gap-2 rounded-md border px-3 py-1.5 text-sm transition-colors"
+                                className="bg-muted/30 hover:bg-muted/60 group flex w-full cursor-default items-center gap-2 rounded-md border px-3 py-1.5 text-sm transition-colors"
                             >
                                 <div
                                     className={`h-3.5 w-2 shrink-0 rounded-xs border border-black/20 dark:border-white/20 ${getCardTypeColor(card.type, card.type2 || undefined)}`}
                                 />
-                                <span className="text-foreground min-w-0 flex-1 truncate font-medium">
+                                <span className="text-foreground w-1 flex-1 truncate font-medium">
                                     {card.name}
                                 </span>
                                 {card.point && card.point > 0 && (
