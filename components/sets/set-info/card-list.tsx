@@ -3,6 +3,7 @@
 import { useSetEditor } from "@/providers/set-provider"
 
 import { XIcon } from "@phosphor-icons/react"
+import { CardPreview } from "@/components/card-preview"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 const getCardTypeColor = (type?: string, subtype?: string) => {
@@ -49,32 +50,31 @@ export function SetCardList() {
                 ) : (
                     <div className="flex flex-col gap-1 pr-2">
                         {set.cards.map((card) => (
-                            <div
-                                key={card.id}
-                                className="bg-muted/30 hover:bg-muted/60 group flex w-full cursor-default items-center gap-2 rounded-md border px-3 py-1.5 text-sm transition-colors"
-                            >
-                                <div
-                                    className={`h-3.5 w-2 shrink-0 rounded-xs border border-black/20 dark:border-white/20 ${getCardTypeColor(card.type, card.type2 || undefined)}`}
-                                />
-                                <span className="text-foreground w-1 flex-1 truncate font-medium">
-                                    {card.name}
-                                </span>
-                                {card.point && card.point > 0 && (
-                                    <span className="shrink-0 rounded bg-red-600 px-1.5 py-0.5 text-[10px] font-bold text-white">
-                                        {card.point}
+                            <CardPreview key={card.id} card={card}>
+                                <div className="bg-muted/30 hover:bg-muted/60 group flex w-full cursor-default items-center gap-2 rounded-md border px-3 py-1.5 text-sm transition-colors">
+                                    <div
+                                        className={`h-3.5 w-2 shrink-0 rounded-xs border border-black/20 dark:border-white/20 ${getCardTypeColor(card.type, card.type2 || undefined)}`}
+                                    />
+                                    <span className="text-foreground w-1 flex-1 truncate font-medium">
+                                        {card.name}
                                     </span>
-                                )}
-                                <button
-                                    onClick={(e) => {
-                                        e.preventDefault()
-                                        removeCard(card.id)
-                                    }}
-                                    className="text-destructive shrink-0 opacity-0 transition-opacity group-hover:opacity-60 hover:opacity-100!"
-                                    aria-label={`Xóa ${card.name}`}
-                                >
-                                    <XIcon size={14} />
-                                </button>
-                            </div>
+                                    {card.point && card.point > 0 && (
+                                        <span className="shrink-0 rounded bg-red-600 px-1.5 py-0.5 text-[10px] font-bold text-white">
+                                            {card.point}
+                                        </span>
+                                    )}
+                                    <button
+                                        onClick={(e) => {
+                                            e.preventDefault()
+                                            removeCard(card.id)
+                                        }}
+                                        className="text-destructive shrink-0 opacity-0 transition-opacity group-hover:opacity-60 hover:opacity-100!"
+                                        aria-label={`Xóa ${card.name}`}
+                                    >
+                                        <XIcon size={14} />
+                                    </button>
+                                </div>
+                            </CardPreview>
                         ))}
                     </div>
                 )}

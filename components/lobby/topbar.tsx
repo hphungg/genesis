@@ -51,7 +51,7 @@ export default function TopBar() {
             </Button>
 
             <h1 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-lg font-bold">
-                Trang chủ
+                Danh sách gói bài
             </h1>
 
             <div className="flex items-center gap-4">
@@ -62,9 +62,7 @@ export default function TopBar() {
                         )
                     }
                 >
-                    {currentView === "decks"
-                        ? "Quay về trang chủ"
-                        : "Bộ bài của tôi"}
+                    {currentView === "decks" ? "Quay lại" : "Bộ bài của tôi"}
                 </Button>
                 <Button
                     variant="destructive"

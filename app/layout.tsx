@@ -32,13 +32,29 @@ export default function RootLayout({
             lang="en"
             className={cn("h-full antialiased", "font-sans", inter.variable)}
         >
-            <body className="flex min-h-full flex-col">
-                <AppProgressProvider>
-                    <main>
-                        {children}
-                        <SpeedInsights />
-                    </main>
-                </AppProgressProvider>
+            <body className="bg-background text-foreground min-h-full">
+                <main className="bg-muted flex min-h-screen items-center justify-center px-6 text-center md:hidden">
+                    <div className="flex w-full max-w-sm flex-col items-center gap-4">
+                        <div className="space-y-2">
+                            <h1 className="text-xl font-bold">
+                                Không hỗ trợ kích cỡ màn hình này
+                            </h1>
+                            <p className="text-muted-foreground text-sm leading-6">
+                                Vui lòng truy cập bằng thiết bị có màn hình lớn
+                                hơn.
+                            </p>
+                        </div>
+                    </div>
+                </main>
+
+                <div className="hidden min-h-full flex-col md:flex">
+                    <AppProgressProvider>
+                        <main>
+                            {children}
+                            <SpeedInsights />
+                        </main>
+                    </AppProgressProvider>
+                </div>
                 <Toaster richColors position="top-center" />
             </body>
         </html>

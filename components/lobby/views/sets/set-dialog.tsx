@@ -25,8 +25,8 @@ export function SetDialog({
 }: SetDialogProps) {
     return (
         <Dialog open={!!selectedSet} onOpenChange={onOpenChange}>
-            <DialogContent className="flex h-[90vh] min-w-7xl flex-col overflow-hidden p-6">
-                <DialogHeader className="mb-2 shrink-0">
+            <DialogContent className="flex h-[90vh]! w-[95vw]! max-w-[95vw]! flex-col overflow-hidden p-6 sm:h-[85vh]! sm:w-[90vw]!">
+                <DialogHeader className="shrink-0">
                     <DialogTitle className="text-2xl">
                         {selectedSet?.name}
                     </DialogTitle>
@@ -51,7 +51,7 @@ export function SetDialog({
                     </DialogDescription>
                 </DialogHeader>
 
-                <div className="no-scrollbar mt-2 h-full flex-1 overflow-y-auto pr-2">
+                <div className="no-scrollbar h-full flex-1 overflow-y-auto pr-2">
                     {isLoading ? (
                         <div className="flex h-full items-center justify-center">
                             <Spinner className="mx-auto size-10" />
