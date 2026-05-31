@@ -61,7 +61,6 @@ export async function getSetById(setId: number) {
 
 export type CreateSetInput = {
     name?: string
-    description?: string
     tags?: string[]
     setType?: string
     coverId?: string | null
@@ -76,7 +75,6 @@ export async function createSet(data: CreateSetInput) {
         .insert(sets)
         .values({
             name: data.name,
-            description: data.description,
             tags: data.tags,
             setType: data.setType,
             coverId: data.coverId,
@@ -98,7 +96,6 @@ export async function createSet(data: CreateSetInput) {
 
 export type UpdateSetInput = {
     name?: string
-    description?: string
     tags?: string[]
     cardIds?: string[]
     setType?: string
@@ -111,8 +108,6 @@ export async function updateSet(setId: number, data: UpdateSetInput) {
 
     const setUpdateData: Partial<CreateSetInput> = {}
     if (data.name !== undefined) setUpdateData.name = data.name
-    if (data.description !== undefined)
-        setUpdateData.description = data.description
     if (data.tags !== undefined) setUpdateData.tags = data.tags
     if (data.setType !== undefined) setUpdateData.setType = data.setType
     if (data.coverId !== undefined) setUpdateData.coverId = data.coverId

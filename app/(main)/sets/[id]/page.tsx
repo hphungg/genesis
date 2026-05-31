@@ -19,7 +19,6 @@ export default async function SetEditorPage({ params }: Props) {
         set = {
             id: 0,
             name: "New Set",
-            description: "",
             setType: "Archetype",
             coverId: null,
             tags: [],

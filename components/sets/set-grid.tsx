@@ -89,11 +89,6 @@ export default function SetGrid({ initialSets }: { initialSets: Sets[] }) {
                                 {set.setType}
                             </span>
                         </div>
-                        {set.description && (
-                            <p className="text-muted-foreground mt-1 line-clamp-2 text-xs opacity-80">
-                                {set.description}
-                            </p>
-                        )}
                     </div>
                 </Card>
             ))}

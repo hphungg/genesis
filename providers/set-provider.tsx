@@ -16,7 +16,6 @@ interface SetContextType {
     isSaving: boolean
     isDirty: boolean
     setName: (name: string) => void
-    setDescription: (desc: string) => void
     setSetType: (type: string) => void
     setCoverId: (id: string | null) => void
     addTag: (tag: string) => void
@@ -40,9 +39,6 @@ export function SetProvider({
     const { start, stop } = useProgress()
 
     const setName = (name: string) => setSet((prev) => ({ ...prev, name }))
-
-    const setDescription = (description: string) =>
-        setSet((prev) => ({ ...prev, description }))
 
     const setSetType = (setType: string) =>
         setSet((prev) => ({ ...prev, setType }))
@@ -90,7 +86,6 @@ export function SetProvider({
             if (set.id === 0) {
                 await createSet({
                     name: set.name,
-                    description: set.description,
                     setType: set.setType,
                     coverId: set.coverId,
                     tags: set.tags,
@@ -99,7 +94,6 @@ export function SetProvider({
             } else {
                 await updateSet(set.id, {
                     name: set.name,
-                    description: set.description,
                     setType: set.setType,
                     coverId: set.coverId,
                     tags: set.tags,
@@ -114,7 +108,6 @@ export function SetProvider({
 
     const isDirty =
         set.name !== initialSet.name ||
-        set.description !== initialSet.description ||
         set.setType !== initialSet.setType ||
         set.coverId !== (initialSet.coverId ?? null) ||
         set.tags.length !== initialSet.tags.length ||
@@ -129,7 +122,6 @@ export function SetProvider({
                 isSaving,
                 isDirty,
                 setName,
-                setDescription,
                 setSetType,
                 setCoverId,
                 addTag,

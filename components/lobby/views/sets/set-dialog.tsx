@@ -2,7 +2,6 @@ import { Sets, Cards } from "@/db/schema"
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog"
@@ -46,9 +45,6 @@ export function SetDialog({
                             Không có tags
                         </Badge>
                     )}
-                    <DialogDescription className="mt-4 text-base">
-                        {selectedSet?.description}
-                    </DialogDescription>
                 </DialogHeader>
 
                 <div className="no-scrollbar h-full flex-1 overflow-y-auto pr-2">
